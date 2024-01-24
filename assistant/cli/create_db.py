@@ -7,7 +7,7 @@ from langchain.vectorstores.chroma import Chroma
 from langchain_community.document_loaders import BSHTMLLoader, DirectoryLoader
 from typing_extensions import Annotated
 
-from assistant.llm import get_embeddings_model
+from assistant import get_embeddings_model
 
 app = typer.Typer()
 
@@ -17,25 +17,25 @@ def create_db(
     docs_directory: Annotated[
         Path,
         typer.Argument(
-            exists=True,
-            file_okay=False,
-            help="Directory with document to index.",
+            exists=True, file_okay=False, help="Directory with documents to index."
         ),
     ] = Path("./data/docs"),
     embeddings_model_name: Annotated[
-        str, typer.Option("-m", "--model", help="Name of embeddings model.")
+        str, typer.Option("-e", "--embeddings", help="Name of embeddings model.")
     ] = "text-embedding-ada-002",
     db_directory: Annotated[
-        Path,
-        typer.Option("-o", "--output", help="Directory to persist database in."),
+        Path, typer.Option("--db", help="Directory to persist database in.")
     ] = Path("./db"),
     db_collection: Annotated[
         str,
         typer.Option(
-            "-c", "--collection", help="Name of database collection to store documents."
+            "--collection", help="Name of database collection to store documents."
         ),
     ] = "docs_store",
 ) -> None:
+    """
+    Index documents into database.
+    """
     embeddings_model = get_embeddings_model(embeddings_model_name)
 
     loader = DirectoryLoader(
