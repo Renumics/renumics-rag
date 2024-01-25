@@ -33,6 +33,18 @@ RelevanceScoreFn = Union[PredefinedRelevanceScoreFn, Callable[[float], float]]
 RetrieverSearchType = Literal["similarity", "similarity_score_threshold", "mmr"]
 
 
+PREDEFINED_RELEVANCE_SCORE_FNS: Dict[PredefinedRelevanceScoreFn, str] = {
+    "l2": "Squared euclidean distance",
+    "ip": "Inner product",
+    "cosine": "Cosine similarity",
+}
+RETRIEVER_SEARCH_TYPES: Dict[PredefinedRelevanceScoreFn, str] = {
+    "similarity": "Similarity",
+    "similarity_score_threshold": "Similarity with score threshold",
+    "mmr": "Maximal marginal relevance (MMR)",
+}
+
+
 def get_embeddings_model(name: str) -> Embeddings:
     if os.getenv("OPENAI_API_TYPE") == "azure":
         return AzureOpenAIEmbeddings(azure_deployment=name)
@@ -55,6 +67,9 @@ def get_chromadb(
     collection_name: str,
     relevance_score_fn: Optional[RelevanceScoreFn] = None,
 ) -> Chroma:
+    """
+    https://docs.trychroma.com/usage-guide#changing-the-distance-function
+    """
     if relevance_score_fn is None:
         return Chroma(
             collection_name=collection_name,
