@@ -41,7 +41,7 @@ def create_db(
         str(docs_directory),
         glob="*.html",
         loader_cls=BSHTMLLoader,
-        loader_kwargs=None,
+        loader_kwargs={"open_encoding": "utf-8"},
         recursive=True,
         show_progress=True,
     )
