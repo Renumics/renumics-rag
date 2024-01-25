@@ -80,25 +80,24 @@ def get_chromadb(
 def get_retriever(
     vectorstore: VectorStore,
     k: Optional[int] = None,
-    search_type: Optional[RetrieverSearchType] = None,
+    search_type: RetrieverSearchType = "similarity",
     score_threshold: Optional[float] = None,
     fetch_k: Optional[int] = None,
     lambda_mult: Optional[float] = None,
 ) -> VectorStoreRetriever:
+    kwargs: Dict[str, Any] = {"search_type": search_type}
     search_kwargs: Dict[str, Any] = {}
     if k is not None:
         search_kwargs["k"] = k
-    if score_threshold is not None:
+    if search_type == "similarity_score_threshold":
+        assert score_threshold is not None
         search_kwargs["score_threshold"] = score_threshold
-    if fetch_k is not None:
-        search_kwargs["fetch_k"] = fetch_k
-    if lambda_mult is not None:
-        search_kwargs["lambda_mult"] = lambda_mult
-    kwargs: Dict[str, Any] = {}
-    if search_type is not None:
-        kwargs["search_type"] = search_type
-    if search_kwargs:
-        kwargs["search_kwargs"] = search_kwargs
+    elif search_type == "mmr":
+        if fetch_k is not None:
+            search_kwargs["fetch_k"] = fetch_k
+        if lambda_mult is not None:
+            search_kwargs["lambda_mult"] = lambda_mult
+    kwargs["search_kwargs"] = search_kwargs
     return vectorstore.as_retriever(**kwargs)
 
 

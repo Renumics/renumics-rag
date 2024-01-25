@@ -8,6 +8,7 @@ from langchain_core.runnables import Runnable
 from assistant import (
     PredefinedRelevanceScoreFn,
     RelevanceScoreFn,
+    RetrieverSearchType,
     format_doc,
     get_chat_model,
     get_chromadb,
@@ -27,7 +28,6 @@ AVATARS: Dict[Role, Any] = {"user": "🧐", "assistant": "🤖", "source": "🔖
 class Message:
     role: Role
     content: str
-    sources: Optional[List[str]] = None
 
 
 def set_embeddings_model_name(value: str) -> None:
@@ -40,24 +40,33 @@ st.title("F1 RAG Demo 🤖➕🔖❤️🏎️")
 st.header("Chat with the F1 docs")
 
 
-# if "embeddings_model_name" not in st.session_state.keys():
-#     st.session_state.embeddings_model_name = "text-embedding-ada-002"
-# if "chat_model_name" not in st.session_state.keys():
-#     st.session_state.chat_model_name = "gpt-4"
 if "messages" not in st.session_state.keys():
-    st.session_state.messages = [Message("assistant", "Ask me a question about F1", [])]
+    st.session_state.messages = [Message("assistant", "Ask me a question about F1")]
 
 
 @st.cache_resource(show_spinner=False)
-def get_chain(
+def _get_rag_chain(
     embeddings_model_name: str,
     chat_model_name: str,
     relevance_score_fn: RelevanceScoreFn,
     k: int,
+    search_type: RetrieverSearchType,
+    score_threshold: float,
+    fetch_k: int,
+    lambda_mult: float,
 ) -> Runnable:
-    print("Load chain", embeddings_model_name, chat_model_name, relevance_score_fn)
+    print(
+        "Load chain",
+        embeddings_model_name,
+        chat_model_name,
+        relevance_score_fn,
+        k,
+        search_type,
+        score_threshold,
+        fetch_k,
+        lambda_mult,
+    )
     with st.spinner(text="Loading database and LLMs..."):
-        # embeddings_model = get_embeddings_model("text-embedding-ada-002")
         embeddings_model = get_embeddings_model(embeddings_model_name)
         chat_model = get_chat_model(chat_model_name)
         vectorstore = get_chromadb(
@@ -66,8 +75,9 @@ def get_chain(
             collection_name="docs_store",
             relevance_score_fn=relevance_score_fn,
         )
-        retriever = get_retriever(vectorstore, k)
-
+        retriever = get_retriever(
+            vectorstore, k, search_type, score_threshold, fetch_k, lambda_mult
+        )
         chain = get_rag_chain(retriever, chat_model)
         return chain
 
@@ -81,49 +91,62 @@ with st.sidebar:
     st.text_input("Chat model", value="gpt-4", key="chat_model_name")
     st.subheader("Retriever")
     st.selectbox(
-        "Relevance score",
+        "Relevance score function",
         get_args(PredefinedRelevanceScoreFn),
         get_args(PredefinedRelevanceScoreFn).index("l2"),
         key="relevance_score_fn",
     )
-    st.slider("k", 0, 100, 4, 1, key="k")
+    k = st.slider("k", 0, 100, 4, key="k", help="Amount of documents to return")
+    search_type = st.selectbox(
+        "Search type",
+        get_args(RetrieverSearchType),
+        get_args(RetrieverSearchType).index("similarity"),
+        key="search_type",
+        help="Type of search. One of '"
+        + "', '".join(get_args(RetrieverSearchType))
+        + "'",
+    )
+    st.slider(
+        "Score threshold",
+        0.0,
+        1.0,
+        0.5,
+        key="score_threshold",
+        disabled=search_type != "similarity_score_threshold",
+    )
+    st.slider("Fetch k", k, 200, 20, key="fetch_k", disabled=search_type != "mmr")
+    st.slider(
+        "Lambda mult", 0.0, 1.0, 0.5, key="lambda_mult", disabled=search_type != "mmr"
+    )
 
 
-chain = get_chain(
+chain = _get_rag_chain(
     st.session_state.embeddings_model_name,
     st.session_state.chat_model_name,
     st.session_state.relevance_score_fn,
     st.session_state.k,
+    st.session_state.search_type,
+    st.session_state.score_threshold,
+    st.session_state.fetch_k,
+    st.session_state.lambda_mult,
 )
 
 
-if prompt := st.chat_input(
-    "Your question"
-):  # Prompt for user input and save to chat history
+if prompt := st.chat_input("Your question"):
     st.session_state.messages.append(Message("user", prompt))
 
-for message in st.session_state.messages:  # Display the prior chat messages
-    if message.role == "assistant":
-        for source in message.sources:
-            with st.chat_message("source", avatar=AVATARS.get("source")):
-                st.write(source)
-        with st.chat_message("assistant", avatar=AVATARS.get("assistant")):
-            st.write(message.content)
-    else:
-        with st.chat_message(message.role, avatar=AVATARS.get(message.role)):
-            st.write(message.content)
+for message in st.session_state.messages:
+    with st.chat_message(message.role, avatar=AVATARS.get(message.role)):
+        st.write(message.content)
 
 if st.session_state.messages[-1].role == "user":
     with st.spinner("Thinking..."):
         answer = chain.invoke(prompt)
-        message = Message(
-            "assistant",
-            answer["answer"],
-            [format_doc(doc) for doc in answer["source_documents"]],
-        )
-        for source in message.sources:
-            with st.chat_message("source", avatar=AVATARS.get("source")):
-                st.write(source)
-        with st.chat_message("assistant", avatar=AVATARS.get("assistant")):
-            st.write(message.content)
-        st.session_state.messages.append(message)
+        messages: List[Message] = []
+        for doc in answer["source_documents"]:
+            messages.append(Message("source", format_doc(doc)))
+        messages.append(Message("assistant", answer["answer"]))
+        for message in messages:
+            with st.chat_message(message.role, avatar=AVATARS.get(message.role)):
+                st.write(message.content)
+        st.session_state.messages.extend(messages)
