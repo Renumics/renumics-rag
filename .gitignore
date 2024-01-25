@@ -1,6 +1,6 @@
 .env
 data/
-db/
+db-docs/
 dev/
 
 .DS_Store

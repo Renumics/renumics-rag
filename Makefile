@@ -10,7 +10,7 @@ help: ## Print this help message
 
 .PHONY: init
 init: ## Locally install all dev dependencies
-	poetry install
+	poetry install --all-extras
 
 .PHONY: clean
 clean: ## Clean project
@@ -32,3 +32,7 @@ typecheck: ## Typecheck all source files
 .PHONY: lint
 lint: ## Lint all source files
 	poetry run ruff assistant scripts/*.py
+
+.PHONY: run
+run: ## Run web app
+	poetry run streamlit run assistant/app.py

@@ -1,4 +1,4 @@
-# rag-demo
+# RAG Demo
 
 Retrieval-Augmented Generation Assistant Demo
 
@@ -36,6 +36,14 @@ create-db
 
 For more options, see `create-db --help`.
 
+Retrieve documents:
+
+```shell
+retrieve "When was the first ever F1 race?"
+```
+
+For more options, see `retrieve --help`.
+
 Answer a question:
 
 ```shell
@@ -43,3 +51,9 @@ answer "When was the first ever F1 race?"
 ```
 
 For more options, see `answer --help`.
+
+Start web app:
+
+```shell
+streamlit run assistant/app.py
+```

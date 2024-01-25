@@ -5,23 +5,14 @@ from typing import List
 import typer
 from typing_extensions import Annotated
 
-from assistant import (
-    get_chat_model,
-    get_chromadb,
-    get_embeddings_model,
-    get_rag_chain,
-    get_retriever,
-)
+from assistant import get_chromadb, get_embeddings_model, get_retriever
 
 app = typer.Typer()
 
 
 @app.command()
-def answer(
+def retrieve(
     questions: Annotated[List[str], typer.Argument(help="Question(s) to answer.")],
-    chat_model_name: Annotated[
-        str, typer.Option("-m", "--model", help="Name of chat model.")
-    ] = "gpt-4",
     embeddings_model_name: Annotated[
         str, typer.Option("-e", "--embeddings", help="Name of embeddings model.")
     ] = "text-embedding-ada-002",
@@ -36,10 +27,9 @@ def answer(
     ] = "docs_store",
 ) -> None:
     """
-    Answer question(s) using indexed database.
+    Retrieve documents relevant to question(s) using indexed database.
     """
     embeddings_model = get_embeddings_model(embeddings_model_name)
-    chat_model = get_chat_model(chat_model_name)
     vectorstore = get_chromadb(
         persist_directory=db_directory,
         embeddings_model=embeddings_model,
@@ -47,14 +37,11 @@ def answer(
     )
     retriever = get_retriever(vectorstore)
 
-    chain = get_rag_chain(retriever, chat_model)
-
     for question in questions:
+        docs = retriever.get_relevant_documents(question)
         print(f"QUESTION: {question}")
-        rag_answer = chain.invoke(question)
-        print(f"ANSWER: {rag_answer['answer']}")
         print("SOURCES:")
-        for doc in rag_answer["source_documents"]:
+        for doc in docs:
             print(f"CONTENT: {doc.page_content}")
             print(
                 "METADATA: "

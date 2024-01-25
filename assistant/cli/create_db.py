@@ -3,11 +3,10 @@ from pathlib import Path
 
 import typer
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores.chroma import Chroma
 from langchain_community.document_loaders import BSHTMLLoader, DirectoryLoader
 from typing_extensions import Annotated
 
-from assistant import get_embeddings_model
+from assistant import get_chromadb, get_embeddings_model
 
 app = typer.Typer()
 
@@ -25,7 +24,7 @@ def create_db(
     ] = "text-embedding-ada-002",
     db_directory: Annotated[
         Path, typer.Option("--db", help="Directory to persist database in.")
-    ] = Path("./db"),
+    ] = Path("./db-docs"),
     db_collection: Annotated[
         str,
         typer.Option(
@@ -40,21 +39,19 @@ def create_db(
 
     loader = DirectoryLoader(
         str(docs_directory),
-        glob="**/*.html",
+        glob="*.html",
         loader_cls=BSHTMLLoader,
+        loader_kwargs=None,
+        recursive=True,
         show_progress=True,
     )
     docs = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     splits = text_splitter.split_documents(docs)
 
-    vectorstore = Chroma.from_documents(
-        documents=splits,
-        embedding=embeddings_model,
-        ids=None,
-        collection_name=db_collection,
-        persist_directory=str(db_directory),
-    )
+    vectorstore = get_chromadb(db_directory, embeddings_model, db_collection)
+
+    vectorstore.add_documents(splits, ids=None)
     vectorstore.persist()
 
 
