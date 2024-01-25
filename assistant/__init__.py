@@ -38,7 +38,7 @@ PREDEFINED_RELEVANCE_SCORE_FNS: Dict[PredefinedRelevanceScoreFn, str] = {
     "ip": "Inner product",
     "cosine": "Cosine similarity",
 }
-RETRIEVER_SEARCH_TYPES: Dict[PredefinedRelevanceScoreFn, str] = {
+RETRIEVER_SEARCH_TYPES: Dict[RetrieverSearchType, str] = {
     "similarity": "Similarity",
     "similarity_score_threshold": "Similarity with score threshold",
     "mmr": "Maximal marginal relevance (MMR)",

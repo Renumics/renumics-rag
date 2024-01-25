@@ -1,6 +1,6 @@
 import dataclasses
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional, get_args
+from typing import Any, Dict, List, Literal, get_args
 
 import streamlit as st
 from langchain_core.runnables import Runnable
