@@ -28,11 +28,17 @@ if sys.platform == "linux":
     sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 
 
+ModelType = Literal["openai", "azure", "hf"]
 PredefinedRelevanceScoreFn = Literal["l2", "ip", "cosine"]
 RelevanceScoreFn = Union[PredefinedRelevanceScoreFn, Callable[[float], float]]
 RetrieverSearchType = Literal["similarity", "similarity_score_threshold", "mmr"]
 
 
+MODEL_TYPES: Dict[ModelType, str] = {
+    "openai": "OpenAI",
+    "azure": "Azure OpenAI",
+    "hf": "HuggingFace",
+}
 PREDEFINED_RELEVANCE_SCORE_FNS: Dict[PredefinedRelevanceScoreFn, str] = {
     "l2": "Squared euclidean distance",
     "ip": "Inner product",
@@ -45,19 +51,39 @@ RETRIEVER_SEARCH_TYPES: Dict[RetrieverSearchType, str] = {
 }
 
 
-def get_embeddings_model(name: str) -> Embeddings:
-    if os.getenv("OPENAI_API_TYPE") == "azure":
+def get_embeddings_model(
+    name: str, model_type: Optional[ModelType] = None
+) -> Embeddings:
+    if model_type is None:
+        if os.getenv("OPENAI_API_TYPE") == "azure":
+            model_type == "azure"
+        elif "OPENAI_API_KEY" in os.environ:
+            model_type == "openai"
+        else:
+            model_type == "hf"
+    if model_type == "azure":
         return AzureOpenAIEmbeddings(azure_deployment=name)
-    if "OPENAI_API_KEY" in os.environ:
+    if model_type == "openai":
         return OpenAIEmbeddings(model=name)
-    return HuggingFaceEmbeddings(model_name=name)
+    if model_type == "hf":
+        return HuggingFaceEmbeddings(model_name=name)
+    raise TypeError("Unknown model type.")
 
 
-def get_chat_model(name: str) -> BaseChatModel:
-    if os.getenv("OPENAI_API_TYPE") == "azure":
+def get_chat_model(name: str, model_type: Optional[ModelType] = None) -> BaseChatModel:
+    if model_type is None:
+        if os.getenv("OPENAI_API_TYPE") == "azure":
+            model_type == "azure"
+        elif "OPENAI_API_KEY" in os.environ:
+            model_type == "openai"
+        else:
+            model_type == "hf"
+    if model_type == "azure":
         return AzureChatOpenAI(azure_deployment=name, temperature=0.0)
-    if "OPENAI_API_KEY" in os.environ:
+    if model_type == "openai":
         return ChatOpenAI(model=name, temperature=0.0)
+    if model_type == "hf":
+        raise NotImplementedError("HuggingFace chat models are not implemented.")
     raise TypeError("Unknown model type.")
 
 

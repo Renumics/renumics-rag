@@ -6,8 +6,10 @@ import streamlit as st
 from langchain_core.runnables import Runnable
 
 from assistant import (
+    MODEL_TYPES,
     PREDEFINED_RELEVANCE_SCORE_FNS,
     RETRIEVER_SEARCH_TYPES,
+    ModelType,
     PredefinedRelevanceScoreFn,
     RelevanceScoreFn,
     RetrieverSearchType,
@@ -48,7 +50,9 @@ if "messages" not in st.session_state.keys():
 
 @st.cache_resource(show_spinner=False)
 def _get_rag_chain(
+    embeddings_model_type: ModelType,
     embeddings_model_name: str,
+    chat_model_type: ModelType,
     chat_model_name: str,
     relevance_score_fn: RelevanceScoreFn,
     k: int,
@@ -59,7 +63,9 @@ def _get_rag_chain(
 ) -> Runnable:
     print(
         "Load chain",
+        embeddings_model_type,
         embeddings_model_name,
+        chat_model_type,
         chat_model_name,
         relevance_score_fn,
         k,
@@ -69,8 +75,10 @@ def _get_rag_chain(
         lambda_mult,
     )
     with st.spinner(text="Loading database and LLMs..."):
-        embeddings_model = get_embeddings_model(embeddings_model_name)
-        chat_model = get_chat_model(chat_model_name)
+        embeddings_model = get_embeddings_model(
+            embeddings_model_name, embeddings_model_type
+        )
+        chat_model = get_chat_model(chat_model_name, chat_model_type)
         vectorstore = get_chromadb(
             persist_directory=Path("./db-docs"),
             embeddings_model=embeddings_model,
@@ -87,8 +95,22 @@ def _get_rag_chain(
 with st.sidebar:
     st.header("Settings")
     st.subheader("LLM models")
+    st.selectbox(
+        "Embeddings model type",
+        get_args(ModelType),
+        get_args(ModelType).index("openai"),
+        format_func=lambda x: MODEL_TYPES.get(x, x),
+        key="embeddings_model_type",
+    )
     st.text_input(
         "Embeddings model", value="text-embedding-ada-002", key="embeddings_model_name"
+    )
+    st.selectbox(
+        "Chat model type",
+        get_args(ModelType),
+        get_args(ModelType).index("openai"),
+        format_func=lambda x: MODEL_TYPES.get(x, x),
+        key="chat_model_type",
     )
     st.text_input("Chat model", value="gpt-4", key="chat_model_name")
     with st.expander("Advanced"):
@@ -141,7 +163,9 @@ with st.sidebar:
 
 
 chain = _get_rag_chain(
+    st.session_state.embeddings_model_type,
     st.session_state.embeddings_model_name,
+    st.session_state.chat_model_type,
     st.session_state.chat_model_name,
     st.session_state.relevance_score_fn,
     st.session_state.k,
