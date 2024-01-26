@@ -9,3 +9,7 @@ __pycache__/
 .ruff_cache/
 .vscode/
 .idea/
+
+db/
+
+db-out/
