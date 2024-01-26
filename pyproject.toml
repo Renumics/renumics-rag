@@ -50,7 +50,6 @@ ignore_missing_imports = false
 disallow_untyped_defs = true
 explicit_package_bases = true
 mypy_path = "."
-plugins = "pydantic.mypy"
 
 [build-system]
 requires = ["poetry-core"]
