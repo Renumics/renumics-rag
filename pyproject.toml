@@ -51,6 +51,13 @@ disallow_untyped_defs = true
 explicit_package_bases = true
 mypy_path = "."
 
+[[tool.mypy.overrides]]
+module = [
+    "transformers",
+    "sentence_transformers"
+]
+ignore_missing_imports = true
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

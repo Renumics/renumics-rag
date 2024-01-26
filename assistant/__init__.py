@@ -7,6 +7,7 @@ import json
 
 import dotenv
 from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.llms.huggingface_pipeline import HuggingFacePipeline
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_core.language_models.chat_models import BaseChatModel
@@ -21,11 +22,13 @@ from langchain_openai import (
 )
 from langchain_core.vectorstores import VectorStore, VectorStoreRetriever
 from langchain.vectorstores.chroma import Chroma
-from langchain_community.llms import HuggingFacePipeline 
-from transformers import AutoModel 
-from transformers import LlamaTokenizer, LlamaForCausalLM, GenerationConfig, pipeline, BitsAndBytesConfig , CodeGenTokenizer , AutoModelForCausalLM, 
-from transformers import AutoTokenizer 
-import torch 
+from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
+    BitsAndBytesConfig,
+    pipeline,
+)
+import torch
 
 dotenv.load_dotenv(override=True)
 
@@ -58,6 +61,32 @@ RETRIEVER_SEARCH_TYPES: Dict[RetrieverSearchType, str] = {
 }
 
 
+class HFImportError(Exception):
+    def __init__(self) -> None:
+        gpu_command = "pip install torch torchvision sentence-transformers accelerate"
+        cpu_command = (
+            gpu_command + " --extra-index-url https://download.pytorch.org/whl/cpu"
+        )
+        super().__init__(
+            f"In order to Hugging Face embeddings models, install extra packages."
+            f"\nFor GPU support: `{gpu_command}`.\nFor CPU support: `{cpu_command}`."
+        )
+
+
+def get_hf_embeddings_model(name: str) -> Embeddings:
+    try:
+        import torch
+        import sentence_transformers  # noqa: F401
+    except ImportError as e:
+        raise HFImportError() from e
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    encode_kwargs = {"normalize_embeddings": True}
+    mode_kwargs = {"device": device}
+    return HuggingFaceEmbeddings(
+        model_name=name, encode_kwargs=encode_kwargs, model_kwargs=mode_kwargs
+    )
+
+
 def get_embeddings_model(
     name: str, model_type: Optional[ModelType] = None
 ) -> Embeddings:
@@ -73,11 +102,7 @@ def get_embeddings_model(
     if model_type == "openai":
         return OpenAIEmbeddings(model=name)
     if model_type == "hf":
-        encode_kwargs = {"normalize_embeddings": True}
-        mode_kwargs = {"device": "cuda"}
-        return HuggingFaceEmbeddings(
-            model_name=name, encode_kwargs=encode_kwargs, model_kwargs=mode_kwargs
-        )
+        return get_hf_embeddings_model(name)
     raise TypeError("Unknown model type.")
 
 
@@ -96,12 +121,12 @@ def get_chat_model(name: str, model_type: Optional[ModelType] = None) -> BaseCha
     if model_type == "hf":
         tokenizer = AutoTokenizer.from_pretrained(name)
         quantization_config = BitsAndBytesConfig(llm_int8_enable_fp32_cpu_offload=True)
-        base_model =  AutoModelForCausalLM.from_pretrained( # AutoModelForCausalLM.from_pretrained( ##AutoModel
+        base_model = AutoModelForCausalLM.from_pretrained(  # AutoModelForCausalLM.from_pretrained( ##AutoModel
             name,
             load_in_8bit=True,
-            torch_dtype=torch.float16, 
-            device_map='auto',
-            quantization_config=quantization_config
+            torch_dtype=torch.float16,
+            device_map="auto",
+            quantization_config=quantization_config,
         )
         pipe = pipeline(
             "text-generation",
@@ -110,12 +135,10 @@ def get_chat_model(name: str, model_type: Optional[ModelType] = None) -> BaseCha
             max_length=256,
             temperature=0.0,
             top_p=0.95,
-            repetition_penalty=1.2
+            repetition_penalty=1.2,
         )
         local_llm = HuggingFacePipeline(pipeline=pipe)
-        return local_llm
-
-        raise NotImplementedError("HuggingFace chat models are not implemented.")
+        return local_llm  # type: ignore
     raise TypeError("Unknown model type.")
 
 
