@@ -66,7 +66,11 @@ def get_embeddings_model(
     if model_type == "openai":
         return OpenAIEmbeddings(model=name)
     if model_type == "hf":
-        return HuggingFaceEmbeddings(model_name=name)
+        encode_kwargs = {"normalize_embeddings": True}
+        mode_kwargs = {"device": "cuda"}
+        return HuggingFaceEmbeddings(
+            model_name=name, encode_kwargs=encode_kwargs, model_kwargs=mode_kwargs
+        )
     raise TypeError("Unknown model type.")
 
 
