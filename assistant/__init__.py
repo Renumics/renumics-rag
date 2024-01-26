@@ -50,7 +50,13 @@ def get_embeddings_model(name: str) -> Embeddings:
         return AzureOpenAIEmbeddings(azure_deployment=name)
     if "OPENAI_API_KEY" in os.environ:
         return OpenAIEmbeddings(model=name)
-    return HuggingFaceEmbeddings(model_name=name)
+    encode_kwargs = {"normalize_embeddings": True}
+    mode_kwargs = {
+        "device": "cuda",
+    }
+    return HuggingFaceEmbeddings(
+        model_name=name, encode_kwargs=encode_kwargs, model_kwargs=mode_kwargs
+    )
 
 
 def get_chat_model(name: str) -> BaseChatModel:
