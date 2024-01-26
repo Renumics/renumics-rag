@@ -1,0 +1,18 @@
+=> globle variablen, hier weg
+docs_directory: './data/docs'
+db_docs_directory: './db
+db_out
+
+
+
+
+
+embeddings_model_type: 'hf'
+embeddings_model_name: 'WhereIsAI/UAE-Large-V1'
+
+
+default_llm_model_type: 'hf'
+default_llm_model_name: 'microsoft/phi-2'
+
+retrival_defaults..
+

@@ -21,6 +21,11 @@ from langchain_openai import (
 )
 from langchain_core.vectorstores import VectorStore, VectorStoreRetriever
 from langchain.vectorstores.chroma import Chroma
+from langchain_community.llms import HuggingFacePipeline 
+from transformers import AutoModel 
+from transformers import LlamaTokenizer, LlamaForCausalLM, GenerationConfig, pipeline, BitsAndBytesConfig , CodeGenTokenizer , AutoModelForCausalLM, 
+from transformers import AutoTokenizer 
+import torch 
 
 dotenv.load_dotenv(override=True)
 
@@ -89,6 +94,27 @@ def get_chat_model(name: str, model_type: Optional[ModelType] = None) -> BaseCha
     if model_type == "openai":
         return ChatOpenAI(model=name, temperature=0.0)
     if model_type == "hf":
+        tokenizer = AutoTokenizer.from_pretrained(name)
+        quantization_config = BitsAndBytesConfig(llm_int8_enable_fp32_cpu_offload=True)
+        base_model =  AutoModelForCausalLM.from_pretrained( # AutoModelForCausalLM.from_pretrained( ##AutoModel
+            name,
+            load_in_8bit=True,
+            torch_dtype=torch.float16, 
+            device_map='auto',
+            quantization_config=quantization_config
+        )
+        pipe = pipeline(
+            "text-generation",
+            model=base_model,
+            tokenizer=tokenizer,
+            max_length=256,
+            temperature=0.0,
+            top_p=0.95,
+            repetition_penalty=1.2
+        )
+        local_llm = HuggingFacePipeline(pipeline=pipe)
+        return local_llm
+
         raise NotImplementedError("HuggingFace chat models are not implemented.")
     raise TypeError("Unknown model type.")
 

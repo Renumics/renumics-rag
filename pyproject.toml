@@ -29,6 +29,9 @@ langchain-openai = {version = "^0.0.3", optional = true}
 streamlit = "^1.30.0"
 renumics-spotlight = "^1.6.0"
 torch = {extras = ["cuda"], version = "^2.1.2"}
+transformers = "^4.37.1"
+accelerate = "^0.26.1"
+bitsandbytes = "^0.42.0"
 
 [tool.poetry.extras]
 openai = ["langchain-openai"]
