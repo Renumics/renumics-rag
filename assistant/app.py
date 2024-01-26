@@ -36,7 +36,7 @@ def set_embeddings_model_name(value: str) -> None:
     st.session_state.embeddings_model_name = value
 
 
-st.set_page_config(page_title="F1 RAG Demo", page_icon="🏎️")
+st.set_page_config(page_title="F1 RAG Demo", page_icon="🏎️", layout="wide")
 st.title("F1 RAG Demo 🤖➕📚❤️🏎️")
 
 st.header("Chat with the F1 docs")
@@ -91,52 +91,53 @@ with st.sidebar:
         "Embeddings model", value="text-embedding-ada-002", key="embeddings_model_name"
     )
     st.text_input("Chat model", value="gpt-4", key="chat_model_name")
-    st.divider()
-    st.subheader("Retriever")
-    st.selectbox(
-        "Relevance score function",
-        get_args(PredefinedRelevanceScoreFn),
-        get_args(PredefinedRelevanceScoreFn).index("l2"),
-        format_func=lambda x: PREDEFINED_RELEVANCE_SCORE_FNS.get(x, x),
-        key="relevance_score_fn",
-        help="Distance function in the embedding space ([more](https://docs.trychroma.com/usage-guide#changing-the-distance-function))",
-    )
-    k = st.slider("k", 0, 100, 4, key="k", help="Amount of documents to return")
-    search_type = st.selectbox(
-        "Search type",
-        get_args(RetrieverSearchType),
-        get_args(RetrieverSearchType).index("similarity"),
-        format_func=lambda x: RETRIEVER_SEARCH_TYPES.get(x, x),
-        key="search_type",
-        help="Type of search",
-    )
-    st.slider(
-        "Score threshold",
-        0.0,
-        1.0,
-        0.5,
-        key="score_threshold",
-        help="Minimum relevance threshold",
-        disabled=search_type != "similarity_score_threshold",
-    )
-    st.slider(
-        "Fetch k",
-        k,
-        max(200, k * 2),
-        max(20, k + 10),
-        key="fetch_k",
-        help="Amount of documents to pass to MMR",
-        disabled=search_type != "mmr",
-    )
-    st.slider(
-        "MMR λ",
-        0.0,
-        1.0,
-        0.5,
-        key="lambda_mult",
-        help="Diversity of results returned by MMR. 1 for minimum diversity and 0 for maximum.",
-        disabled=search_type != "mmr",
-    )
+    with st.expander("Advanced"):
+        st.subheader("Retriever")
+        st.selectbox(
+            "Relevance score function",
+            get_args(PredefinedRelevanceScoreFn),
+            get_args(PredefinedRelevanceScoreFn).index("l2"),
+            format_func=lambda x: PREDEFINED_RELEVANCE_SCORE_FNS.get(x, x),
+            key="relevance_score_fn",
+            help="Distance function in the embedding space "
+            "([more](https://docs.trychroma.com/usage-guide#changing-the-distance-function))",
+        )
+        k = st.slider("k", 0, 100, 4, key="k", help="Amount of documents to return")
+        search_type = st.selectbox(
+            "Search type",
+            get_args(RetrieverSearchType),
+            get_args(RetrieverSearchType).index("similarity"),
+            format_func=lambda x: RETRIEVER_SEARCH_TYPES.get(x, x),
+            key="search_type",
+            help="Type of search",
+        )
+        st.slider(
+            "Score threshold",
+            0.0,
+            1.0,
+            0.5,
+            key="score_threshold",
+            help="Minimum relevance threshold",
+            disabled=search_type != "similarity_score_threshold",
+        )
+        st.slider(
+            "Fetch k",
+            k,
+            max(200, k * 2),
+            max(20, k + 10),
+            key="fetch_k",
+            help="Amount of documents to pass to MMR",
+            disabled=search_type != "mmr",
+        )
+        st.slider(
+            "MMR λ",
+            0.0,
+            1.0,
+            0.5,
+            key="lambda_mult",
+            help="Diversity of results returned by MMR. 1 for minimum diversity and 0 for maximum.",
+            disabled=search_type != "mmr",
+        )
 
 
 chain = _get_rag_chain(
