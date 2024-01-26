@@ -2,6 +2,8 @@ import os
 from pathlib import Path
 import sys
 from typing import Any, Callable, Dict, List, Literal, Optional, Union, get_args
+import hashlib
+import json
 
 import dotenv
 from langchain_community.embeddings import HuggingFaceEmbeddings
@@ -56,11 +58,11 @@ def get_embeddings_model(
 ) -> Embeddings:
     if model_type is None:
         if os.getenv("OPENAI_API_TYPE") == "azure":
-            model_type == "azure"
+            model_type = "azure"
         elif "OPENAI_API_KEY" in os.environ:
-            model_type == "openai"
+            model_type = "openai"
         else:
-            model_type == "hf"
+            model_type = "hf"
     if model_type == "azure":
         return AzureOpenAIEmbeddings(azure_deployment=name)
     if model_type == "openai":
@@ -77,11 +79,11 @@ def get_embeddings_model(
 def get_chat_model(name: str, model_type: Optional[ModelType] = None) -> BaseChatModel:
     if model_type is None:
         if os.getenv("OPENAI_API_TYPE") == "azure":
-            model_type == "azure"
+            model_type = "azure"
         elif "OPENAI_API_KEY" in os.environ:
-            model_type == "openai"
+            model_type = "openai"
         else:
-            model_type == "hf"
+            model_type = "hf"
     if model_type == "azure":
         return AzureChatOpenAI(azure_deployment=name, temperature=0.0)
     if model_type == "openai":
@@ -185,3 +187,10 @@ FINAL ANSWER: """
         }
     ).assign(answer=rag_chain_from_docs)
     return rag_chain_with_source
+
+
+def stable_hash(doc: Document) -> str:
+    """
+    Stable hash document based on its metadata.
+    """
+    return hashlib.sha1(json.dumps(doc.metadata, sort_keys=True).encode()).hexdigest()

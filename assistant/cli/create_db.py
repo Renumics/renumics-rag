@@ -6,7 +6,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import BSHTMLLoader, DirectoryLoader
 from typing_extensions import Annotated
 
-from assistant import get_chromadb, get_embeddings_model
+from assistant import get_chromadb, get_embeddings_model, stable_hash
 
 app = typer.Typer()
 
@@ -21,7 +21,7 @@ def create_db(
     ] = Path("./data/docs"),
     embeddings_model_name: Annotated[
         str, typer.Option("-e", "--embeddings", help="Name of embeddings model.")
-    ] = "text-embedding-ada-002",
+    ] = "WhereIsAI/UAE-Large-V1",
     db_directory: Annotated[
         Path, typer.Option("--db", help="Directory to persist database in.")
     ] = Path("./db-docs"),
@@ -35,7 +35,7 @@ def create_db(
     """
     Index documents into database.
     """
-    embeddings_model = get_embeddings_model(embeddings_model_name)
+    embeddings_model = get_embeddings_model(embeddings_model_name, model_type="hf")
 
     loader = DirectoryLoader(
         str(docs_directory),
@@ -46,12 +46,16 @@ def create_db(
         show_progress=True,
     )
     docs = loader.load()
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000, chunk_overlap=200, add_start_index=True
+    )
     splits = text_splitter.split_documents(docs)
 
     vectorstore = get_chromadb(db_directory, embeddings_model, db_collection)
 
-    vectorstore.add_documents(splits, ids=None)
+    doc_ids = list(map(stable_hash, splits))
+
+    vectorstore.add_documents(splits, ids=doc_ids)
     vectorstore.persist()
 
 
