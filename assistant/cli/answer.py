@@ -47,14 +47,14 @@ def answer(
     """
     embeddings_model = get_embeddings_model(embeddings_model_name, model_type="hf")
     chat_model = get_chat_model(chat_model_name)
-    vectorstore = get_chromadb(
+    docs_vectorstore = get_chromadb(
         persist_directory=db_directory,
         embeddings_model=embeddings_model,
         collection_name=db_collection,
     )
-    retriever = get_retriever(vectorstore)
+    retriever = get_retriever(docs_vectorstore)
 
-    chain = get_rag_chain(retriever, chat_model)
+    rag_chain = get_rag_chain(retriever, chat_model)
 
     questions_vectorstore = get_chromadb(
         persist_directory=db_out_directory,
@@ -64,7 +64,7 @@ def answer(
 
     for question in questions:
         print(f"QUESTION: {question}")
-        rag_answer = chain.invoke(question)
+        rag_answer = rag_chain.invoke(question)
 
         # store question and answer in db
         questions_vectorstore.add_documents(

@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Literal, get_args
 
 import streamlit as st
+from langchain.vectorstores.chroma import Chroma
 from langchain_core.runnables import Runnable
 from langchain_core.documents import Document
 
@@ -35,10 +36,6 @@ AVATARS: Dict[Role, Any] = {"user": "🧐", "assistant": "🤖", "source": "📚
 class Message:
     role: Role
     content: str
-
-
-def set_embeddings_model_name(value: str) -> None:
-    st.session_state.embeddings_model_name = value
 
 
 st.set_page_config(page_title="F1 RAG Demo", page_icon="🏎️", layout="wide")
@@ -95,7 +92,19 @@ def _get_rag_chain(
         return chain
 
 
-_get_chroma_db = st.cache_resource(show_spinner=False)(get_chromadb)
+@st.cache_resource(show_spinner=False)
+def get_questions_chromadb(
+    embeddings_model_type: ModelType, embeddings_model_name: str
+) -> Chroma:
+    embeddings_model = get_embeddings_model(
+        embeddings_model_name, embeddings_model_type
+    )
+    vectorstore = get_chromadb(
+        persist_directory=Path("./db-out"),
+        embeddings_model=embeddings_model,
+        collection_name="questions_docs_store",
+    )
+    return vectorstore
 
 
 with st.sidebar:
@@ -180,17 +189,12 @@ chain = _get_rag_chain(
     st.session_state.fetch_k,
     st.session_state.lambda_mult,
 )
-
-questions_vectorstore = _get_chroma_db(
-    persist_directory=Path("./db-out"),
-    embeddings_model=get_embeddings_model(
-        st.session_state.embeddings_model_name, st.session_state.embeddings_model_type
-    ),
-    collection_name=f"questions_docs_store",
+questions_vectorstore = get_questions_chromadb(
+    st.session_state.embeddings_model_type, st.session_state.embeddings_model_name
 )
 
-if prompt := st.chat_input("Your question"):
-    st.session_state.messages.append(Message("user", prompt))
+if question := st.chat_input("Your question"):
+    st.session_state.messages.append(Message("user", question))
 
 for message in st.session_state.messages:
     with st.chat_message(message.role, avatar=AVATARS.get(message.role)):
@@ -198,17 +202,17 @@ for message in st.session_state.messages:
 
 if st.session_state.messages[-1].role == "user":
     with st.spinner("Thinking..."):
-        answer = chain.invoke(prompt)
+        rag_answer = chain.invoke(question)
 
         # store question and answer in db
         questions_vectorstore.add_documents(
             [
                 Document(
-                    page_content=prompt,
+                    page_content=st.session_state.messages[-1].content,
                     metadata={
-                        "answer": answer["answer"],
+                        "answer": rag_answer["answer"],
                         "sources": ",".join(
-                            map(stable_hash, answer["source_documents"])
+                            map(stable_hash, rag_answer["source_documents"])
                         ),
                     },
                 )
@@ -216,9 +220,9 @@ if st.session_state.messages[-1].role == "user":
         )
 
         messages: List[Message] = []
-        for doc in answer["source_documents"]:
+        for doc in rag_answer["source_documents"]:
             messages.append(Message("source", format_doc(doc)))
-        messages.append(Message("assistant", answer["answer"]))
+        messages.append(Message("assistant", rag_answer["answer"]))
         for message in messages:
             with st.chat_message(message.role, avatar=AVATARS.get(message.role)):
                 st.write(message.content)
