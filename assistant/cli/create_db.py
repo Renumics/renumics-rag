@@ -21,7 +21,7 @@ def create_db(
     ] = Path("./data/docs"),
     embeddings_model_name: Annotated[
         str, typer.Option("-e", "--embeddings", help="Name of embeddings model.")
-    ] = "WhereIsAI/UAE-Large-V1",
+    ] = "text-embedding-ada-002",
     db_directory: Annotated[
         Path, typer.Option("--db", help="Directory to persist database in.")
     ] = Path("./db-docs"),
@@ -35,7 +35,7 @@ def create_db(
     """
     Index documents into database.
     """
-    embeddings_model = get_embeddings_model(embeddings_model_name, model_type="hf")
+    embeddings_model = get_embeddings_model(embeddings_model_name)
 
     loader = DirectoryLoader(
         str(docs_directory),
@@ -50,12 +50,11 @@ def create_db(
         chunk_size=1000, chunk_overlap=200, add_start_index=True
     )
     splits = text_splitter.split_documents(docs)
+    split_ids = list(map(stable_hash, splits))
 
     vectorstore = get_chromadb(db_directory, embeddings_model, db_collection)
 
-    doc_ids = list(map(stable_hash, splits))
-
-    vectorstore.add_documents(splits, ids=doc_ids)
+    vectorstore.add_documents(splits, ids=split_ids)
     vectorstore.persist()
 
 

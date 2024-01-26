@@ -18,7 +18,7 @@ app = typer.Typer()
 
 
 @app.command()
-def answer_question(
+def explore(
     embeddings_model_name: Annotated[
         str, typer.Option("-e", "--embeddings", help="Name of embeddings model.")
     ] = "text-embedding-ada-002",

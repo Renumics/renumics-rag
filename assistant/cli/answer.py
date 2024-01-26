@@ -27,7 +27,7 @@ def answer(
     ] = "gpt-4",
     embeddings_model_name: Annotated[
         str, typer.Option("-e", "--embeddings", help="Name of embeddings model.")
-    ] = "WhereIsAI/UAE-Large-V1",
+    ] = "text-embedding-ada-002",
     db_directory: Annotated[
         Path, typer.Option("--db", help="Directory to persist database in.")
     ] = Path("./db-docs"),

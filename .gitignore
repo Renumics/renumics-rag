@@ -1,6 +1,7 @@
 .env
 data/
 db-docs/
+db-out/
 dev/
 
 .DS_Store
@@ -9,7 +10,3 @@ __pycache__/
 .ruff_cache/
 .vscode/
 .idea/
-
-db/
-
-db-out/

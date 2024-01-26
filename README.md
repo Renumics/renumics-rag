@@ -10,22 +10,19 @@ Enable [Direnv](https://direnv.net/):
 direnv allow
 ```
 
-Install dependencies:
-
-```shell
-make init
-```
+Install dependencies via `make init-gpu` for GPU support ar via `make init-cpu` for CPU support (only relevant for local models).
 
 Create `.env` with the following content:
 
 ```shell
 # For OpenAI usage
 OPENAI_API_KEY="Your OpenAI API key"
-# OR For Azure OpenAI usage
+# OR for Azure OpenAI usage
 OPENAI_API_TYPE="azure"
 OPENAI_API_VERSION="2023-08-01-preview"
 AZURE_OPENAI_API_KEY="Your Azure OpenAI API key"
 AZURE_OPENAI_ENDPOINT="Your Azure OpenAI endpoint"
+# OR empty for Hugging Face usage
 ```
 
 Index documents:
@@ -56,4 +53,10 @@ Start web app:
 
 ```shell
 streamlit run assistant/app.py
+```
+
+After you asked some questions you can explore them in [Renumics Spotlight](https://github.com/Renumics/spotlight):
+
+```shell
+explore
 ```
