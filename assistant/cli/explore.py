@@ -90,7 +90,7 @@ def answer_question(
     if visualize:
         df = pd.concat([docs_df, questions_df], ignore_index=True)
         print(df)
-        spotlight.show(df)
+        spotlight.show(df, embed=False, analyze=False)
 
 
 if __name__ == "__main__":

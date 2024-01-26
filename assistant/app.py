@@ -4,6 +4,8 @@ from typing import Any, Dict, List, Literal, get_args
 
 import streamlit as st
 from langchain_core.runnables import Runnable
+from langchain_core.documents import Document
+
 
 from assistant import (
     MODEL_TYPES,
@@ -19,6 +21,7 @@ from assistant import (
     get_embeddings_model,
     get_rag_chain,
     get_retriever,
+    stable_hash,
 )
 
 
@@ -90,6 +93,9 @@ def _get_rag_chain(
         )
         chain = get_rag_chain(retriever, chat_model)
         return chain
+
+
+_get_chroma_db = st.cache_resource(show_spinner=False)(get_chromadb)
 
 
 with st.sidebar:
@@ -175,6 +181,13 @@ chain = _get_rag_chain(
     st.session_state.lambda_mult,
 )
 
+questions_vectorstore = _get_chroma_db(
+    persist_directory=Path("./db-out"),
+    embeddings_model=get_embeddings_model(
+        st.session_state.embeddings_model_name, st.session_state.embeddings_model_type
+    ),
+    collection_name=f"questions_docs_store",
+)
 
 if prompt := st.chat_input("Your question"):
     st.session_state.messages.append(Message("user", prompt))
@@ -186,6 +199,22 @@ for message in st.session_state.messages:
 if st.session_state.messages[-1].role == "user":
     with st.spinner("Thinking..."):
         answer = chain.invoke(prompt)
+
+        # store question and answer in db
+        questions_vectorstore.add_documents(
+            [
+                Document(
+                    page_content=prompt,
+                    metadata={
+                        "answer": answer["answer"],
+                        "sources": ",".join(
+                            map(stable_hash, answer["source_documents"])
+                        ),
+                    },
+                )
+            ]
+        )
+
         messages: List[Message] = []
         for doc in answer["source_documents"]:
             messages.append(Message("source", format_doc(doc)))
