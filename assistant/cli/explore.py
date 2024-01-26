@@ -11,7 +11,8 @@ from renumics import spotlight
 from typing_extensions import Annotated
 from langchain.vectorstores.chroma import Chroma
 
-from assistant import get_embeddings_model
+from assistant import get_embeddings_model, parse_model_name
+from assistant.const import EMBEDDINGS_MODEL_NAME_HELP
 
 
 app = typer.Typer()
@@ -20,7 +21,7 @@ app = typer.Typer()
 @app.command()
 def explore(
     embeddings_model_name: Annotated[
-        str, typer.Option("-e", "--embeddings", help="Name of embeddings model.")
+        str, typer.Option("--embeddings", help=EMBEDDINGS_MODEL_NAME_HELP)
     ] = "text-embedding-ada-002",
     db_directory: Annotated[
         Path, typer.Option("--db", help="Directory to persist database in.")
@@ -38,7 +39,7 @@ def explore(
     and optionally visalize them.
     """
 
-    embeddings_model = get_embeddings_model(embeddings_model_name)
+    embeddings_model = get_embeddings_model(*parse_model_name(embeddings_model_name))
 
     # get docs from db
     docs_vector_store = Chroma(

@@ -17,7 +17,7 @@ from assistant import (
     RelevanceScoreFn,
     RetrieverSearchType,
     format_doc,
-    get_chat_model,
+    get_llm,
     get_chromadb,
     get_embeddings_model,
     get_rag_chain,
@@ -52,8 +52,8 @@ if "messages" not in st.session_state.keys():
 def _get_rag_chain(
     embeddings_model_type: ModelType,
     embeddings_model_name: str,
-    chat_model_type: ModelType,
-    chat_model_name: str,
+    llm_type: ModelType,
+    llm_name: str,
     relevance_score_fn: RelevanceScoreFn,
     k: int,
     search_type: RetrieverSearchType,
@@ -65,8 +65,8 @@ def _get_rag_chain(
         "Load chain",
         embeddings_model_type,
         embeddings_model_name,
-        chat_model_type,
-        chat_model_name,
+        llm_type,
+        llm_name,
         relevance_score_fn,
         k,
         search_type,
@@ -78,7 +78,7 @@ def _get_rag_chain(
         embeddings_model = get_embeddings_model(
             embeddings_model_name, embeddings_model_type
         )
-        chat_model = get_chat_model(chat_model_name, chat_model_type)
+        llm = get_llm(llm_name, llm_type)
         vectorstore = get_chromadb(
             persist_directory=Path("./db-docs"),
             embeddings_model=embeddings_model,
@@ -88,7 +88,7 @@ def _get_rag_chain(
         retriever = get_retriever(
             vectorstore, k, search_type, score_threshold, fetch_k, lambda_mult
         )
-        chain = get_rag_chain(retriever, chat_model)
+        chain = get_rag_chain(retriever, llm)
         return chain
 
 
@@ -125,9 +125,9 @@ with st.sidebar:
         get_args(ModelType),
         get_args(ModelType).index("openai"),
         format_func=lambda x: MODEL_TYPES.get(x, x),
-        key="chat_model_type",
+        key="llm_type",
     )
-    st.text_input("Chat model", value="gpt-4", key="chat_model_name")
+    st.text_input("Chat model", value="gpt-4", key="llm_name")
     with st.expander("Advanced"):
         st.subheader("Retriever")
         st.selectbox(
@@ -180,8 +180,8 @@ with st.sidebar:
 chain = _get_rag_chain(
     st.session_state.embeddings_model_type,
     st.session_state.embeddings_model_name,
-    st.session_state.chat_model_type,
-    st.session_state.chat_model_name,
+    st.session_state.llm_type,
+    st.session_state.llm_name,
     st.session_state.relevance_score_fn,
     st.session_state.k,
     st.session_state.search_type,

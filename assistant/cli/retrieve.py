@@ -5,7 +5,13 @@ from typing import List
 import typer
 from typing_extensions import Annotated
 
-from assistant import get_chromadb, get_embeddings_model, get_retriever
+from assistant import (
+    get_chromadb,
+    get_embeddings_model,
+    get_retriever,
+    parse_model_name,
+)
+from assistant.const import EMBEDDINGS_MODEL_NAME_HELP
 
 app = typer.Typer()
 
@@ -14,7 +20,7 @@ app = typer.Typer()
 def retrieve(
     questions: Annotated[List[str], typer.Argument(help="Question(s) to answer.")],
     embeddings_model_name: Annotated[
-        str, typer.Option("-e", "--embeddings", help="Name of embeddings model.")
+        str, typer.Option("--embeddings", help=EMBEDDINGS_MODEL_NAME_HELP)
     ] = "text-embedding-ada-002",
     db_directory: Annotated[
         Path, typer.Option("--db", help="Directory to persist database in.")
@@ -29,7 +35,7 @@ def retrieve(
     """
     Retrieve documents relevant to question(s) using indexed database.
     """
-    embeddings_model = get_embeddings_model(embeddings_model_name)
+    embeddings_model = get_embeddings_model(*parse_model_name(embeddings_model_name))
     vectorstore = get_chromadb(
         persist_directory=db_directory,
         embeddings_model=embeddings_model,

@@ -1,7 +1,18 @@
 import os
 from pathlib import Path
 import sys
-from typing import Any, Callable, Dict, List, Literal, Optional, Union, get_args
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    List,
+    Literal,
+    Optional,
+    Tuple,
+    Union,
+    cast,
+    get_args,
+)
 import hashlib
 import json
 
@@ -11,6 +22,7 @@ from langchain_community.llms.huggingface_pipeline import HuggingFacePipeline
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_core.language_models.chat_models import BaseChatModel
+from langchain_core.language_models.llms import BaseLLM
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import Runnable, RunnableParallel, RunnablePassthrough
@@ -22,13 +34,7 @@ from langchain_openai import (
 )
 from langchain_core.vectorstores import VectorStore, VectorStoreRetriever
 from langchain.vectorstores.chroma import Chroma
-from transformers import (
-    AutoModelForCausalLM,
-    AutoTokenizer,
-    BitsAndBytesConfig,
-    pipeline,
-)
-import torch
+from transformers import pipeline
 
 dotenv.load_dotenv(override=True)
 
@@ -42,12 +48,13 @@ ModelType = Literal["openai", "azure", "hf"]
 PredefinedRelevanceScoreFn = Literal["l2", "ip", "cosine"]
 RelevanceScoreFn = Union[PredefinedRelevanceScoreFn, Callable[[float], float]]
 RetrieverSearchType = Literal["similarity", "similarity_score_threshold", "mmr"]
+LLM = Union[BaseChatModel, BaseLLM]
 
 
 MODEL_TYPES: Dict[ModelType, str] = {
     "openai": "OpenAI",
     "azure": "Azure OpenAI",
-    "hf": "HuggingFace",
+    "hf": "Hugging Face",
 }
 PREDEFINED_RELEVANCE_SCORE_FNS: Dict[PredefinedRelevanceScoreFn, str] = {
     "l2": "Squared euclidean distance",
@@ -73,7 +80,21 @@ class HFImportError(Exception):
         )
 
 
-def get_hf_embeddings_model(name: str) -> Embeddings:
+def parse_model_name(name: str) -> Tuple[str, ModelType]:
+    if ":" in name:
+        model_type, name = name.split(":", 1)
+        assert model_type in get_args(ModelType)
+    elif os.getenv("OPENAI_API_TYPE") == "azure":
+        model_type = "azure"
+    elif "OPENAI_API_KEY" in os.environ:
+        model_type = "openai"
+    else:
+        model_type = "hf"
+    model_type = cast(ModelType, model_type)
+    return name, model_type
+
+
+def get_hf_embeddings_model(name: str) -> HuggingFaceEmbeddings:
     try:
         import torch
         import sentence_transformers  # noqa: F401
@@ -87,16 +108,7 @@ def get_hf_embeddings_model(name: str) -> Embeddings:
     )
 
 
-def get_embeddings_model(
-    name: str, model_type: Optional[ModelType] = None
-) -> Embeddings:
-    if model_type is None:
-        if os.getenv("OPENAI_API_TYPE") == "azure":
-            model_type = "azure"
-        elif "OPENAI_API_KEY" in os.environ:
-            model_type = "openai"
-        else:
-            model_type = "hf"
+def get_embeddings_model(name: str, model_type: ModelType) -> Embeddings:
     if model_type == "azure":
         return AzureOpenAIEmbeddings(azure_deployment=name)
     if model_type == "openai":
@@ -106,39 +118,55 @@ def get_embeddings_model(
     raise TypeError("Unknown model type.")
 
 
-def get_chat_model(name: str, model_type: Optional[ModelType] = None) -> BaseChatModel:
-    if model_type is None:
-        if os.getenv("OPENAI_API_TYPE") == "azure":
-            model_type = "azure"
-        elif "OPENAI_API_KEY" in os.environ:
-            model_type = "openai"
-        else:
-            model_type = "hf"
+def get_hf_llm(name: str) -> HuggingFacePipeline:
+    """
+    [Pipeline tasks](https://huggingface.co/docs/transformers/v4.37.1/en/main_classes/pipelines#transformers.pipeline.task):
+    - "conversational",
+    - "document-question-answering",
+    - ["question-answering"](https://huggingface.co/models?pipeline_tag=question-answering),
+    - "summarization",
+    - "table-question-answering",
+    - ["text2text-generation"](https://huggingface.co/models?pipeline_tag=text2text-generation)
+    - "text-generation"
+    """
+    try:
+        import torch
+        import sentence_transformers  # noqa: F401
+    except ImportError as e:
+        raise HFImportError() from e
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    pipe = pipeline(model=name, device=device)
+    llm = HuggingFacePipeline(pipeline=pipe)
+    return llm
+    # tokenizer = AutoTokenizer.from_pretrained(name)
+    # quantization_config = BitsAndBytesConfig(llm_int8_enable_fp32_cpu_offload=True)
+    # base_model = AutoModelForCausalLM.from_pretrained(  # AutoModelForCausalLM.from_pretrained( ##AutoModel
+    #     name,
+    #     load_in_8bit=True,
+    #     torch_dtype=torch.float16,
+    #     device_map="auto",
+    #     quantization_config=quantization_config,
+    # )
+    # pipe = pipeline(
+    #     "text-generation",
+    #     model=base_model,
+    #     tokenizer=tokenizer,
+    #     max_length=256,
+    #     temperature=0.0,
+    #     top_p=0.95,
+    #     repetition_penalty=1.2,
+    # )
+    # local_llm = HuggingFacePipeline(pipeline=pipe)
+    # return local_llm  # type: ignore
+
+
+def get_llm(name: str, model_type: ModelType) -> LLM:
     if model_type == "azure":
         return AzureChatOpenAI(azure_deployment=name, temperature=0.0)
     if model_type == "openai":
         return ChatOpenAI(model=name, temperature=0.0)
     if model_type == "hf":
-        tokenizer = AutoTokenizer.from_pretrained(name)
-        quantization_config = BitsAndBytesConfig(llm_int8_enable_fp32_cpu_offload=True)
-        base_model = AutoModelForCausalLM.from_pretrained(  # AutoModelForCausalLM.from_pretrained( ##AutoModel
-            name,
-            load_in_8bit=True,
-            torch_dtype=torch.float16,
-            device_map="auto",
-            quantization_config=quantization_config,
-        )
-        pipe = pipeline(
-            "text-generation",
-            model=base_model,
-            tokenizer=tokenizer,
-            max_length=256,
-            temperature=0.0,
-            top_p=0.95,
-            repetition_penalty=1.2,
-        )
-        local_llm = HuggingFacePipeline(pipeline=pipe)
-        return local_llm  # type: ignore
+        return get_hf_llm(name)
     raise TypeError("Unknown model type.")
 
 
@@ -207,9 +235,7 @@ def format_docs(docs: List[Document]) -> str:
     )
 
 
-def get_rag_chain(
-    retriever: VectorStoreRetriever, chat_model: BaseChatModel
-) -> Runnable:
+def get_rag_chain(retriever: VectorStoreRetriever, llm: LLM) -> Runnable:
     template = """You are an assistant for question-answering tasks on Formula One (F1) documentation.
 Given the following extracted parts of a long document and a question, create a final answer with used references (named "sources").
 Keep the answer concise. If you don't know the answer, just say that you don't know. Don't try to make up an answer.
@@ -226,7 +252,7 @@ FINAL ANSWER: """
             source_documents=(lambda x: format_docs(x["source_documents"]))
         )
         | prompt
-        | chat_model
+        | llm
         | StrOutputParser()
     )
     rag_chain_with_source = RunnableParallel(
