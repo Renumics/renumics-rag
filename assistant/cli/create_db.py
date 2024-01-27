@@ -8,6 +8,7 @@ from typing_extensions import Annotated
 
 from assistant import get_chromadb, get_embeddings_model, parse_model_name, stable_hash
 from assistant.const import EMBEDDINGS_MODEL_NAME_HELP
+from assistant.settings import settings
 
 app = typer.Typer()
 
@@ -22,16 +23,7 @@ def create_db(
     ] = Path("./data/docs"),
     embeddings_model_name: Annotated[
         str, typer.Option("--embeddings", help=EMBEDDINGS_MODEL_NAME_HELP)
-    ] = "text-embedding-ada-002",
-    db_directory: Annotated[
-        Path, typer.Option("--db", help="Directory to persist database in.")
-    ] = Path("./db-docs"),
-    db_collection: Annotated[
-        str,
-        typer.Option(
-            "--collection", help="Name of database collection to store documents."
-        ),
-    ] = "docs_store",
+    ] = settings.full_embeddings_model_name,
 ) -> None:
     """
     Index documents into database.
@@ -53,10 +45,12 @@ def create_db(
     splits = text_splitter.split_documents(docs)
     split_ids = list(map(stable_hash, splits))
 
-    vectorstore = get_chromadb(db_directory, embeddings_model, db_collection)
+    docs_vectorstore = get_chromadb(
+        settings.docs_db_directory, embeddings_model, settings.docs_db_collection
+    )
 
-    vectorstore.add_documents(splits, ids=split_ids)
-    vectorstore.persist()
+    docs_vectorstore.add_documents(splits, ids=split_ids)
+    docs_vectorstore.persist()
 
 
 if __name__ == "__main__":

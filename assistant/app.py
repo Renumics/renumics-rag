@@ -1,14 +1,22 @@
 import dataclasses
-from pathlib import Path
 from typing import Any, Dict, List, Literal, get_args
 
 import streamlit as st
 from langchain.vectorstores.chroma import Chroma
-from langchain_core.runnables import Runnable
 from langchain_core.documents import Document
-
+from langchain_core.runnables import Runnable
 
 from assistant import (
+    format_doc,
+    get_chromadb,
+    get_embeddings_model,
+    get_llm,
+    get_rag_chain,
+    get_retriever,
+    stable_hash,
+)
+from assistant.settings import settings
+from assistant.types import (
     MODEL_TYPES,
     PREDEFINED_RELEVANCE_SCORE_FNS,
     RETRIEVER_SEARCH_TYPES,
@@ -16,15 +24,7 @@ from assistant import (
     PredefinedRelevanceScoreFn,
     RelevanceScoreFn,
     RetrieverSearchType,
-    format_doc,
-    get_llm,
-    get_chromadb,
-    get_embeddings_model,
-    get_rag_chain,
-    get_retriever,
-    stable_hash,
 )
-
 
 Role = Literal["user", "assistant", "source"]
 
@@ -80,9 +80,9 @@ def _get_rag_chain(
         )
         llm = get_llm(llm_name, llm_type)
         vectorstore = get_chromadb(
-            persist_directory=Path("./db-docs"),
+            persist_directory=settings.docs_db_directory,
             embeddings_model=embeddings_model,
-            collection_name="docs_store",
+            collection_name=settings.docs_db_collection,
             relevance_score_fn=relevance_score_fn,
         )
         retriever = get_retriever(
@@ -100,9 +100,9 @@ def get_questions_chromadb(
         embeddings_model_name, embeddings_model_type
     )
     vectorstore = get_chromadb(
-        persist_directory=Path("./db-out"),
+        persist_directory=settings.questions_db_directory,
         embeddings_model=embeddings_model,
-        collection_name="questions_docs_store",
+        collection_name=settings.questions_db_collection,
     )
     return vectorstore
 

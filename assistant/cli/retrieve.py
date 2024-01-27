@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-from pathlib import Path
 from typing import List
 
 import typer
@@ -12,34 +11,28 @@ from assistant import (
     parse_model_name,
 )
 from assistant.const import EMBEDDINGS_MODEL_NAME_HELP
+from assistant.settings import settings
 
 app = typer.Typer()
 
 
 @app.command()
 def retrieve(
-    questions: Annotated[List[str], typer.Argument(help="Question(s) to answer.")],
+    questions: Annotated[
+        List[str], typer.Argument(help="Question(s) to retrieve docs for.")
+    ],
     embeddings_model_name: Annotated[
         str, typer.Option("--embeddings", help=EMBEDDINGS_MODEL_NAME_HELP)
-    ] = "text-embedding-ada-002",
-    db_directory: Annotated[
-        Path, typer.Option("--db", help="Directory to persist database in.")
-    ] = Path("./db-docs"),
-    db_collection: Annotated[
-        str,
-        typer.Option(
-            "--collection", help="Name of database collection to store documents."
-        ),
-    ] = "docs_store",
+    ] = settings.full_embeddings_model_name,
 ) -> None:
     """
     Retrieve documents relevant to question(s) using indexed database.
     """
     embeddings_model = get_embeddings_model(*parse_model_name(embeddings_model_name))
     vectorstore = get_chromadb(
-        persist_directory=db_directory,
+        persist_directory=settings.docs_db_directory,
         embeddings_model=embeddings_model,
-        collection_name=db_collection,
+        collection_name=settings.docs_db_collection,
     )
     retriever = get_retriever(vectorstore)
 

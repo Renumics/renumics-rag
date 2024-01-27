@@ -1,40 +1,35 @@
-import os
-from pathlib import Path
-import sys
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    List,
-    Literal,
-    Optional,
-    Tuple,
-    Union,
-    cast,
-    get_args,
-)
 import hashlib
 import json
+import sys
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple, cast, get_args
 
 import dotenv
+from langchain.vectorstores.chroma import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.llms.huggingface_pipeline import HuggingFacePipeline
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
-from langchain_core.language_models.chat_models import BaseChatModel
-from langchain_core.language_models.llms import BaseLLM
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import Runnable, RunnableParallel, RunnablePassthrough
+from langchain_core.vectorstores import VectorStore, VectorStoreRetriever
 from langchain_openai import (
-    ChatOpenAI,
-    OpenAIEmbeddings,
     AzureChatOpenAI,
     AzureOpenAIEmbeddings,
+    ChatOpenAI,
+    OpenAIEmbeddings,
 )
-from langchain_core.vectorstores import VectorStore, VectorStoreRetriever
-from langchain.vectorstores.chroma import Chroma
-from transformers import pipeline
+
+from .exceptions import HFImportError
+from .settings import guess_model_type
+from .types import (
+    LLM,
+    ModelType,
+    PredefinedRelevanceScoreFn,
+    RelevanceScoreFn,
+    RetrieverSearchType,
+)
 
 dotenv.load_dotenv(override=True)
 
@@ -44,60 +39,20 @@ if sys.platform == "linux":
     sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 
 
-ModelType = Literal["openai", "azure", "hf"]
-PredefinedRelevanceScoreFn = Literal["l2", "ip", "cosine"]
-RelevanceScoreFn = Union[PredefinedRelevanceScoreFn, Callable[[float], float]]
-RetrieverSearchType = Literal["similarity", "similarity_score_threshold", "mmr"]
-LLM = Union[BaseChatModel, BaseLLM]
-
-
-MODEL_TYPES: Dict[ModelType, str] = {
-    "openai": "OpenAI",
-    "azure": "Azure OpenAI",
-    "hf": "Hugging Face",
-}
-PREDEFINED_RELEVANCE_SCORE_FNS: Dict[PredefinedRelevanceScoreFn, str] = {
-    "l2": "Squared euclidean distance",
-    "ip": "Inner product",
-    "cosine": "Cosine similarity",
-}
-RETRIEVER_SEARCH_TYPES: Dict[RetrieverSearchType, str] = {
-    "similarity": "Similarity",
-    "similarity_score_threshold": "Similarity with score threshold",
-    "mmr": "Maximal marginal relevance (MMR)",
-}
-
-
-class HFImportError(Exception):
-    def __init__(self) -> None:
-        gpu_command = "pip install torch torchvision sentence-transformers accelerate"
-        cpu_command = (
-            gpu_command + " --extra-index-url https://download.pytorch.org/whl/cpu"
-        )
-        super().__init__(
-            f"In order to Hugging Face embeddings models, install extra packages."
-            f"\nFor GPU support: `{gpu_command}`.\nFor CPU support: `{cpu_command}`."
-        )
-
-
 def parse_model_name(name: str) -> Tuple[str, ModelType]:
     if ":" in name:
         model_type, name = name.split(":", 1)
         assert model_type in get_args(ModelType)
-    elif os.getenv("OPENAI_API_TYPE") == "azure":
-        model_type = "azure"
-    elif "OPENAI_API_KEY" in os.environ:
-        model_type = "openai"
     else:
-        model_type = "hf"
+        model_type = guess_model_type()
     model_type = cast(ModelType, model_type)
     return name, model_type
 
 
 def get_hf_embeddings_model(name: str) -> HuggingFaceEmbeddings:
     try:
-        import torch
         import sentence_transformers  # noqa: F401
+        import torch
     except ImportError as e:
         raise HFImportError() from e
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -131,7 +86,7 @@ def get_hf_llm(name: str) -> HuggingFacePipeline:
     """
     try:
         import torch
-        import sentence_transformers  # noqa: F401
+        from transformers import pipeline
     except ImportError as e:
         raise HFImportError() from e
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")

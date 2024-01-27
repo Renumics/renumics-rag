@@ -1,18 +1,10 @@
-=> globle variablen, hier weg
-docs_directory: './data/docs'
-db_docs_directory: './db
-db_out
-
-
-
-
-
-embeddings_model_type: 'hf'
-embeddings_model_name: 'WhereIsAI/UAE-Large-V1'
-
-
-default_llm_model_type: 'hf'
-default_llm_model_name: 'microsoft/phi-2'
-
-retrival_defaults..
-
+llm_type: 'openai'
+llm_name: 'gpt-3.5-turbo'
+relevance_score_fn: 'l2'
+k: 4
+search_type: 'similarity'
+score_threshold: 0.5
+fetch_k: 20
+lambda_mult: 0.5
+embeddings_model_type: 'openai'
+embeddings_model_name: 'text-embedding-ada-002'

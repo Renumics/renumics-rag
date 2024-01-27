@@ -1,6 +1,6 @@
 from typing import get_args
-from . import ModelType
 
+from .types import ModelType
 
 EMBEDDINGS_MODEL_NAMES = [
     "openai:text-embedding-ada-002",
