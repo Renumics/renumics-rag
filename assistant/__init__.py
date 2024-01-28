@@ -4,6 +4,8 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, cast, get_args
 
+import chromadb
+import chromadb.api.types
 import dotenv
 from langchain.vectorstores.chroma import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
@@ -22,7 +24,7 @@ from langchain_openai import (
 )
 
 from .exceptions import HFImportError
-from .settings import guess_model_type
+from .settings import guess_model_type, settings
 from .types import (
     LLM,
     ModelType,
@@ -71,6 +73,17 @@ def get_embeddings_model(name: str, model_type: ModelType) -> Embeddings:
     if model_type == "hf":
         return get_hf_embeddings_model(name)
     raise TypeError("Unknown model type.")
+
+
+def get_embeddings_model_config(embeddings_model: Embeddings) -> Tuple[str, ModelType]:
+    if isinstance(embeddings_model, AzureOpenAIEmbeddings):
+        assert embeddings_model.deployment is not None
+        return embeddings_model.deployment, "azure"
+    if isinstance(embeddings_model, OpenAIEmbeddings):
+        return embeddings_model.model, "openai"
+    if isinstance(embeddings_model, HuggingFaceEmbeddings):
+        return embeddings_model.model_name, "hf"
+    raise ValueError("Unknown model type.")
 
 
 def get_hf_llm(name: str) -> HuggingFacePipeline:
@@ -134,6 +147,29 @@ def get_chromadb(
     """
     https://docs.trychroma.com/usage-guide#changing-the-distance-function
     """
+    if persist_directory.exists():
+        client_settings = chromadb.Settings(
+            is_persistent=True, persist_directory=str(settings.docs_db_directory)
+        )
+        client = chromadb.Client(client_settings)
+        try:
+            collection = client.get_collection(collection_name, embedding_function=None)
+        except ValueError:
+            ...  # Collection doesn't exist, so nothing to check.
+        else:
+            model_name, model_type = get_embeddings_model_config(embeddings_model)
+            if collection.metadata:
+                if (
+                    "model_type" in collection.metadata
+                    and collection.metadata["model_type"] != model_type
+                ):
+                    raise RuntimeError("")
+                if (
+                    "model_name" in collection.metadata
+                    and collection.metadata["model_name"] != model_name
+                ):
+                    raise RuntimeError("")
+
     if relevance_score_fn is None:
         return Chroma(
             collection_name=collection_name,
