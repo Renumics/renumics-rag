@@ -72,7 +72,7 @@ def get_embeddings_model(name: str, model_type: ModelType) -> Embeddings:
         return OpenAIEmbeddings(model=name)
     if model_type == "hf":
         return get_hf_embeddings_model(name)
-    raise TypeError("Unknown model type.")
+    raise TypeError(f"Unknown model type '{model_type}'.")
 
 
 def get_embeddings_model_config(embeddings_model: Embeddings) -> Tuple[str, ModelType]:
@@ -83,7 +83,7 @@ def get_embeddings_model_config(embeddings_model: Embeddings) -> Tuple[str, Mode
         return embeddings_model.model, "openai"
     if isinstance(embeddings_model, HuggingFaceEmbeddings):
         return embeddings_model.model_name, "hf"
-    raise ValueError("Unknown model type.")
+    raise TypeError("Unknown model type.")
 
 
 def get_hf_llm(name: str) -> HuggingFacePipeline:
@@ -142,11 +142,12 @@ def get_chromadb(
     persist_directory: Path,
     embeddings_model: Embeddings,
     collection_name: str,
-    relevance_score_fn: Optional[RelevanceScoreFn] = None,
+    relevance_score_fn: RelevanceScoreFn = "l2",
 ) -> Chroma:
     """
     https://docs.trychroma.com/usage-guide#changing-the-distance-function
     """
+    model_name, model_type = get_embeddings_model_config(embeddings_model)
     if persist_directory.exists():
         client_settings = chromadb.Settings(
             is_persistent=True, persist_directory=str(settings.docs_db_directory)
@@ -157,37 +158,48 @@ def get_chromadb(
         except ValueError:
             ...  # Collection doesn't exist, so nothing to check.
         else:
-            model_name, model_type = get_embeddings_model_config(embeddings_model)
             if collection.metadata:
-                if (
-                    "model_type" in collection.metadata
-                    and collection.metadata["model_type"] != model_type
-                ):
-                    raise RuntimeError("")
+                try:
+                    collection_model_type = collection.metadata["model_type"]
+                except KeyError:
+                    ...  # Model type isn't defined on the collection, do not check.
+                else:
+                    if model_type != collection_model_type and {
+                        model_type,
+                        collection_model_type,
+                    } != {"azure", "openai"}:
+                        raise RuntimeError(
+                            f"Given embeddings model type '{model_type}' doesn't "
+                            f"match with the embeddings model type "
+                            f"'{collection.metadata['model_type']}' of the "
+                            f"collection '{collection_name}' of the database."
+                        )
                 if (
                     "model_name" in collection.metadata
                     and collection.metadata["model_name"] != model_name
                 ):
-                    raise RuntimeError("")
+                    raise RuntimeError(
+                        f"Given embeddings model name '{model_name}' doesn't "
+                        f"match with the embeddings model name "
+                        f"'{collection.metadata['model_name']}' of the "
+                        f"collection '{collection_name}' of the database."
+                    )
 
-    if relevance_score_fn is None:
-        return Chroma(
-            collection_name=collection_name,
-            embedding_function=embeddings_model,
-            persist_directory=str(persist_directory),
-        )
+    collection_metadata = {"model_name": model_name, "model_type": model_type}
     if isinstance(relevance_score_fn, str):
         assert relevance_score_fn in get_args(PredefinedRelevanceScoreFn)
+        collection_metadata["hnsw:space"] = relevance_score_fn
         return Chroma(
             collection_name=collection_name,
             embedding_function=embeddings_model,
             persist_directory=str(persist_directory),
-            collection_metadata={"hnsw:space": relevance_score_fn},
+            collection_metadata=collection_metadata,
         )
     return Chroma(
         collection_name=collection_name,
         embedding_function=embeddings_model,
         persist_directory=str(persist_directory),
+        collection_metadata=collection_metadata,
         relevance_score_fn=relevance_score_fn,
     )
 
