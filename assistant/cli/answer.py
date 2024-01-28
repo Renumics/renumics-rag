@@ -2,7 +2,6 @@
 from typing import List
 
 import typer
-from langchain_core.documents import Document
 from typing_extensions import Annotated
 
 from assistant import (
@@ -12,7 +11,7 @@ from assistant import (
     get_rag_chain,
     get_retriever,
     parse_model_name,
-    stable_hash,
+    question_as_doc,
 )
 from assistant.const import EMBEDDINGS_MODEL_NAME_HELP, LLM_NAME_HELP
 from assistant.settings import settings
@@ -36,11 +35,19 @@ def answer(
     embeddings_model = get_embeddings_model(*parse_model_name(embeddings_model_name))
     llm = get_llm(*parse_model_name(llm_name))
     docs_vectorstore = get_chromadb(
-        persist_directory=settings.docs_db_directory,
-        embeddings_model=embeddings_model,
-        collection_name=settings.docs_db_collection,
+        settings.docs_db_directory,
+        embeddings_model,
+        settings.docs_db_collection,
+        settings.relevance_score_fn,
     )
-    retriever = get_retriever(docs_vectorstore)
+    retriever = get_retriever(
+        docs_vectorstore,
+        settings.k,
+        settings.search_type,
+        settings.score_threshold,
+        settings.fetch_k,
+        settings.lambda_mult,
+    )
 
     rag_chain = get_rag_chain(retriever, llm)
 
@@ -54,20 +61,7 @@ def answer(
         print(f"QUESTION: {question}")
         rag_answer = rag_chain.invoke(question)
 
-        # store question and answer in db
-        questions_vectorstore.add_documents(
-            [
-                Document(
-                    page_content=question,
-                    metadata={
-                        "answer": rag_answer["answer"],
-                        "sources": ",".join(
-                            map(stable_hash, rag_answer["source_documents"])
-                        ),
-                    },
-                )
-            ]
-        )
+        questions_vectorstore.add_documents([question_as_doc(question, rag_answer)])
 
         print(f"ANSWER: {rag_answer['answer']}")
         print("SOURCES:")

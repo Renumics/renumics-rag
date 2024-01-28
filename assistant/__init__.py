@@ -224,3 +224,13 @@ def stable_hash(doc: Document) -> str:
     Stable hash document based on its metadata.
     """
     return hashlib.sha1(json.dumps(doc.metadata, sort_keys=True).encode()).hexdigest()
+
+
+def question_as_doc(question: str, rag_answer: Dict[str, Any]) -> Document:
+    return Document(
+        page_content=question,
+        metadata={
+            "answer": rag_answer["answer"],
+            "sources": ",".join(map(stable_hash, rag_answer["source_documents"])),
+        },
+    )

@@ -1,9 +1,15 @@
-import dataclasses
 import os
 from pathlib import Path
-from typing import Optional
+from typing import Any, Dict, Optional
 
 import yaml
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    PositiveInt,
+    validator,
+)
 from typing_extensions import Self
 
 from .types import ModelType, RelevanceScoreFn, RetrieverSearchType
@@ -17,23 +23,41 @@ def guess_model_type() -> ModelType:
     return "hf"
 
 
-@dataclasses.dataclass
-class Settings:
+class Settings(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     llm_type: Optional[ModelType]
-    llm_name: str
-    relevance_score_fn: RelevanceScoreFn
-    k: int
-    search_type: RetrieverSearchType
-    score_threshold: float
-    fetch_k: int
-    lambda_mult: float
+    llm_name: str = Field(..., min_length=1)
+    relevance_score_fn: RelevanceScoreFn = "l2"
+    k: PositiveInt = 4
+    search_type: RetrieverSearchType = "similarity"
+    score_threshold: float = Field(0.5, ge=0.0, le=1.0)
+    fetch_k: PositiveInt = 20
+    lambda_mult: float = Field(0.5, ge=0.0, le=1.0)
     embeddings_model_type: Optional[ModelType]
-    embeddings_model_name: str
+    embeddings_model_name: str = Field(..., min_length=1)
 
     docs_db_directory: Path = Path("./db-docs")
-    docs_db_collection: str = "docs_store"
+    docs_db_collection: str = Field("docs_store", min_length=1)
     questions_db_directory: Path = Path("./db-questions")
-    questions_db_collection: str = "questions_store"
+    questions_db_collection: str = Field("questions_store", min_length=1)
+
+    @validator("fetch_k")
+    def _(cls, fetch_k: int, values: Dict[str, Any]) -> int:
+        k = values["k"]
+        if fetch_k < k:
+            raise ValueError(
+                f"`fetch_k`({fetch_k}) should be greater than or equal to `k`({k})"
+            )
+        return fetch_k
+
+    @property
+    def full_llm_name(self) -> str:
+        return f"{self.llm_type}:{self.llm_name}"
+
+    @property
+    def full_embeddings_model_name(self) -> str:
+        return f"{self.embeddings_model_type}:{self.embeddings_model_name}"
 
     @classmethod
     def from_yaml(cls, filepath: Path) -> Self:
@@ -50,14 +74,6 @@ class Settings:
             raw_settings["embeddings_model_type"] = guess_model_type()
         return cls(**raw_settings)
 
-    @property
-    def full_llm_name(self) -> str:
-        return f"{settings.llm_type}:{settings.llm_name}"
 
-    @property
-    def full_embeddings_model_name(self) -> str:
-        return f"{settings.embeddings_model_type}:{settings.embeddings_model_name}"
-
-
-settings_filepath = Path(os.getenv("RAG_SETTINGS", "./settings.yaml"))
-settings = Settings.from_yaml(settings_filepath)
+filepath = Path(os.getenv("RAG_SETTINGS", "./settings.yaml"))
+settings = Settings.from_yaml(filepath)
