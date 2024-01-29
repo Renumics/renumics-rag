@@ -3,13 +3,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 import yaml
-from pydantic import (
-    BaseModel,
-    ConfigDict,
-    Field,
-    PositiveInt,
-    validator,
-)
+from pydantic import BaseModel, ConfigDict, Field, PositiveInt, validator
 from typing_extensions import Self
 
 from .types import ModelType, RelevanceScoreFn, RetrieverSearchType
@@ -61,8 +55,14 @@ class Settings(BaseModel):
 
     @classmethod
     def from_yaml(cls, filepath: Path) -> Self:
-        assert filepath.is_file()
-        assert filepath.suffix.lower() in (".yml", ".yaml")
+        if not filepath.is_file():
+            raise FileNotFoundError(
+                f"Settings file '{filepath}' is not a file or does not exist."
+            )
+        if filepath.suffix.lower() not in (".yml", ".yaml"):
+            raise RuntimeError(
+                f"Settings file should be in YAML format, but '{filepath}' received."
+            )
         with filepath.open() as file:
             raw_settings = yaml.safe_load(file)
         if "llm_type" in raw_settings and raw_settings["llm_type"] is None:
@@ -76,4 +76,11 @@ class Settings(BaseModel):
 
 
 filepath = Path(os.getenv("RAG_SETTINGS", "./settings.yaml"))
-settings = Settings.from_yaml(filepath)
+try:
+    settings = Settings.from_yaml(filepath)
+except FileNotFoundError as e:
+    raise FileNotFoundError(
+        f"{e}\nCreate a new settings file "
+        f"(s. https://github.com/Renumics/rag-demo/blob/main/settings.yaml) or "
+        f"set `RAG_SETTINGS` environment variable to an existing one."
+    )

@@ -46,3 +46,7 @@ lint: ## Lint all source files
 .PHONY: run
 run: ## Run web app
 	poetry run streamlit run assistant/app.py
+
+.PHONY: build
+build: ## Build package
+	poetry build -f wheel

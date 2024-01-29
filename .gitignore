@@ -3,6 +3,7 @@ data/
 db-docs/
 db-questions/
 dev/
+dist/
 
 .DS_Store
 __pycache__/
