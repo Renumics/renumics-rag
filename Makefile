@@ -10,7 +10,18 @@ help: ## Print this help message
 
 .PHONY: init
 init: ## Locally install all dev dependencies
-	poetry install
+	poetry install --all-extras
+
+.PHONY: init-cpu
+init-cpu: ## Locally install all dev dependencies with CPU support
+init-cpu: init
+	poetry run pip install pandas renumics-spotlight torch torchvision sentence-transformers accelerate \
+		--extra-index-url https://download.pytorch.org/whl/cpu
+
+.PHONY: init-gpu
+init-gpu: ## Locally install all dev dependencies with GPU support
+init-gpu: init
+	poetry run pip install pandas renumics-spotlight torch torchvision sentence-transformers accelerate
 
 .PHONY: clean
 clean: ## Clean project
@@ -27,8 +38,15 @@ format: ## Fix code formatting
 .PHONY: typecheck
 typecheck: ## Typecheck all source files
 	poetry run mypy -p assistant
-	poetry run mypy scripts
 
 .PHONY: lint
 lint: ## Lint all source files
-	poetry run ruff assistant scripts/*.py
+	poetry run ruff assistant
+
+.PHONY: run
+run: ## Run web app
+	poetry run streamlit run assistant/app.py
+
+.PHONY: build
+build: ## Build package
+	poetry build -f wheel
