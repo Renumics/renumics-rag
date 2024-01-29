@@ -37,16 +37,6 @@ class Message:
     content: str
 
 
-st.set_page_config(page_title="F1 RAG Demo", page_icon="🏎️", layout="wide")
-st.title("F1 RAG Demo 🤖➕📚❤️🏎️")
-
-st.header("Chat with the F1 docs")
-
-
-if "messages" not in st.session_state.keys():
-    st.session_state.messages = [Message("assistant", "Ask me a question about F1")]
-
-
 @st.cache_resource(show_spinner=False)
 def _get_rag_chain(
     llm_type: ModelType,
@@ -105,6 +95,11 @@ def get_questions_chromadb(
     )
     return vectorstore
 
+
+st.set_page_config(page_title="F1 RAG Demo", page_icon="🏎️", layout="wide")
+st.title("F1 RAG Demo 🤖➕📚❤️🏎️")
+
+st.header("Chat with the F1 docs")
 
 with st.sidebar:
     st.header("Settings")
@@ -204,6 +199,9 @@ chain = _get_rag_chain(
 questions_vectorstore = get_questions_chromadb(
     st.session_state.embeddings_model_type, st.session_state.embeddings_model_name
 )
+
+if "messages" not in st.session_state.keys():
+    st.session_state.messages = [Message("assistant", "Ask me a question about F1")]
 
 if question := st.chat_input("Your question"):
     st.session_state.messages.append(Message("user", question))
