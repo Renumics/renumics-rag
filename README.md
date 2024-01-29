@@ -2,52 +2,105 @@
 
 Retrieval-Augmented Generation Assistant Demo
 
-## Development Setup
+## Setup
 
-Enable [Direnv](https://direnv.net/):
+### Via `pip`
+
+Setup virtual environment in the project folder:
 
 ```shell
-direnv allow
+python3.8 -m venv .venv
+source .venv/bin/activate  # Linux/MacOS
+# .\.venv\Scripts\activate.bat  # Windows CMD
+# .\.venv\Scripts\activate.ps1  # PowerShell
+pip install -IU pip setuptools wheel
 ```
 
-Install dependencies via `make init-gpu` for GPU support ar via `make init-cpu` for CPU support (only relevant for local models).
-
-Create `.env` with the following content:
+Install RAG demo package and some extra dependencies:
 
 ```shell
-# For OpenAI usage
+pip install -e .[all]
+# Torch with GPU support
+pip install pandas renumics-spotlight torch torchvision sentence-transformers accelerate
+# Torch with CPU support
+# pip install pandas renumics-spotlight torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
+```
+
+### Via `poetry`
+
+Install RAG demo and some extra dependencies:
+
+```shell
+poetry install --all-extras
+# Torch with GPU support
+pip install pandas renumics-spotlight torch torchvision sentence-transformers accelerate
+# Torch with CPU support
+# pip install pandas renumics-spotlight torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
+```
+
+Activate environment (otherwise, all further commands should be prefixed with `poetry run`):
+
+```shell
+poetry shell
+```
+
+> Note: If you have [Direnv](https://direnv.net/) installed, you can avoid prefixing python commands with `poetry run` by executing `direnv allow` in the project folder. It will activate environment each time you enter the project folder.
+
+### Settings
+
+If you are going to use OpenAI models, create `.env` with the following content:
+
+```bash
 OPENAI_API_KEY="Your OpenAI API key"
-# OR for Azure OpenAI usage
+```
+
+If you are going to use OpenAI models via Azure, create `.env` with the following content:
+
+```shell
 OPENAI_API_TYPE="azure"
 OPENAI_API_VERSION="2023-08-01-preview"
 AZURE_OPENAI_API_KEY="Your Azure OpenAI API key"
 AZURE_OPENAI_ENDPOINT="Your Azure OpenAI endpoint"
-# OR empty for Hugging Face usage
 ```
 
-Index documents:
+If you are going to use OpenAI models via Azure, create empty `.env` file.
+
+Navigate to [settings file](./settings.yaml) and adjust parameters if needed.
+
+> Note: you can create multiple settings files and switch between them by setting `RAG_SETTINGS` environment variable.
+
+## Usage
+
+Create folder `data/docs` in the project folder and place your documents in there (recursive folder structure is supported).
+
+> Note: at the moment only HTML files are supported for indexing but it can be adjusted in the [create-db](assistant/cli/create_db.py) script.
+
+First step is to index your documents. To do it, execute the following command:
 
 ```shell
 create-db
 ```
 
-For more options, see `create-db --help`.
+It should create `db-docs` folder in the project with indexed documents inside. To index new documents, use `--exist-ok` and `--on-match` flags (run `create-db --help` to see more).
 
-Retrieve documents:
+Now you can use the indexed documents to answer your questions.
 
-```shell
-retrieve "When was the first ever F1 race?"
-```
-
-For more options, see `retrieve --help`.
-
-Answer a question:
+To only retrieve relevant documents:
 
 ```shell
-answer "When was the first ever F1 race?"
+retrieve "Your question here"
+# QUESTION: ...
+# SOURCES: ...
 ```
 
-For more options, see `answer --help`.
+Answer a question using indexed documents:
+
+```shell
+answer "Your question here"
+# QUESTION: ...
+# ANSWER: ...
+# SOURCES: ...
+```
 
 Start web app:
 
