@@ -1,14 +1,18 @@
 import dataclasses
-from typing import Any, Dict, List, Literal, get_args
+from typing import Any, Callable, Dict, List, Literal, Type, Union, get_args
 
 import streamlit as st
 from langchain.vectorstores.chroma import Chroma
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_core.embeddings import Embeddings
 from langchain_core.runnables import Runnable
+from langchain_openai import AzureOpenAIEmbeddings, OpenAIEmbeddings
 
 from assistant import (
     format_doc,
     get_chromadb,
     get_embeddings_model,
+    get_embeddings_model_config,
     get_llm,
     get_rag_chain,
     get_retriever,
@@ -37,7 +41,22 @@ class Message:
     content: str
 
 
-@st.cache_resource(show_spinner=False)
+def hash_embeddings_model(embeddings_model: Embeddings) -> int:
+    name, model_type = get_embeddings_model_config(embeddings_model)
+    return hash(name) ^ hash(model_type)
+
+
+HASH_FUNCS: Dict[Union[str, Type], Callable[[Any], Any]] = {
+    AzureOpenAIEmbeddings: hash_embeddings_model,
+    OpenAIEmbeddings: hash_embeddings_model,
+    HuggingFaceEmbeddings: hash_embeddings_model,
+}
+
+
+_get_embeddings_model = st.cache_resource(show_spinner=False)(get_embeddings_model)
+
+
+@st.cache_resource(show_spinner=False, hash_funcs=HASH_FUNCS)
 def _get_rag_chain(
     llm_type: ModelType,
     llm_name: str,
@@ -47,8 +66,7 @@ def _get_rag_chain(
     score_threshold: float,
     fetch_k: int,
     lambda_mult: float,
-    embeddings_model_type: ModelType,
-    embeddings_model_name: str,
+    embeddings_model: Embeddings,
 ) -> Runnable:
     print(
         "Load chain",
@@ -60,34 +78,24 @@ def _get_rag_chain(
         score_threshold,
         fetch_k,
         lambda_mult,
-        embeddings_model_type,
-        embeddings_model_name,
+        *get_embeddings_model_config(embeddings_model),
     )
-    with st.spinner(text="Loading database and LLMs..."):
-        embeddings_model = get_embeddings_model(
-            embeddings_model_name, embeddings_model_type
-        )
-        llm = get_llm(llm_name, llm_type)
-        vectorstore = get_chromadb(
-            persist_directory=settings.docs_db_directory,
-            embeddings_model=embeddings_model,
-            collection_name=settings.docs_db_collection,
-            relevance_score_fn=relevance_score_fn,
-        )
-        retriever = get_retriever(
-            vectorstore, k, search_type, score_threshold, fetch_k, lambda_mult
-        )
-        chain = get_rag_chain(retriever, llm)
-        return chain
+    llm = get_llm(llm_name, llm_type)
+    vectorstore = get_chromadb(
+        persist_directory=settings.docs_db_directory,
+        embeddings_model=embeddings_model,
+        collection_name=settings.docs_db_collection,
+        relevance_score_fn=relevance_score_fn,
+    )
+    retriever = get_retriever(
+        vectorstore, k, search_type, score_threshold, fetch_k, lambda_mult
+    )
+    chain = get_rag_chain(retriever, llm)
+    return chain
 
 
-@st.cache_resource(show_spinner=False)
-def get_questions_chromadb(
-    embeddings_model_type: ModelType, embeddings_model_name: str
-) -> Chroma:
-    embeddings_model = get_embeddings_model(
-        embeddings_model_name, embeddings_model_type
-    )
+@st.cache_resource(show_spinner=False, hash_funcs=HASH_FUNCS)
+def get_questions_chromadb(embeddings_model: Embeddings) -> Chroma:
     vectorstore = get_chromadb(
         persist_directory=settings.questions_db_directory,
         embeddings_model=embeddings_model,
@@ -212,7 +220,7 @@ def st_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
             st.session_state.messages.extend(messages)
 
 
-def at_app() -> None:
+def st_app() -> None:
     st.set_page_config(page_title="F1 RAG Demo", page_icon="🏎️", layout="wide")
     st.title("F1 RAG Demo 🤖➕📚❤️🏎️")
 
@@ -221,25 +229,28 @@ def at_app() -> None:
     with st.sidebar:
         st_settings(settings)
 
-    # All variables used in `_get_rag_chain` and `get_questions_chromadb` should
-    # be set before, either with `st_settings` or fixed.
-    chain = _get_rag_chain(
-        st.session_state.llm_type,
-        st.session_state.llm_name,
-        st.session_state.relevance_score_fn,
-        st.session_state.k,
-        st.session_state.search_type,
-        st.session_state.score_threshold,
-        st.session_state.fetch_k,
-        st.session_state.lambda_mult,
-        st.session_state.embeddings_model_type,
-        st.session_state.embeddings_model_name,
-    )
-    questions_vectorstore = get_questions_chromadb(
-        st.session_state.embeddings_model_type, st.session_state.embeddings_model_name
-    )
+    # All variables used in `get_embeddings_model`, `_get_rag_chain` and
+    # `get_questions_chromadb` should be set before, either with `st_settings` or fixed.
+    with st.spinner("Loading RAG database, models and chain..."):
+        embeddings_model = _get_embeddings_model(
+            st.session_state.embeddings_model_name,
+            st.session_state.embeddings_model_type,
+        )
+        chain = _get_rag_chain(
+            st.session_state.llm_type,
+            st.session_state.llm_name,
+            st.session_state.relevance_score_fn,
+            st.session_state.k,
+            st.session_state.search_type,
+            st.session_state.score_threshold,
+            st.session_state.fetch_k,
+            st.session_state.lambda_mult,
+            embeddings_model,
+        )
+        questions_vectorstore = get_questions_chromadb(embeddings_model)
 
     st_chat(chain, questions_vectorstore)
 
 
-at_app()
+if __name__ == "__main__":
+    st_app()
