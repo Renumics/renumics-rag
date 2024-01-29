@@ -5,6 +5,6 @@ class HFImportError(Exception):
             gpu_command + " --extra-index-url https://download.pytorch.org/whl/cpu"
         )
         super().__init__(
-            f"In order to Hugging Face embeddings models, install extra packages."
+            f"In order to use Hugging Face embeddings models, install extra packages."
             f"\nFor GPU support: `{gpu_command}`.\nFor CPU support: `{cpu_command}`."
         )

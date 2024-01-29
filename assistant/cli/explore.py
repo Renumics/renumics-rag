@@ -3,9 +3,15 @@
 Explore embeddings database.
 """
 
-import pandas as pd
+try:
+    import pandas as pd
+    from renumics import spotlight
+except ImportError as e:
+    raise ImportError(
+        "In order to explore vectorstores, install extra packages: "
+        "`pip install pandas renumics-spotlight`."
+    ) from e
 import typer
-from renumics import spotlight
 from typing_extensions import Annotated
 
 from assistant import get_chromadb, get_embeddings_model, parse_model_name

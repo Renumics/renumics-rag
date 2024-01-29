@@ -15,13 +15,13 @@ init: ## Locally install all dev dependencies
 .PHONY: init-cpu
 init-cpu: ## Locally install all dev dependencies with CPU support
 init-cpu: init
-	poetry run pip install torch torchvision sentence-transformers accelerate \
+	poetry run pip install pandas renumics-spotlight torch torchvision sentence-transformers accelerate \
 		--extra-index-url https://download.pytorch.org/whl/cpu
 
 .PHONY: init-gpu
 init-gpu: ## Locally install all dev dependencies with GPU support
 init-gpu: init
-	poetry run pip install renumics-spotlight torch torchvision sentence-transformers accelerate
+	poetry run pip install pandas renumics-spotlight torch torchvision sentence-transformers accelerate
 
 .PHONY: clean
 clean: ## Clean project
