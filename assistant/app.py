@@ -78,7 +78,7 @@ def _get_rag_chain(
         score_threshold,
         fetch_k,
         lambda_mult,
-        *get_embeddings_model_config(embeddings_model),
+        *reversed(get_embeddings_model_config(embeddings_model)),
     )
     llm = get_llm(llm_name, llm_type)
     vectorstore = get_chromadb(
@@ -104,7 +104,9 @@ def get_questions_chromadb(embeddings_model: Embeddings) -> Chroma:
     return vectorstore
 
 
-def st_settings(default_settings: Settings) -> None:
+def st_settings(
+    default_settings: Settings,
+) -> None:
     st.header("Settings")
     st.subheader("LLM")
     st.selectbox(
@@ -191,6 +193,12 @@ def st_settings(default_settings: Settings) -> None:
         )
 
 
+def st_chat_messages(messages: List[Message]) -> None:
+    for message in messages:
+        with st.chat_message(message.role, avatar=AVATARS.get(message.role)):
+            st.write(message.content)
+
+
 def st_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
     if "messages" not in st.session_state.keys():
         st.session_state.messages = [Message("assistant", "Ask me a question about F1")]
@@ -198,9 +206,7 @@ def st_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
     if question := st.chat_input("Your question"):
         st.session_state.messages.append(Message("user", question))
 
-    for message in st.session_state.messages:
-        with st.chat_message(message.role, avatar=AVATARS.get(message.role)):
-            st.write(message.content)
+    st_chat_messages(st.session_state.messages)
 
     if st.session_state.messages[-1].role == "user":
         with st.spinner("Thinking..."):
@@ -209,14 +215,13 @@ def st_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
             questions_vectorstore.add_documents(
                 [question_as_doc(st.session_state.messages[-1].content, rag_answer)]
             )
+            questions_vectorstore.persist()
 
             messages: List[Message] = []
             for doc in rag_answer["source_documents"]:
                 messages.append(Message("source", format_doc(doc)))
             messages.append(Message("assistant", rag_answer["answer"]))
-            for message in messages:
-                with st.chat_message(message.role, avatar=AVATARS.get(message.role)):
-                    st.write(message.content)
+            st_chat_messages(messages)
             st.session_state.messages.extend(messages)
 
 

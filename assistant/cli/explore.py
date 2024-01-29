@@ -27,10 +27,10 @@ def explore(
     """
 
     embeddings_model = get_embeddings_model(*parse_model_name(embeddings_model_name))
-
     docs_vectorstore = get_chromadb(
         settings.docs_db_directory, embeddings_model, settings.docs_db_collection
     )
+
     response = docs_vectorstore.get(include=["metadatas", "documents", "embeddings"])
     docs_df = pd.DataFrame(
         {
