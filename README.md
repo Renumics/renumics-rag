@@ -2,7 +2,36 @@
 
 Retrieval-Augmented Generation Assistant Demo
 
-## Setup
+## Installation
+
+Setup virtual environment in the project folder:
+
+```shell
+python3.8 -m venv .venv
+source .venv/bin/activate  # Linux/MacOS
+# .\.venv\Scripts\activate.bat  # Windows CMD
+# .\.venv\Scripts\activate.ps1  # PowerShell
+pip install -IU pip setuptools wheel
+```
+
+Install RAG demo package and some extra dependencies:
+
+```shell
+# Torch with GPU support
+pip install git+https://github.com/Renumics/rag-demo.git[all] pandas renumics-spotlight torch torchvision sentence-transformers accelerate
+# Torch with CPU support
+# pip install git+https://github.com/Renumics/rag-demo.git[all] pandas renumics-spotlight torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
+```
+
+## Local Setup
+
+If are going not only to use, but also to modify this project, it makes sense to clone the whole project:
+
+```
+git clone git@github.com:Renumics/rag-demo.git
+```
+
+and install it editable.
 
 ### Via `pip`
 
@@ -105,8 +134,10 @@ answer "Your question here"
 Start web app:
 
 ```shell
-streamlit run assistant/app.py
+app
 ```
+
+For available app options, see `app --help`.
 
 After you asked some questions you can explore them in [Renumics Spotlight](https://github.com/Renumics/spotlight):
 
