@@ -14,7 +14,7 @@ from assistant import (
     get_retriever,
     question_as_doc,
 )
-from assistant.settings import settings
+from assistant.settings import Settings, settings
 from assistant.types import (
     MODEL_TYPES,
     PREDEFINED_RELEVANCE_SCORE_FNS,
@@ -96,28 +96,25 @@ def get_questions_chromadb(
     return vectorstore
 
 
-st.set_page_config(page_title="F1 RAG Demo", page_icon="🏎️", layout="wide")
-st.title("F1 RAG Demo 🤖➕📚❤️🏎️")
-
-st.header("Chat with the F1 docs")
-
-with st.sidebar:
+def st_settings(default_settings: Settings) -> None:
     st.header("Settings")
     st.subheader("LLM")
     st.selectbox(
         "type",
         get_args(ModelType),
-        get_args(ModelType).index(settings.llm_type),
+        get_args(ModelType).index(default_settings.llm_type),
         format_func=lambda x: MODEL_TYPES.get(x, x),
         key="llm_type",
     )
-    st.text_input("name", value=settings.llm_name, key="llm_name")
+    st.text_input("name", value=default_settings.llm_name, key="llm_name")
     with st.expander("Advanced"):
         st.subheader("Retriever")
         st.selectbox(
             "Relevance score function",
             get_args(PredefinedRelevanceScoreFn),
-            get_args(PredefinedRelevanceScoreFn).index(settings.relevance_score_fn),
+            get_args(PredefinedRelevanceScoreFn).index(
+                default_settings.relevance_score_fn
+            ),
             format_func=lambda x: PREDEFINED_RELEVANCE_SCORE_FNS.get(x, x),
             key="relevance_score_fn",
             help="Distance function in the embedding space "
@@ -126,15 +123,15 @@ with st.sidebar:
         k = st.slider(
             "k",
             1,
-            max(100, settings.k + 20),
-            settings.k,
+            max(100, default_settings.k + 20),
+            default_settings.k,
             key="k",
             help="Amount of documents to return",
         )
         search_type = st.selectbox(
             "Search type",
             get_args(RetrieverSearchType),
-            get_args(RetrieverSearchType).index(settings.search_type),
+            get_args(RetrieverSearchType).index(default_settings.search_type),
             format_func=lambda x: RETRIEVER_SEARCH_TYPES.get(x, x),
             key="search_type",
             help="Type of search",
@@ -143,7 +140,7 @@ with st.sidebar:
             "Score threshold",
             0.0,
             1.0,
-            settings.score_threshold,
+            default_settings.score_threshold,
             key="score_threshold",
             help="Minimum relevance threshold",
             disabled=search_type != "similarity_score_threshold",
@@ -152,7 +149,7 @@ with st.sidebar:
             "Fetch k",
             k,
             max(200, k * 2),
-            max(settings.fetch_k, k + 10),
+            max(default_settings.fetch_k, k + 10),
             key="fetch_k",
             help="Amount of documents to pass to MMR",
             disabled=search_type != "mmr",
@@ -161,68 +158,88 @@ with st.sidebar:
             "MMR λ",
             0.0,
             1.0,
-            settings.lambda_mult,
+            default_settings.lambda_mult,
             key="lambda_mult",
             help="Diversity of results returned by MMR. 1 for minimum diversity and 0 for maximum.",
             disabled=search_type != "mmr",
         )
         st.subheader("Embeddings model")
         st.write(
-            f"Be sure to replace the vectorstore at '{settings.docs_db_directory}' "
+            f"Be sure to replace the vectorstore at '{default_settings.docs_db_directory}' "
             f"with one indexed by the respective embeddings model and stored in "
-            f"the '{settings.docs_db_collection}' collection."
+            f"the '{default_settings.docs_db_collection}' collection."
         )
         st.selectbox(
             "type",
             get_args(ModelType),
-            get_args(ModelType).index(settings.embeddings_model_type),
+            get_args(ModelType).index(default_settings.embeddings_model_type),
             format_func=lambda x: MODEL_TYPES.get(x, x),
             key="embeddings_model_type",
         )
         st.text_input(
-            "name", value=settings.embeddings_model_name, key="embeddings_model_name"
+            "name",
+            value=default_settings.embeddings_model_name,
+            key="embeddings_model_name",
         )
 
 
-chain = _get_rag_chain(
-    st.session_state.llm_type,
-    st.session_state.llm_name,
-    st.session_state.relevance_score_fn,
-    st.session_state.k,
-    st.session_state.search_type,
-    st.session_state.score_threshold,
-    st.session_state.fetch_k,
-    st.session_state.lambda_mult,
-    st.session_state.embeddings_model_type,
-    st.session_state.embeddings_model_name,
-)
-questions_vectorstore = get_questions_chromadb(
-    st.session_state.embeddings_model_type, st.session_state.embeddings_model_name
-)
+def st_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
+    if "messages" not in st.session_state.keys():
+        st.session_state.messages = [Message("assistant", "Ask me a question about F1")]
 
-if "messages" not in st.session_state.keys():
-    st.session_state.messages = [Message("assistant", "Ask me a question about F1")]
+    if question := st.chat_input("Your question"):
+        st.session_state.messages.append(Message("user", question))
 
-if question := st.chat_input("Your question"):
-    st.session_state.messages.append(Message("user", question))
+    for message in st.session_state.messages:
+        with st.chat_message(message.role, avatar=AVATARS.get(message.role)):
+            st.write(message.content)
 
-for message in st.session_state.messages:
-    with st.chat_message(message.role, avatar=AVATARS.get(message.role)):
-        st.write(message.content)
+    if st.session_state.messages[-1].role == "user":
+        with st.spinner("Thinking..."):
+            rag_answer = chain.invoke(question)
 
-if st.session_state.messages[-1].role == "user":
-    with st.spinner("Thinking..."):
-        rag_answer = chain.invoke(question)
+            questions_vectorstore.add_documents(
+                [question_as_doc(st.session_state.messages[-1].content, rag_answer)]
+            )
 
-        questions_vectorstore.add_documents(
-            [question_as_doc(st.session_state.messages[-1].content, rag_answer)]
-        )
+            messages: List[Message] = []
+            for doc in rag_answer["source_documents"]:
+                messages.append(Message("source", format_doc(doc)))
+            messages.append(Message("assistant", rag_answer["answer"]))
+            for message in messages:
+                with st.chat_message(message.role, avatar=AVATARS.get(message.role)):
+                    st.write(message.content)
+            st.session_state.messages.extend(messages)
 
-        messages: List[Message] = []
-        for doc in rag_answer["source_documents"]:
-            messages.append(Message("source", format_doc(doc)))
-        messages.append(Message("assistant", rag_answer["answer"]))
-        for message in messages:
-            with st.chat_message(message.role, avatar=AVATARS.get(message.role)):
-                st.write(message.content)
-        st.session_state.messages.extend(messages)
+
+def at_app() -> None:
+    st.set_page_config(page_title="F1 RAG Demo", page_icon="🏎️", layout="wide")
+    st.title("F1 RAG Demo 🤖➕📚❤️🏎️")
+
+    st.header("Chat with the F1 docs")
+
+    with st.sidebar:
+        st_settings(settings)
+
+    # All variables used in `_get_rag_chain` and `get_questions_chromadb` should
+    # be set before, either with `st_settings` or fixed.
+    chain = _get_rag_chain(
+        st.session_state.llm_type,
+        st.session_state.llm_name,
+        st.session_state.relevance_score_fn,
+        st.session_state.k,
+        st.session_state.search_type,
+        st.session_state.score_threshold,
+        st.session_state.fetch_k,
+        st.session_state.lambda_mult,
+        st.session_state.embeddings_model_type,
+        st.session_state.embeddings_model_name,
+    )
+    questions_vectorstore = get_questions_chromadb(
+        st.session_state.embeddings_model_type, st.session_state.embeddings_model_name
+    )
+
+    st_chat(chain, questions_vectorstore)
+
+
+at_app()
