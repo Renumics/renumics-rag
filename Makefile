@@ -21,7 +21,7 @@ init-cpu: init
 .PHONY: init-gpu
 init-gpu: ## Locally install all dev dependencies with GPU support
 init-gpu: init
-	poetry run pip install torch torchvision sentence-transformers accelerate
+	poetry run pip install renumics-spotlight torch torchvision sentence-transformers accelerate
 
 .PHONY: clean
 clean: ## Clean project

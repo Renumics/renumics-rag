@@ -66,8 +66,10 @@ def explore(
         lambda id: questions_df["sources"].apply(lambda sources: id in sources).sum()
     )
     docs_df["used_by"] = [
-        q["id"] if src_id in q["sources"] else None
-        for _, q in questions_df.iterrows()
+        next(
+            (q["id"] for _, q in questions_df.iterrows() if src_id in q["sources"]),
+            None,
+        )
         for src_id in docs_df["id"]
     ]
     questions_df["used_by"] = questions_df["id"]
