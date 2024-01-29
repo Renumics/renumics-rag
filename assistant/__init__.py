@@ -89,16 +89,6 @@ def get_embeddings_model_config(embeddings_model: Embeddings) -> Tuple[str, Mode
 
 
 def get_hf_llm(name: str) -> HuggingFacePipeline:
-    """
-    [Pipeline tasks](https://huggingface.co/docs/transformers/v4.37.1/en/main_classes/pipelines#transformers.pipeline.task):
-    - "conversational",
-    - "document-question-answering",
-    - ["question-answering"](https://huggingface.co/models?pipeline_tag=question-answering),
-    - "summarization",
-    - "table-question-answering",
-    - ["text2text-generation"](https://huggingface.co/models?pipeline_tag=text2text-generation)
-    - "text-generation"
-    """
     try:
         import torch
         from transformers import pipeline
@@ -148,6 +138,7 @@ def get_chromadb(
                 except KeyError:
                     ...  # Model type isn't defined on the collection, do not check.
                 else:
+                    # Assume models from Azure and OpenAI with the same name as same.
                     if model_type != collection_model_type and {
                         model_type,
                         collection_model_type,
@@ -223,10 +214,10 @@ def format_docs(docs: List[Document]) -> str:
 
 
 def get_rag_chain(retriever: VectorStoreRetriever, llm: LLM) -> Runnable:
-    template = """You are an assistant for question-answering tasks on Formula One (F1) documentation.
-Given the following extracted parts of a long document and a question, create a final answer with used references (named "sources").
-Keep the answer concise. If you don't know the answer, just say that you don't know. Don't try to make up an answer.
-ALWAYS return used sources in your answer.
+    template = """You are an assistant for question-answering tasks.
+Given the following extracted parts of a long document and a question, create a final answer with references ("SOURCES").
+If you don't know the answer, just say that you don't know. Don't try to make up an answer.
+ALWAYS return a "SOURCES" part in your answer.
 
 QUESTION: {question}
 =========
