@@ -105,29 +105,11 @@ def get_hf_llm(name: str) -> HuggingFacePipeline:
     except ImportError as e:
         raise HFImportError() from e
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    pipe = pipeline(model=name, device=device)
+    pipe = pipeline(
+        model=name, device=device, max_length=1024, temperature=0.0
+    )  # torch_dtype=torch.float16
     llm = HuggingFacePipeline(pipeline=pipe)
     return llm
-    # tokenizer = AutoTokenizer.from_pretrained(name)
-    # quantization_config = BitsAndBytesConfig(llm_int8_enable_fp32_cpu_offload=True)
-    # base_model = AutoModelForCausalLM.from_pretrained(  # AutoModelForCausalLM.from_pretrained( ##AutoModel
-    #     name,
-    #     load_in_8bit=True,
-    #     torch_dtype=torch.float16,
-    #     device_map="auto",
-    #     quantization_config=quantization_config,
-    # )
-    # pipe = pipeline(
-    #     "text-generation",
-    #     model=base_model,
-    #     tokenizer=tokenizer,
-    #     max_length=256,
-    #     temperature=0.0,
-    #     top_p=0.95,
-    #     repetition_penalty=1.2,
-    # )
-    # local_llm = HuggingFacePipeline(pipeline=pipe)
-    # return local_llm  # type: ignore
 
 
 def get_llm(name: str, model_type: ModelType) -> LLM:
