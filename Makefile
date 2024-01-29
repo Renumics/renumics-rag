@@ -38,11 +38,10 @@ format: ## Fix code formatting
 .PHONY: typecheck
 typecheck: ## Typecheck all source files
 	poetry run mypy -p assistant
-	poetry run mypy scripts
 
 .PHONY: lint
 lint: ## Lint all source files
-	poetry run ruff assistant scripts/*.py
+	poetry run ruff assistant
 
 .PHONY: run
 run: ## Run web app
