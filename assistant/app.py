@@ -2,6 +2,7 @@ import dataclasses
 from typing import Any, Callable, Dict, List, Literal, Type, Union, get_args
 
 import streamlit as st
+import typer
 from langchain.vectorstores.chroma import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_core.embeddings import Embeddings
@@ -28,6 +29,8 @@ from assistant.types import (
     RelevanceScoreFn,
     RetrieverSearchType,
 )
+
+app = typer.Typer()
 
 Role = Literal["user", "assistant", "source"]
 
@@ -68,18 +71,6 @@ def _get_rag_chain(
     lambda_mult: float,
     embeddings_model: Embeddings,
 ) -> Runnable:
-    print(
-        "Load chain",
-        llm_type,
-        llm_name,
-        relevance_score_fn,
-        k,
-        search_type,
-        score_threshold,
-        fetch_k,
-        lambda_mult,
-        *reversed(get_embeddings_model_config(embeddings_model)),
-    )
     llm = get_llm(llm_name, llm_type)
     vectorstore = get_chromadb(
         persist_directory=settings.docs_db_directory,
@@ -201,7 +192,7 @@ def st_chat_messages(messages: List[Message]) -> None:
 
 def st_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
     if "messages" not in st.session_state.keys():
-        st.session_state.messages = [Message("assistant", "Ask me a question about F1")]
+        st.session_state.messages = [Message("assistant", "Ask me a question")]
 
     if question := st.chat_input("Your question"):
         st.session_state.messages.append(Message("user", question))
@@ -225,11 +216,26 @@ def st_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
             st.session_state.messages.extend(messages)
 
 
-def st_app() -> None:
-    st.set_page_config(page_title="F1 RAG Demo", page_icon="🏎️", layout="wide")
-    st.title("F1 RAG Demo 🤖➕📚❤️🏎️")
-
-    st.header("Chat with the F1 docs")
+def st_app(
+    title: str = "RAG Demo",
+    favicon: str = "🤖",
+    h1: str = "RAG Demo",
+    h2: str = "Chat with your docs",
+) -> None:
+    st.set_page_config(
+        page_title=title,
+        page_icon=favicon,
+        layout="wide",
+        menu_items={
+            # "Get Help": "https://github.com/Renumics/rag-demo",
+            # "Report a bug": "https://github.com/Renumics/rag-demo/issues",
+            # "About": "https://github.com/Renumics/rag-demo",
+        },
+    )
+    if h1:
+        st.title(h1)
+    if h2:
+        st.header(h2, divider=True)
 
     with st.sidebar:
         st_settings(settings)
@@ -257,5 +263,8 @@ def st_app() -> None:
     st_chat(chain, questions_vectorstore)
 
 
+app.command()(st_app)
+
+
 if __name__ == "__main__":
-    st_app()
+    app()
