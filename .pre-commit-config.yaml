@@ -17,7 +17,7 @@ repos:
             entry: poetry run mypy
             language: system
             types: [python]
-            files: ^(assistant|scripts)/
+            files: ^assistant/
             require_serial: true
 
     # "official" pre-commit hooks
