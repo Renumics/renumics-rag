@@ -6,6 +6,7 @@ Explore embeddings database.
 try:
     import pandas as pd
     from renumics import spotlight
+    from renumics.spotlight import dtypes as spotlight_dtypes
 except ImportError as e:
     raise ImportError(
         "In order to explore vectorstores, install extra packages: "
@@ -28,15 +29,14 @@ def explore(
     ] = settings.full_embeddings_model_name,
 ) -> None:
     """
-    Load sources and chat history from a Polytec Assistant settings file, export
-    and optionally visalize them.
+    Load RAG demo sources and chat history and visalize them.
     """
 
     embeddings_model = get_embeddings_model(*parse_model_name(embeddings_model_name))
+
     docs_vectorstore = get_chromadb(
         settings.docs_db_directory, embeddings_model, settings.docs_db_collection
     )
-
     response = docs_vectorstore.get(include=["metadatas", "documents", "embeddings"])
     docs_df = pd.DataFrame(
         {
@@ -60,29 +60,40 @@ def explore(
         {
             "id": response["ids"],
             "question": response["documents"],
-            "embedding": response["embeddings"],
             "answer": [metadata.get("answer") for metadata in response["metadatas"]],
             "sources": [
                 metadata.get("sources").split(",") for metadata in response["metadatas"]
             ],
+            "embedding": response["embeddings"],
         }
     )
-
-    docs_df["used_by_n_questions"] = docs_df["id"].apply(
-        lambda id: questions_df["sources"].apply(lambda sources: id in sources).sum()
+    questions_df["num_sources"] = questions_df["sources"].apply(len)
+    questions_df["first_source"] = questions_df["sources"].apply(
+        lambda x: next(iter(x), None)
     )
-    docs_df["used_by"] = [
-        next(
-            (q["id"] for _, q in questions_df.iterrows() if src_id in q["sources"]),
-            None,
-        )
-        for src_id in docs_df["id"]
-    ]
-    questions_df["used_by"] = questions_df["id"]
+
+    docs_df["used_by_questions"] = docs_df["id"].apply(
+        lambda doc_id: questions_df[
+            questions_df["sources"].apply(lambda sources: doc_id in sources)
+        ]["id"].tolist()
+    )
+    docs_df["used_by_num_questions"] = docs_df["used_by_questions"].apply(len)
+    docs_df["used_by_question_first"] = docs_df["used_by_questions"].apply(
+        lambda x: next(iter(x), None)
+    )
 
     df = pd.concat([docs_df, questions_df], ignore_index=True)
     print(df)
-    spotlight.show(df, embed=False, analyze=False)
+    spotlight.show(
+        df,
+        dtype={
+            "used_by_questions": spotlight_dtypes.SequenceDType(
+                spotlight_dtypes.str_dtype
+            )
+        },
+        embed=False,
+        analyze=False,
+    )
 
 
 if __name__ == "__main__":
