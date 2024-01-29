@@ -4,8 +4,6 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, cast, get_args
 
-import chromadb
-import chromadb.api.types
 import dotenv
 from langchain.vectorstores.chroma import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
@@ -39,6 +37,10 @@ if sys.platform == "linux":
     # For Linux, `sqlite3` can be outdated, so use the installed Python package.
     __import__("pysqlite3")
     sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
+
+# Import `chromadb` when `sqlite3` is patched only.
+import chromadb  # noqa: E402
+import chromadb.api.types  # noqa: E402
 
 
 def parse_model_name(name: str) -> Tuple[str, ModelType]:
