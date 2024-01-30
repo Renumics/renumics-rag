@@ -56,8 +56,6 @@ extend-select = [
 [tool.mypy]
 ignore_missing_imports = false
 disallow_untyped_defs = true
-explicit_package_bases = true
-mypy_path = "."
 
 [[tool.mypy.overrides]]
 module = [

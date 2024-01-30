@@ -4,7 +4,7 @@ from typing import Any, Dict, Optional
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, PositiveInt, validator
-from typing_extensions import Self
+from typing_extensions import Annotated, Self
 
 from .types import ModelType, RelevanceScoreFn, RetrieverSearchType
 
@@ -21,20 +21,20 @@ class Settings(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     llm_type: Optional[ModelType]
-    llm_name: str = Field(..., min_length=1)
+    llm_name: Annotated[str, Field(min_length=1)]
     relevance_score_fn: RelevanceScoreFn = "l2"
     k: PositiveInt = 4
     search_type: RetrieverSearchType = "similarity"
-    score_threshold: float = Field(0.5, ge=0.0, le=1.0)
+    score_threshold: Annotated[float, Field(ge=0.0, le=1.0)] = 0.5
     fetch_k: PositiveInt = 20
-    lambda_mult: float = Field(0.5, ge=0.0, le=1.0)
+    lambda_mult: Annotated[float, Field(ge=0.0, le=1.0)] = 0.5
     embeddings_model_type: Optional[ModelType]
-    embeddings_model_name: str = Field(..., min_length=1)
+    embeddings_model_name: Annotated[str, Field(min_length=1)]
 
     docs_db_directory: Path = Path("./db-docs")
-    docs_db_collection: str = Field("docs_store", min_length=1)
+    docs_db_collection: Annotated[str, Field(min_length=1)] = "docs_store"
     questions_db_directory: Path = Path("./db-questions")
-    questions_db_collection: str = Field("questions_store", min_length=1)
+    questions_db_collection: Annotated[str, Field(min_length=1)] = "questions_store"
 
     @validator("fetch_k")
     def _(cls, fetch_k: int, values: Dict[str, Any]) -> int:
