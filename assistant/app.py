@@ -1,6 +1,8 @@
 import dataclasses
+import re
 from typing import Any, Callable, Dict, List, Literal, Optional, Type, Union, get_args
 
+import duckdb
 import streamlit as st
 import typer
 from langchain.vectorstores.chroma import Chroma
@@ -20,6 +22,7 @@ from assistant import (
     question_as_doc,
 )
 from assistant.settings import Settings, settings
+from assistant.sql_rag import get_sql_chain
 from assistant.types import (
     MODEL_TYPES,
     PREDEFINED_RELEVANCE_SCORE_FNS,
@@ -32,10 +35,10 @@ from assistant.types import (
 
 app = typer.Typer()
 
-Role = Literal["user", "assistant", "source"]
+Role = Literal["user", "assistant", "source", "query"]
 
 
-AVATARS: Dict[Role, Any] = {"user": "🧐", "assistant": "🤖", "source": "📚"}
+AVATARS: Dict[Role, Any] = {"user": "🧐", "assistant": "🤖", "source": "📚", "query": "🔃"}
 
 
 @dataclasses.dataclass
@@ -95,10 +98,23 @@ def get_questions_chromadb(embeddings_model: Embeddings) -> Chroma:
     return vectorstore
 
 
+@st.cache_resource(show_spinner=False)
+def _get_sql_chain(llm_type: ModelType, llm_name: str) -> Runnable:
+    llm = get_llm(llm_name, llm_type)
+    chain = get_sql_chain(llm)
+    return chain
+
+
+@st.cache_resource(show_spinner=False)
+def get_db_connection() -> duckdb.DuckDBPyConnection:
+    return duckdb.connect()
+
+
 def st_settings(
     default_settings: Settings,
 ) -> None:
     st.header("Settings")
+    st.radio("RAG mode", ["Docs", "SQL"], key="rag_mode")
     st.subheader("LLM")
     st.selectbox(
         "type",
@@ -190,7 +206,7 @@ def st_chat_messages(messages: List[Message]) -> None:
             st.write(message.content)
 
 
-def st_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
+def st_docs_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
     if "messages" not in st.session_state.keys():
         st.session_state.messages = [Message("assistant", "Ask me a question")]
 
@@ -216,6 +232,71 @@ def st_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
             st.session_state.messages.extend(messages)
 
 
+def st_sql_chat(chain: Runnable) -> None:
+    if "messages" not in st.session_state.keys():
+        st.session_state.messages = [Message("assistant", "Ask me a question")]
+
+    if question := st.chat_input("Your question"):
+        st.session_state.messages.append(Message("user", question))
+
+    st_chat_messages(st.session_state.messages)
+
+    if st.session_state.messages[-1].role == "user":
+        with st.spinner("Thinking..."):
+            answer = chain.invoke(question)
+
+            query, explanation = answer.split("END_QUERY", 1)
+            _, query = query.split("QUERY:")
+            messages = [Message("query", query), Message("assistant", explanation)]
+
+            st_chat_messages(messages)
+            st.session_state.messages.extend(messages)
+
+
+def st_explore_sql() -> None:
+    try:
+        from renumics import spotlight
+    except ImportError:
+        st.warning(
+            "To explore results, first install Spotlight: "
+            "`pip install renumics-spotlight`",
+            icon="⚠️",
+        )
+        return
+    query = next(
+        (
+            message.content
+            for message in reversed(st.session_state.messages)
+            if message.role == "query"
+        ),
+        None,
+    )
+    col1, col2 = st.columns(2)
+    try:
+        viewer_port = st.session_state.viewer_port
+    except AttributeError:
+        viewer_port = None
+    with col1:
+        if st.button("Explore", disabled=query is None or viewer_port is not None):
+            assert query is not None
+            query = re.sub("`*(?:sql)([^`]*)`*", "\\1", query).strip()
+            db_connection = get_db_connection()
+            try:
+                response = db_connection.execute(query)
+            except Exception:
+                st.warning("Invalid query recevied!", icon="⚠️")
+            else:
+                df = response.df()
+                viewer = spotlight.show(df, wait=False)
+                st.session_state.viewer_port = viewer.port
+                st.rerun()
+    with col2:
+        if st.button("Stop", disabled=viewer_port is None):
+            spotlight.close(st.session_state.viewer_port)
+            st.session_state.viewer_port = None
+            st.rerun()
+
+
 def st_app(
     title: str = "RAG Demo",
     favicon: str = "🤖",
@@ -233,37 +314,47 @@ def st_app(
             # "About": "https://github.com/Renumics/rag-demo",
         },
     )
-    if image:
-        st.image(image)
-    if h1:
-        st.title(h1)
+
+    col1, col2 = st.columns([0.8, 0.2])
+
+    with col1:
+        if image:
+            st.image(image)
+        if h1:
+            st.title(h1)
     if h2:
         st.header(h2, divider=True)
 
     with st.sidebar:
         st_settings(settings)
 
-    # All variables used in `get_embeddings_model`, `_get_rag_chain` and
-    # `get_questions_chromadb` should be set before, either with `st_settings` or fixed.
-    with st.spinner("Loading RAG database, models and chain..."):
-        embeddings_model = _get_embeddings_model(
-            st.session_state.embeddings_model_name,
-            st.session_state.embeddings_model_type,
-        )
-        chain = _get_rag_chain(
-            st.session_state.llm_type,
-            st.session_state.llm_name,
-            st.session_state.relevance_score_fn,
-            st.session_state.k,
-            st.session_state.search_type,
-            st.session_state.score_threshold,
-            st.session_state.fetch_k,
-            st.session_state.lambda_mult,
-            embeddings_model,
-        )
-        questions_vectorstore = get_questions_chromadb(embeddings_model)
-
-    st_chat(chain, questions_vectorstore)
+    if st.session_state.rag_mode == "Docs":
+        with st.spinner("Loading RAG database, models and chain..."):
+            embeddings_model = _get_embeddings_model(
+                st.session_state.embeddings_model_name,
+                st.session_state.embeddings_model_type,
+            )
+            chain = _get_rag_chain(
+                st.session_state.llm_type,
+                st.session_state.llm_name,
+                st.session_state.relevance_score_fn,
+                st.session_state.k,
+                st.session_state.search_type,
+                st.session_state.score_threshold,
+                st.session_state.fetch_k,
+                st.session_state.lambda_mult,
+                embeddings_model,
+            )
+            questions_vectorstore = get_questions_chromadb(embeddings_model)
+        st_docs_chat(chain, questions_vectorstore)
+    elif st.session_state.rag_mode == "SQL":
+        with st.spinner("Loading llm and chain..."):
+            chain = _get_sql_chain(st.session_state.llm_type, st.session_state.llm_name)
+        st_sql_chat(chain)
+        with col2:
+            st_explore_sql()
+    else:
+        raise ValueError(f"Unknown RAG mode: '{st.session_state.rag_mode}'.")
 
 
 app.command()(st_app)
