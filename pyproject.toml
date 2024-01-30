@@ -37,7 +37,7 @@ bitsandbytes = {version = "^0.42.0", optional = true}
 [tool.poetry.extras]
 openai = ["langchain-openai"]
 hf = ["transformers", "bitsandbytes"]
-all = ["langchain-openai"]
+all = ["langchain-openai", "transformers", "bitsandbytes"]
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.12.1"
