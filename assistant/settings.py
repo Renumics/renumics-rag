@@ -37,6 +37,7 @@ class Settings(BaseModel):
     questions_db_collection: Annotated[str, Field(min_length=1)] = "questions_store"
 
     @validator("fetch_k")
+    @classmethod
     def _(cls, fetch_k: int, values: Dict[str, Any]) -> int:
         k = values["k"]
         if fetch_k < k:
