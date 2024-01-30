@@ -187,11 +187,7 @@ def st_settings(
 def st_chat_messages(messages: List[Message]) -> None:
     for message in messages:
         with st.chat_message(message.role, avatar=AVATARS.get(message.role)):
-            if message.role == "source":
-                with st.expander("Sources"):
-                    st.write(message.content)
-            else:
-                st.write(message.content)
+            st.write(message.content)
 
 
 def st_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
@@ -213,16 +209,8 @@ def st_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
             questions_vectorstore.persist()
 
             messages: List[Message] = []
-            messages.append(
-                Message(
-                    "source",
-                    "/n/n/n/n".join(
-                        format_doc(doc) for doc in rag_answer["source_documents"]
-                    ),
-                )
-            )
-            # for doc in rag_answer["source_documents"]:
-            #     messages.append(Message("source", format_doc(doc)))
+            for doc in rag_answer["source_documents"]:
+                messages.append(Message("source", format_doc(doc)))
             messages.append(Message("assistant", rag_answer["answer"]))
             st_chat_messages(messages)
             st.session_state.messages.extend(messages)
