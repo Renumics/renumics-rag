@@ -2,6 +2,7 @@
 import subprocess
 from enum import Enum
 from pathlib import Path
+from typing import Optional
 
 import typer
 from typing_extensions import Annotated
@@ -18,6 +19,9 @@ class Mode(str, Enum):
 def run_app(
     title: Annotated[str, typer.Option(help="Page title")] = "RAG Demo",
     favicon: Annotated[str, typer.Option(help="Page favicon")] = "🤖",
+    image: Annotated[
+        Optional[str], typer.Option(help="Path or link to hero image")
+    ] = None,
     h1: Annotated[str, typer.Option(help="Title text at the of the page")] = "RAG Demo",
     h2: Annotated[
         str, typer.Option(help="Header text at the top of the page")
@@ -42,6 +46,8 @@ def run_app(
         "--h2",
         h2,
     ]
+    if image is not None:
+        args.extend(["--image", image])
     subprocess.run(args)
 
 

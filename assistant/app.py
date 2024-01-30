@@ -1,5 +1,5 @@
 import dataclasses
-from typing import Any, Callable, Dict, List, Literal, Type, Union, get_args
+from typing import Any, Callable, Dict, List, Literal, Optional, Type, Union, get_args
 
 import streamlit as st
 import typer
@@ -187,7 +187,11 @@ def st_settings(
 def st_chat_messages(messages: List[Message]) -> None:
     for message in messages:
         with st.chat_message(message.role, avatar=AVATARS.get(message.role)):
-            st.write(message.content)
+            if message.role == "source":
+                with st.expander("Sources"):
+                    st.write(message.content)
+            else:
+                st.write(message.content)
 
 
 def st_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
@@ -209,8 +213,16 @@ def st_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
             questions_vectorstore.persist()
 
             messages: List[Message] = []
-            for doc in rag_answer["source_documents"]:
-                messages.append(Message("source", format_doc(doc)))
+            messages.append(
+                Message(
+                    "source",
+                    "/n/n/n/n".join(
+                        format_doc(doc) for doc in rag_answer["source_documents"]
+                    ),
+                )
+            )
+            # for doc in rag_answer["source_documents"]:
+            #     messages.append(Message("source", format_doc(doc)))
             messages.append(Message("assistant", rag_answer["answer"]))
             st_chat_messages(messages)
             st.session_state.messages.extend(messages)
@@ -219,6 +231,7 @@ def st_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
 def st_app(
     title: str = "RAG Demo",
     favicon: str = "🤖",
+    image: Optional[str] = None,
     h1: str = "RAG Demo",
     h2: str = "Chat with your docs",
 ) -> None:
@@ -232,6 +245,8 @@ def st_app(
             # "About": "https://github.com/Renumics/rag-demo",
         },
     )
+    if image:
+        st.image(image)
     if h1:
         st.title(h1)
     if h2:
