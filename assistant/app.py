@@ -84,6 +84,9 @@ _get_llm = st.cache_resource(max_entries=1, show_spinner=False)(get_llm)
 _get_embeddings_model = st.cache_resource(max_entries=1, show_spinner=False)(
     get_embeddings_model
 )
+_get_sql_chain = st.cache_resource(show_spinner=False, hash_funcs=HASH_FUNCS)(
+    get_sql_chain
+)
 
 
 @st.cache_resource(show_spinner=False, hash_funcs=HASH_FUNCS)
@@ -118,12 +121,6 @@ def get_questions_chromadb(embeddings_model: Embeddings) -> Chroma:
         collection_name=settings.questions_db_collection,
     )
     return vectorstore
-
-
-@st.cache_resource(show_spinner=False, hash_funcs=HASH_FUNCS)
-def _get_sql_chain(llm: LLM) -> Runnable:
-    chain = get_sql_chain(llm)
-    return chain
 
 
 @st.cache_resource(show_spinner=False)
