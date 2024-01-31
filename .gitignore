@@ -4,6 +4,9 @@ db-docs/
 db-questions/
 dev/
 dist/
+*.yml
+*.yaml
+!settings.yaml
 
 .DS_Store
 __pycache__/
