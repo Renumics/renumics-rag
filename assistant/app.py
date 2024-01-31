@@ -5,9 +5,15 @@ import streamlit as st
 import typer
 from langchain.vectorstores.chroma import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.llms.huggingface_pipeline import HuggingFacePipeline
 from langchain_core.embeddings import Embeddings
 from langchain_core.runnables import Runnable
-from langchain_openai import AzureOpenAIEmbeddings, OpenAIEmbeddings
+from langchain_openai import (
+    AzureChatOpenAI,
+    AzureOpenAIEmbeddings,
+    ChatOpenAI,
+    OpenAIEmbeddings,
+)
 
 from assistant import (
     format_doc,
@@ -15,12 +21,14 @@ from assistant import (
     get_embeddings_model,
     get_embeddings_model_config,
     get_llm,
+    get_llm_config,
     get_rag_chain,
     get_retriever,
     question_as_doc,
 )
 from assistant.settings import Settings, settings
 from assistant.types import (
+    LLM,
     MODEL_TYPES,
     PREDEFINED_RELEVANCE_SCORE_FNS,
     RETRIEVER_SEARCH_TYPES,
@@ -44,25 +52,33 @@ class Message:
     content: str
 
 
-def hash_embeddings_model(embeddings_model: Embeddings) -> int:
-    name, model_type = get_embeddings_model_config(embeddings_model)
+def hash_model(model: Union[Embeddings, LLM]) -> int:
+    if isinstance(model, Embeddings):
+        name, model_type = get_embeddings_model_config(model)
+    else:
+        name, model_type = get_llm_config(model)
     return hash(name) ^ hash(model_type)
 
 
 HASH_FUNCS: Dict[Union[str, Type], Callable[[Any], Any]] = {
-    AzureOpenAIEmbeddings: hash_embeddings_model,
-    OpenAIEmbeddings: hash_embeddings_model,
-    HuggingFaceEmbeddings: hash_embeddings_model,
+    AzureOpenAIEmbeddings: hash_model,
+    OpenAIEmbeddings: hash_model,
+    HuggingFaceEmbeddings: hash_model,
+    AzureChatOpenAI: hash_model,
+    ChatOpenAI: hash_model,
+    HuggingFacePipeline: hash_model,
 }
 
 
-_get_embeddings_model = st.cache_resource(show_spinner=False)(get_embeddings_model)
+_get_llm = st.cache_resource(max_entries=1, show_spinner=False)(get_llm)
+_get_embeddings_model = st.cache_resource(max_entries=1, show_spinner=False)(
+    get_embeddings_model
+)
 
 
 @st.cache_resource(show_spinner=False, hash_funcs=HASH_FUNCS)
 def _get_rag_chain(
-    llm_type: ModelType,
-    llm_name: str,
+    llm: LLM,
     relevance_score_fn: RelevanceScoreFn,
     k: int,
     search_type: RetrieverSearchType,
@@ -71,7 +87,6 @@ def _get_rag_chain(
     lambda_mult: float,
     embeddings_model: Embeddings,
 ) -> Runnable:
-    llm = get_llm(llm_name, llm_type)
     vectorstore = get_chromadb(
         persist_directory=settings.docs_db_directory,
         embeddings_model=embeddings_model,
@@ -250,9 +265,9 @@ def st_app(
             st.session_state.embeddings_model_name,
             st.session_state.embeddings_model_type,
         )
+        llm = _get_llm(st.session_state.llm_name, st.session_state.llm_type)
         chain = _get_rag_chain(
-            st.session_state.llm_type,
-            st.session_state.llm_name,
+            llm,
             st.session_state.relevance_score_fn,
             st.session_state.k,
             st.session_state.search_type,

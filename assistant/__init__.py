@@ -85,7 +85,7 @@ def get_embeddings_model_config(embeddings_model: Embeddings) -> Tuple[str, Mode
         return embeddings_model.model, "openai"
     if isinstance(embeddings_model, HuggingFaceEmbeddings):
         return embeddings_model.model_name, "hf"
-    raise TypeError("Unknown model type.")
+    raise TypeError(f"Unknown model type `{type(embeddings_model)}`.")
 
 
 def get_hf_llm(name: str) -> HuggingFacePipeline:
@@ -109,7 +109,18 @@ def get_llm(name: str, model_type: ModelType) -> LLM:
         return ChatOpenAI(model=name, temperature=0.0)
     if model_type == "hf":
         return get_hf_llm(name)
-    raise TypeError("Unknown model type.")
+    raise TypeError(f"Unknown model type '{model_type}'.")
+
+
+def get_llm_config(llm: LLM) -> Tuple[str, ModelType]:
+    if isinstance(llm, AzureChatOpenAI):
+        assert llm.deployment_name is not None
+        return llm.deployment_name, "azure"
+    if isinstance(llm, ChatOpenAI):
+        return llm.model_name, "openai"
+    if isinstance(llm, HuggingFacePipeline):
+        return llm.pipeline.model_name, "hf"
+    raise TypeError(f"Unknown model type `{type(llm)}`.")
 
 
 def get_chromadb(
