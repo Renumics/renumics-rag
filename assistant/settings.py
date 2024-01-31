@@ -6,7 +6,7 @@ import yaml
 from pydantic import BaseModel, ConfigDict, Field, PositiveInt, validator
 from typing_extensions import Annotated, Self
 
-from .types import ModelType, RelevanceScoreFn, RetrieverSearchType
+from .types import ModelType, RAGMode, RelevanceScoreFn, RetrieverSearchType
 
 
 def guess_model_type() -> ModelType:
@@ -37,6 +37,7 @@ class Settings(BaseModel):
     questions_db_collection: Annotated[str, Field(min_length=1)] = "questions_store"
 
     sql_dataset_path: Path = Path("./data/f1_dataset.parquet")
+    rag_mode: RAGMode = "docs"
 
     @validator("fetch_k")
     @classmethod

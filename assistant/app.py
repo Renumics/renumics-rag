@@ -29,6 +29,7 @@ from assistant.types import (
     RETRIEVER_SEARCH_TYPES,
     ModelType,
     PredefinedRelevanceScoreFn,
+    RAGMode,
     RelevanceScoreFn,
     RetrieverSearchType,
 )
@@ -114,7 +115,12 @@ def st_settings(
     default_settings: Settings,
 ) -> None:
     st.header("Settings")
-    st.radio("RAG mode", ["Docs", "SQL"], key="rag_mode")
+    st.radio(
+        "RAG mode",
+        get_args(RAGMode),
+        get_args(RAGMode).index(default_settings.rag_mode),
+        key="rag_mode",
+    )
     st.subheader("LLM")
     st.selectbox(
         "type",
@@ -350,7 +356,7 @@ def st_app(
     with st.sidebar:
         st_settings(settings)
 
-    if st.session_state.rag_mode == "Docs":
+    if st.session_state.rag_mode == "docs":
         with st.spinner("Loading RAG database, models and chain..."):
             embeddings_model = _get_embeddings_model(
                 st.session_state.embeddings_model_name,
@@ -369,7 +375,7 @@ def st_app(
             )
             questions_vectorstore = get_questions_chromadb(embeddings_model)
         st_docs_chat(chain, questions_vectorstore)
-    elif st.session_state.rag_mode == "SQL":
+    elif st.session_state.rag_mode == "sql":
         with st.spinner("Loading llm and chain..."):
             chain = _get_sql_chain(st.session_state.llm_type, st.session_state.llm_name)
         st_sql_chat(chain)

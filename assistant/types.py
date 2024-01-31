@@ -8,6 +8,7 @@ PredefinedRelevanceScoreFn = Literal["l2", "ip", "cosine"]
 RelevanceScoreFn = Union[PredefinedRelevanceScoreFn, Callable[[float], float]]
 RetrieverSearchType = Literal["similarity", "similarity_score_threshold", "mmr"]
 LLM = Union[BaseChatModel, BaseLLM]
+RAGMode = Literal["docs", "sql"]
 
 
 MODEL_TYPES: Dict[ModelType, str] = {
@@ -25,3 +26,4 @@ RETRIEVER_SEARCH_TYPES: Dict[RetrieverSearchType, str] = {
     "similarity_score_threshold": "Similarity with score threshold",
     "mmr": "Maximal marginal relevance (MMR)",
 }
+RAG_MODES: Dict[RAGMode, str] = {"docs": "Documents", "sql": "SQL"}
