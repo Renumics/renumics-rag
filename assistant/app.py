@@ -251,15 +251,19 @@ def st_sql_chat(chain: Runnable) -> None:
         with st.spinner("Thinking..."):
             answer = chain.invoke(question)
 
-            query, explanation = answer.split("END_QUERY", 1)
-            _, query = query.split("QUERY:")
+            try:
+                query, explanation = answer.split("END_QUERY", 1)
+                _, query = query.split("QUERY:")
+            except ValueError:
+                query = "⚠️<invalid SQL query>"
+                explanation = answer
             messages = [Message("query", query), Message("assistant", explanation)]
 
             st_chat_messages(messages)
             st.session_state.messages.extend(messages)
 
 
-def run_spotlight(query: str, message_container: Any) -> None:
+def run_spotlight(query: str) -> None:
     from renumics import spotlight
 
     assert query is not None
@@ -268,8 +272,7 @@ def run_spotlight(query: str, message_container: Any) -> None:
     try:
         response = db_connection.execute(query)
     except Exception:
-        with message_container:
-            st.warning("Invalid query recevied!", icon="⚠️")
+        st.session_state.invalid_query = True
     else:
         df = response.df()
         viewer = spotlight.show(df, wait=False)
@@ -296,16 +299,20 @@ def st_explore_sql() -> None:
         return
     if "spotlight_ports" not in st.session_state:
         st.session_state.spotlight_ports = []
+    if "invalid_query" not in st.session_state:
+        st.session_state.invalid_query = False
     query = next(
         (
             message.content
             for message in reversed(st.session_state.messages)
-            if message.role == "query"
+            if message.role == "query" and not message.content.startswith("⚠️")
         ),
         None,
     )
     _, col1, col2 = st.columns([0.6, 0.2, 0.2])
-    container = st.container()
+    if st.session_state.invalid_query:
+        st.warning("Invalid SQL query recevied!", icon="⚠️")
+        st.session_state.invalid_query = False
 
     with col1:
         st.button(
@@ -315,7 +322,7 @@ def st_explore_sql() -> None:
                 st.session_state.spotlight_ports,
             ),
             on_click=run_spotlight,
-            args=(query, container),
+            args=(query,),
         )
     with col2:
         st.button(
