@@ -119,7 +119,7 @@ def get_llm_config(llm: LLM) -> Tuple[str, ModelType]:
     if isinstance(llm, ChatOpenAI):
         return llm.model_name, "openai"
     if isinstance(llm, HuggingFacePipeline):
-        return llm.pipeline.model_name, "hf"
+        return llm.pipeline.model, "hf"
     raise TypeError(f"Unknown model type `{type(llm)}`.")
 
 
