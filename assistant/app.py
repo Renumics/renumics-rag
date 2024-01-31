@@ -312,7 +312,10 @@ def run_spotlight(query: str) -> None:
 def stop_spotlight() -> None:
     from renumics import spotlight
 
-    for port in {*st.session_state.spotlight_ports, *spotlight.viewers()}:
+    for port in {
+        *st.session_state.spotlight_ports,
+        *(viewer.port for viewer in spotlight.viewers()),
+    }:
         spotlight.close(port)
     st.session_state.spotlight_ports.clear()
 
