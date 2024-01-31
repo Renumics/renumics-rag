@@ -253,9 +253,34 @@ def st_sql_chat(chain: Runnable) -> None:
             st.session_state.messages.extend(messages)
 
 
+def run_spotlight(query: str, message_container: Any) -> None:
+    from renumics import spotlight
+
+    assert query is not None
+    query = re.sub("`*(?:sql)([^`]*)`*", "\\1", query).strip()
+    db_connection = get_db_connection()
+    try:
+        response = db_connection.execute(query)
+    except Exception:
+        with message_container:
+            st.warning("Invalid query recevied!", icon="⚠️")
+    else:
+        df = response.df()
+        viewer = spotlight.show(df, wait=False)
+        st.session_state.spotlight_ports.append(viewer.port)
+
+
+def stop_spotlight() -> None:
+    from renumics import spotlight
+
+    for port in st.session_state.spotlight_ports:
+        spotlight.close(port)
+    st.session_state.spotlight_ports.clear()
+
+
 def st_explore_sql() -> None:
     try:
-        from renumics import spotlight
+        from renumics import spotlight  # noqa: F401
     except ImportError:
         st.warning(
             "To explore results, first install Spotlight: "
@@ -263,6 +288,8 @@ def st_explore_sql() -> None:
             icon="⚠️",
         )
         return
+    if "spotlight_ports" not in st.session_state:
+        st.session_state.spotlight_ports = []
     query = next(
         (
             message.content
@@ -271,30 +298,25 @@ def st_explore_sql() -> None:
         ),
         None,
     )
-    col1, col2 = st.columns(2)
-    try:
-        viewer_port = st.session_state.viewer_port
-    except AttributeError:
-        viewer_port = None
+    _, col1, col2 = st.columns([0.6, 0.2, 0.2])
+    container = st.container()
+
     with col1:
-        if st.button("Explore", disabled=query is None or viewer_port is not None):
-            assert query is not None
-            query = re.sub("`*(?:sql)([^`]*)`*", "\\1", query).strip()
-            db_connection = get_db_connection()
-            try:
-                response = db_connection.execute(query)
-            except Exception:
-                st.warning("Invalid query recevied!", icon="⚠️")
-            else:
-                df = response.df()
-                viewer = spotlight.show(df, wait=False)
-                st.session_state.viewer_port = viewer.port
-                st.rerun()
+        st.button(
+            "Explore",
+            disabled=query is None
+            or bool(
+                st.session_state.spotlight_ports,
+            ),
+            on_click=run_spotlight,
+            args=(query, container),
+        )
     with col2:
-        if st.button("Stop", disabled=viewer_port is None):
-            spotlight.close(st.session_state.viewer_port)
-            st.session_state.viewer_port = None
-            st.rerun()
+        st.button(
+            "Stop",
+            disabled=not st.session_state.spotlight_ports,
+            on_click=stop_spotlight,
+        )
 
 
 def st_app(
@@ -315,7 +337,7 @@ def st_app(
         },
     )
 
-    col1, col2 = st.columns([0.8, 0.2])
+    col1, col2 = st.columns([0.5, 0.5])
 
     with col1:
         if image:
