@@ -18,7 +18,6 @@ from langchain_openai import (
 )
 
 from assistant import (
-    format_doc,
     get_chromadb,
     get_embeddings_model,
     get_embeddings_model_config,
@@ -54,6 +53,13 @@ AVATARS: Dict[Role, Any] = {"user": "🧐", "assistant": "🤖", "source": "📚
 class Message:
     role: Role
     content: str
+
+
+@dataclasses.dataclass
+class SourceMessage(Message):
+    role: Role
+    content: str
+    sources: List[str]
 
 
 def hash_model(model: Union[Embeddings, LLM]) -> int:
@@ -223,7 +229,12 @@ def st_settings(
 def st_chat_messages(messages: List[Message]) -> None:
     for message in messages:
         with st.chat_message(message.role, avatar=AVATARS.get(message.role)):
-            st.write(message.content)
+            if message.role == "source":
+                with st.expander("Sources"):
+                    for source in message.sources:  # type: ignore
+                        st.write(source)
+            else:
+                st.write(message.content)
 
 
 def st_docs_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
@@ -245,8 +256,13 @@ def st_docs_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
             questions_vectorstore.persist()
 
             messages: List[Message] = []
+            sources: List[str] = []
             for doc in rag_answer["source_documents"]:
-                messages.append(Message("source", format_doc(doc)))
+                sources.append(doc.page_content)
+                sources.append(f"Source: \"{doc.metadata['source']}\"")
+            messages.append(SourceMessage("source", "Sources", sources))
+            # for doc in rag_answer["source_documents"]:
+            #     messages.append(Message("source", format_doc(doc)))
             messages.append(Message("assistant", rag_answer["answer"]))
             st_chat_messages(messages)
             st.session_state.messages.extend(messages)
