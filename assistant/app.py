@@ -33,6 +33,7 @@ from assistant.types import (
     LLM,
     MODEL_TYPES,
     PREDEFINED_RELEVANCE_SCORE_FNS,
+    RAG_MODES,
     RETRIEVER_SEARCH_TYPES,
     ModelType,
     PredefinedRelevanceScoreFn,
@@ -136,6 +137,7 @@ def st_settings(
         "RAG mode",
         get_args(RAGMode),
         get_args(RAGMode).index(default_settings.rag_mode),
+        format_func=lambda x: RAG_MODES.get(x, x),
         key="rag_mode",
     )
     st.subheader("LLM")
