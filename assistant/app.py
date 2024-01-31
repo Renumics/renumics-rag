@@ -120,7 +120,7 @@ def get_questions_chromadb(embeddings_model: Embeddings) -> Chroma:
     return vectorstore
 
 
-@st.cache_resource(show_spinner=False)
+@st.cache_resource(show_spinner=False, hash_funcs=HASH_FUNCS)
 def _get_sql_chain(llm: LLM) -> Runnable:
     chain = get_sql_chain(llm)
     return chain
@@ -258,7 +258,7 @@ def st_docs_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
             messages: List[Message] = []
             sources: List[str] = []
             for doc in rag_answer["source_documents"]:
-                sources.append(doc.page_content)
+                sources.append(f"Content: {doc.page_content}")
                 sources.append(f"Source: \"{doc.metadata['source']}\"")
             messages.append(SourceMessage("source", "Sources", sources))
             # for doc in rag_answer["source_documents"]:
