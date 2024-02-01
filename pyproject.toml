@@ -34,6 +34,7 @@ langchain-openai = {version = "^0.0.3", optional = true}
 transformers = {version = "^4.37.1", optional = true}
 bitsandbytes = {version = "^0.42.0", optional = true}
 duckdb = "^0.9.2"
+ragas = "^0.0.22"
 
 [tool.poetry.extras]
 openai = ["langchain-openai"]
