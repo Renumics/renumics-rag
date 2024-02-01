@@ -92,7 +92,7 @@ AZURE_OPENAI_API_KEY="Your Azure OpenAI API key"
 AZURE_OPENAI_ENDPOINT="Your Azure OpenAI endpoint"
 ```
 
-If you are going to use OpenAI models via Azure, create empty `.env` file.
+If you are going to use Hugging Face models, you don't need `.env` file.
 
 Navigate to [settings file](./settings.yaml) and adjust parameters if needed.
 
