@@ -284,9 +284,16 @@ def st_docs_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
                 sources.append(f"Content: {doc.page_content}")
                 sources.append(f"Source: \"{doc.metadata['source']}\"")
             messages.append(SourceMessage("source", "Sources", sources))
-            # for doc in rag_answer["source_documents"]:
-            #     messages.append(Message("source", format_doc(doc)))
-            messages.append(Message("assistant", rag_answer["answer"]))
+            answer: str = rag_answer["answer"]
+            try:
+                answer, _ = answer.split("SOURCES:")
+            except ValueError:
+                ...
+            else:
+                if answer.endswith("("):
+                    answer = answer[:-1]
+            answer = answer.strip()
+            messages.append(Message("assistant", answer))
             st_chat_messages(messages)
             st.session_state.messages.extend(messages)
 
