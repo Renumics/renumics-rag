@@ -16,6 +16,11 @@ from langchain_openai import (
     OpenAIEmbeddings,
 )
 
+try:
+    from renumics import spotlight
+except ImportError:
+    spotlight = None  # type: ignore
+
 from assistant import (
     get_chromadb,
     get_embeddings_model,
@@ -43,10 +48,16 @@ from assistant.types import (
 
 app = typer.Typer()
 
-Role = Literal["user", "assistant", "source", "query"]
+Role = Literal["user", "assistant", "source", "query", "link"]
 
 
-AVATARS: Dict[Role, Any] = {"user": "🧐", "assistant": "🤖", "source": "📚", "query": "🔃"}
+AVATARS: Dict[Role, Any] = {
+    "user": "🧐",
+    "assistant": "🤖",
+    "source": "📚",
+    "query": "🔃",
+    "link": "🔗",
+}
 
 
 @dataclasses.dataclass
@@ -126,6 +137,18 @@ def get_questions_chromadb(embeddings_model: Embeddings) -> Chroma:
 @st.cache_resource(show_spinner=False)
 def get_db_connection() -> duckdb.DuckDBPyConnection:
     return duckdb.connect()
+
+
+@st.cache_resource(show_spinner=False)
+def get_or_create_spotlight_viewer() -> Any:
+    if spotlight is None:
+        return None
+    viewers = spotlight.viewers()
+    if viewers:
+        for viewer in viewers[:-1]:
+            viewer.close()
+        return spotlight.viewers()[-1]
+    return spotlight.show(no_browser=True, wait=False)
 
 
 def st_settings(
@@ -268,7 +291,7 @@ def st_docs_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
             st.session_state.messages.extend(messages)
 
 
-def st_sql_chat(chain: Runnable) -> None:
+def st_sql_chat(chain: Runnable, viewer: Any) -> None:
     if "messages" not in st.session_state.keys():
         st.session_state.messages = [Message("assistant", "Ask me a question")]
 
@@ -280,92 +303,33 @@ def st_sql_chat(chain: Runnable) -> None:
     if st.session_state.messages[-1].role == "user":
         with st.spinner("Thinking..."):
             answer = chain.invoke(question)
-
             try:
                 query, explanation = answer.split("END_QUERY", 1)
                 _, query = query.split("QUERY:")
+            except ValueError:
+                query = "⚠️Unparsable SQL query"
+                explanation = answer
+            else:
                 query = query.strip().strip("`")
                 if query.startswith("sql"):
                     query = query[3:]
                 query = query.strip()
-            except ValueError:
-                query = "⚠️<invalid SQL query>"
-                explanation = answer
-
             messages = [Message("query", query), Message("assistant", explanation)]
-
-            st_chat_messages(messages)
-            st.session_state.messages.extend(messages)
-
-
-def run_spotlight(query: str) -> None:
-    from renumics import spotlight
-
-    db_connection = get_db_connection()
-    try:
-        response = db_connection.execute(query)
-    except Exception:
-        st.session_state.invalid_query = True
-    else:
-        df = response.df()
-        viewer = spotlight.show(df, wait=False)
-        st.session_state.spotlight_ports.append(viewer.port)
-
-
-def stop_spotlight() -> None:
-    from renumics import spotlight
-
-    for port in {
-        *st.session_state.spotlight_ports,
-        *(viewer.port for viewer in spotlight.viewers()),
-    }:
-        spotlight.close(port)
-    st.session_state.spotlight_ports.clear()
-
-
-def st_explore_sql() -> None:
-    try:
-        from renumics import spotlight  # noqa: F401
-    except ImportError:
-        st.warning(
-            "To explore results, first install Spotlight: "
-            "`pip install renumics-spotlight`",
-            icon="⚠️",
-        )
-        return
-    if "spotlight_ports" not in st.session_state:
-        st.session_state.spotlight_ports = []
-    if "invalid_query" not in st.session_state:
-        st.session_state.invalid_query = False
-    query = next(
-        (
-            message.content
-            for message in reversed(st.session_state.messages)
-            if message.role == "query" and not message.content.startswith("⚠️")
-        ),
-        None,
-    )
-    _, col1, col2 = st.columns([0.6, 0.2, 0.2])
-    if st.session_state.invalid_query:
-        st.warning("Invalid SQL query recevied!", icon="⚠️")
-        st.session_state.invalid_query = False
-
-    with col1:
-        st.button(
-            "Explore",
-            disabled=query is None
-            or bool(
-                st.session_state.spotlight_ports,
-            ),
-            on_click=run_spotlight,
-            args=(query,),
-        )
-    with col2:
-        st.button(
-            "Stop",
-            disabled=not st.session_state.spotlight_ports,
-            on_click=stop_spotlight,
-        )
+        with st.spinner("Preparing visualization..."):
+            if viewer is not None and not query.startswith("⚠️"):
+                try:
+                    df = duckdb.sql(query).df()
+                    viewer.show(
+                        df, no_browser=True, allow_filebrowsing=False, wait=False
+                    )
+                except Exception:
+                    messages[0] = Message(
+                        "query", f"⚠️Invalid SQL query:\n{messages[0].content}"
+                    )
+                else:
+                    messages.insert(1, Message("link", f"Explore: {viewer}"))
+        st_chat_messages(messages)
+        st.session_state.messages.extend(messages)
 
 
 def st_app(
@@ -385,19 +349,15 @@ def st_app(
             # "About": "https://github.com/Renumics/rag-demo",
         },
     )
-
-    col1, col2 = st.columns([0.5, 0.5])
-
-    with col1:
-        if image:
-            st.image(image)
-        if h1:
-            st.title(h1)
-    if h2:
-        st.header(h2, divider=True)
-
     with st.sidebar:
         st_settings(settings)
+
+    if image:
+        st.image(image)
+    if h1:
+        st.title(h1)
+    if h2:
+        st.header(h2, divider=True)
 
     # All variables used in `get_embeddings_model`, `_get_rag_chain` and
     # `get_questions_chromadb` should be set before, either with `st_settings` or fixed.
@@ -421,12 +381,17 @@ def st_app(
             questions_vectorstore = get_questions_chromadb(embeddings_model)
         st_docs_chat(chain, questions_vectorstore)
     elif st.session_state.rag_mode == "sql":
-        with st.spinner("Loading llm and chain..."):
+        with st.spinner("Loading llm, chain and explorer..."):
             llm = _get_llm(st.session_state.llm_name, st.session_state.llm_type)
             chain = _get_sql_chain(llm)
-        st_sql_chat(chain)
-        with col2:
-            st_explore_sql()
+            viewer = get_or_create_spotlight_viewer()
+            if viewer is None:
+                st.warning(
+                    "To explore results, first install Spotlight: "
+                    "`pip install renumics-spotlight`",
+                    icon="⚠️",
+                )
+        st_sql_chat(chain, viewer)
     else:
         raise ValueError(f"Unknown RAG mode: '{st.session_state.rag_mode}'.")
 
