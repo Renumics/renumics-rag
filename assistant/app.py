@@ -1,5 +1,4 @@
 import dataclasses
-import re
 from typing import Any, Callable, Dict, List, Literal, Optional, Type, Union, get_args
 
 import duckdb
@@ -232,6 +231,8 @@ def st_chat_messages(messages: List[Message]) -> None:
                 with st.expander("Sources"):
                     for source in message.sources:  # type: ignore
                         st.write(source)
+            elif message.role == "query":
+                st.write(f"```sql\n{message.content}\n```")
             else:
                 st.write(message.content)
 
@@ -283,9 +284,14 @@ def st_sql_chat(chain: Runnable) -> None:
             try:
                 query, explanation = answer.split("END_QUERY", 1)
                 _, query = query.split("QUERY:")
+                query = query.strip().strip("`")
+                if query.startswith("sql"):
+                    query = query[3:]
+                query = query.strip()
             except ValueError:
                 query = "⚠️<invalid SQL query>"
                 explanation = answer
+
             messages = [Message("query", query), Message("assistant", explanation)]
 
             st_chat_messages(messages)
@@ -295,8 +301,6 @@ def st_sql_chat(chain: Runnable) -> None:
 def run_spotlight(query: str) -> None:
     from renumics import spotlight
 
-    assert query is not None
-    query = re.sub("`*(?:sql)([^`]*)`*", "\\1", query).strip()
     db_connection = get_db_connection()
     try:
         response = db_connection.execute(query)
