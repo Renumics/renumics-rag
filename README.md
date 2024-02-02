@@ -1,6 +1,6 @@
 # 🤖RAG Demo
 
-Retrieval-Augmented Generation Assistant Demo.
+Retrieval-augmented generation assistant demo using [LangChain](https://github.com/langchain-ai/langchain) and [Streamlit](https://github.com/streamlit/streamlit).
 
 ## 🛠️Installation
 

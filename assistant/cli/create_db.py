@@ -65,7 +65,7 @@ def create_db(
     embeddings_model = get_embeddings_model(*parse_model_name(embeddings_model_name))
 
     docs_vectorstore = get_chromadb(
-        settings.docs_db_directory, embeddings_model, settings.docs_db_collection
+        embeddings_model, settings.docs_db_directory, settings.docs_db_collection
     )
     indexed_doc_filepaths = sorted(
         set(

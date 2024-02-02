@@ -35,8 +35,8 @@ def answer(
     embeddings_model = get_embeddings_model(*parse_model_name(embeddings_model_name))
     llm = get_llm(*parse_model_name(llm_name))
     docs_vectorstore = get_chromadb(
-        settings.docs_db_directory,
         embeddings_model,
+        settings.docs_db_directory,
         settings.docs_db_collection,
         settings.relevance_score_fn,
     )
@@ -52,9 +52,9 @@ def answer(
     rag_chain = get_rag_chain(retriever, llm)
 
     questions_vectorstore = get_chromadb(
-        persist_directory=settings.questions_db_directory,
-        embeddings_model=embeddings_model,
-        collection_name=settings.questions_db_collection,
+        embeddings_model,
+        settings.questions_db_directory,
+        settings.questions_db_collection,
     )
 
     for question in questions:

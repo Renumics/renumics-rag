@@ -30,9 +30,7 @@ def retrieve(
     """
     embeddings_model = get_embeddings_model(*parse_model_name(embeddings_model_name))
     vectorstore = get_chromadb(
-        persist_directory=settings.docs_db_directory,
-        embeddings_model=embeddings_model,
-        collection_name=settings.docs_db_collection,
+        embeddings_model, settings.docs_db_directory, settings.docs_db_collection
     )
     retriever = get_retriever(vectorstore)
 
