@@ -1,10 +1,10 @@
 # RAG Demo
 
-Retrieval-Augmented Generation Assistant Demo
+Retrieval-Augmented Generation Assistant Demo.
 
 ## Installation
 
-Setup virtual environment in the project folder:
+Setup a virtual environment in the project directory:
 
 ```shell
 python3.8 -m venv .venv
@@ -14,24 +14,24 @@ source .venv/bin/activate  # Linux/MacOS
 pip install -IU pip setuptools wheel
 ```
 
-Install RAG demo package and some extra dependencies:
+Install the RAG demo package and some extra dependencies:
 
 ```shell
-# Torch with GPU support
+# For GPU support
 pip install git+https://github.com/Renumics/rag-demo.git[all] pandas renumics-spotlight torch torchvision sentence-transformers accelerate
-# Torch with CPU support
+# For CPU support
 # pip install git+https://github.com/Renumics/rag-demo.git[all] pandas renumics-spotlight torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
 ```
 
 ## Local Setup
 
-If are going not only to use, but also to modify this project, it makes sense to clone the whole project:
+If you intend to edit, not simply use, this project, clone the entire repository:
 
-```
+```shell
 git clone git@github.com:Renumics/rag-demo.git
 ```
 
-and install it editable.
+Then install it in editable mode.
 
 ### Via `pip`
 
@@ -45,19 +45,19 @@ source .venv/bin/activate  # Linux/MacOS
 pip install -IU pip setuptools wheel
 ```
 
-Install RAG demo package and some extra dependencies:
+Install the RAG demo package and some extra dependencies:
 
 ```shell
 pip install -e .[all]
-# Torch with GPU support
+# For GPU support
 pip install pandas renumics-spotlight torch torchvision sentence-transformers accelerate
-# Torch with CPU support
+# For CPU support
 # pip install pandas renumics-spotlight torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
 ```
 
 ### Via `poetry`
 
-Install RAG demo and some extra dependencies:
+Install the RAG demo and some extra dependencies:
 
 ```shell
 poetry install --all-extras
@@ -67,23 +67,23 @@ pip install pandas renumics-spotlight torch torchvision sentence-transformers ac
 # pip install pandas renumics-spotlight torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
 ```
 
-Activate environment (otherwise, all further commands should be prefixed with `poetry run`):
+Activate the environment (otherwise, prexis all subsequent commands with `poetry run`):
 
 ```shell
 poetry shell
 ```
 
-> Note: If you have [Direnv](https://direnv.net/) installed, you can avoid prefixing python commands with `poetry run` by executing `direnv allow` in the project folder. It will activate environment each time you enter the project folder.
+> Note: If you have [Direnv](https://direnv.net/) installed, you can avoid prefixing python commands with `poetry run` by executing `direnv allow` in the project directory. It will activate environment each time you enter the project directory.
 
-### Settings
+### Configuration
 
-If you are going to use OpenAI models, create `.env` with the following content:
+If you plan to use OpenAI models, create `.env` with the following content:
 
 ```bash
 OPENAI_API_KEY="Your OpenAI API key"
 ```
 
-If you are going to use OpenAI models via Azure, create `.env` with the following content:
+If you plan to use OpenAI models via Azure, create `.env` with the following content:
 
 ```shell
 OPENAI_API_TYPE="azure"
@@ -92,27 +92,27 @@ AZURE_OPENAI_API_KEY="Your Azure OpenAI API key"
 AZURE_OPENAI_ENDPOINT="Your Azure OpenAI endpoint"
 ```
 
-If you are going to use Hugging Face models, you don't need `.env` file.
+If you are using Hugging Face models, a `.env` file is not necessary.
 
-Navigate to [settings file](./settings.yaml) and adjust parameters if needed.
+Modify parameters if desired in the [settings file](./settings.yaml).
 
-> Note: you can create multiple settings files and switch between them by setting `RAG_SETTINGS` environment variable.
+> Note: you can create different settings files and toggle between them by setting the `RAG_SETTINGS` environment variable.
 
 ## Usage
 
-Create folder `data/docs` in the project folder and place your documents in there (recursive folder structure is supported).
+Create a new `data/docs` directory within the project and place your documents in there (recursive directories are supported).
 
-> Note: at the moment only HTML files are supported for indexing but it can be adjusted in the [create-db](assistant/cli/create_db.py) script.
+> Note: at the moment, only HTML files can be indexed but it can be adjusted in the [create-db](assistant/cli/create_db.py) script.
 
-First step is to index your documents. To do it, execute the following command:
+Begin the process by indexing your documents. Execute the following command:
 
 ```shell
 create-db
 ```
 
-It should create `db-docs` folder in the project with indexed documents inside. To index new documents, use `--exist-ok` and `--on-match` flags (run `create-db --help` to see more).
+This will create a `db-docs` directory within the project consisting of indexed documents. To index additional documents, use the `--exist-ok` and `--on-match` flags (refer to `create-db --help` for more information).
 
-Now you can use the indexed documents to answer your questions.
+Now, you can leverage the indexed documents to answer questions.
 
 To only retrieve relevant documents:
 
@@ -122,7 +122,7 @@ retrieve "Your question here"
 # SOURCES: ...
 ```
 
-Answer a question using indexed documents:
+To answer a question based on the indexed documents:
 
 ```shell
 answer "Your question here"
@@ -131,15 +131,15 @@ answer "Your question here"
 # SOURCES: ...
 ```
 
-Start web app:
+To start a web application:
 
 ```shell
 app
 ```
 
-For available app options, see `app --help`.
+See `app --help` for available application options.
 
-After you asked some questions you can explore them in [Renumics Spotlight](https://github.com/Renumics/spotlight):
+After submitting some questions, you can explore them using [Renumics Spotlight](https://github.com/Renumics/spotlight):
 
 ```shell
 explore
