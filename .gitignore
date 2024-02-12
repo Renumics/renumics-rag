@@ -1,7 +1,9 @@
 .env
 data/
+db/
 db-docs/
 db-questions/
+db-out/
 dev/
 dist/
 *.yml
@@ -14,7 +16,4 @@ __pycache__/
 .ruff_cache/
 .vscode/
 .idea/
-
-db-out/
-
-db/
+node_modules/
