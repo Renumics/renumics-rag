@@ -2,8 +2,8 @@
 data/
 db/
 db-docs/
-db-questions/
 db-out/
+db-questions/
 dev/
 dist/
 *.yml
