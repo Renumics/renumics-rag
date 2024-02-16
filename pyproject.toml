@@ -47,6 +47,7 @@ pre-commit = "^3.0.1"
 pandas-stubs = "^2.0.2.230605"
 ipython = "^8.12.3"
 types-pyyaml = "^6.0.12.12"
+notebook = "^7.0.8"
 
 [tool.ruff.lint]
 extend-select = [
