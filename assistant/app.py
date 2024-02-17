@@ -249,7 +249,7 @@ def st_app(
         },
     )
     if image:
-        st.image(image)
+        st.image(image, width=128)
     if h1:
         st.title(h1)
     if h2:
