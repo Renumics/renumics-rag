@@ -205,7 +205,7 @@ def st_chat_messages(messages: List[Message]) -> None:
             st.write(message.content)
 
 
-def st_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
+def st_chat(on_question: Callable[[str], List[Message]]) -> None:
     if "messages" not in st.session_state.keys():
         st.session_state.messages = [Message("assistant", "Ask me a question")]
 
@@ -216,17 +216,7 @@ def st_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
 
     if st.session_state.messages[-1].role == "user":
         with st.spinner("Thinking..."):
-            rag_answer = chain.invoke(question)
-
-            questions_vectorstore.add_documents(
-                [question_as_doc(st.session_state.messages[-1].content, rag_answer)]
-            )
-            questions_vectorstore.persist()
-
-            messages: List[Message] = []
-            for doc in rag_answer["source_documents"]:
-                messages.append(Message("source", format_doc(doc)))
-            messages.append(Message("assistant", rag_answer["answer"]))
+            messages = on_question(st.session_state.messages[-1].content)
             st_chat_messages(messages)
             st.session_state.messages.extend(messages)
 
@@ -248,6 +238,8 @@ def st_app(
             # "About": "https://github.com/Renumics/rag-demo",
         },
     )
+    with st.sidebar:
+        st_settings(settings)
     col1, col2 = st.columns([7, 1])
     with col1:
         if h1:
@@ -258,9 +250,6 @@ def st_app(
         if image:
             st.image(image)
     st.divider()
-
-    with st.sidebar:
-        st_settings(settings)
 
     # All variables used in `get_embeddings_model`, `_get_rag_chain` and
     # `get_questions_chromadb` should be set before, either with `st_settings` or fixed.
@@ -282,7 +271,19 @@ def st_app(
         )
         questions_vectorstore = _get_questions_chromadb(embeddings_model)
 
-    st_chat(chain, questions_vectorstore)
+        def on_question(question: str) -> List[Message]:
+            rag_answer = chain.invoke(question)
+
+            questions_vectorstore.add_documents([question_as_doc(question, rag_answer)])
+            questions_vectorstore.persist()
+
+            messages: List[Message] = []
+            for doc in rag_answer["source_documents"]:
+                messages.append(Message("source", format_doc(doc)))
+            messages.append(Message("assistant", rag_answer["answer"]))
+            return messages
+
+    st_chat(on_question)
 
 
 app.command()(st_app)
