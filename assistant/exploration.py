@@ -1,41 +1,18 @@
-#!/usr/bin/env python3
-"""
-Explore embeddings database.
-"""
+from pathlib import Path
 
-try:
-    import pandas as pd
-    from renumics import spotlight
-    from renumics.spotlight import dtypes as spotlight_dtypes
-except ImportError as e:
-    raise ImportError(
-        "In order to explore vectorstores, install extra packages: "
-        "`pip install pandas renumics-spotlight`."
-    ) from e
-import typer
-from typing_extensions import Annotated
+import pandas as pd
 
-from assistant import get_chromadb, get_embeddings_model, parse_model_name
-from assistant.const import EMBEDDINGS_MODEL_NAME_HELP
-from assistant.settings import settings
-
-app = typer.Typer()
+from assistant import get_chromadb
 
 
-@app.command()
-def explore(
-    embeddings_model_name: Annotated[
-        str, typer.Option("--embeddings", help=EMBEDDINGS_MODEL_NAME_HELP)
-    ] = settings.full_embeddings_model_name,
-) -> None:
-    """
-    Load RAG demo sources and chat history and visualize them.
-    """
-
-    embeddings_model = get_embeddings_model(*parse_model_name(embeddings_model_name))
-
+def get_docs_questions_df(
+    docs_db_directory: Path,
+    docs_db_collection: str,
+    questions_db_directory: Path,
+    questions_db_collection: str,
+) -> pd.DataFrame:
     docs_vectorstore = get_chromadb(
-        embeddings_model, settings.docs_db_directory, settings.docs_db_collection
+        persist_directory=docs_db_directory, collection_name=docs_db_collection
     )
     response = docs_vectorstore.get(include=["metadatas", "documents", "embeddings"])
     docs_df = pd.DataFrame(
@@ -49,9 +26,8 @@ def explore(
     )
 
     questions_vectorstore = get_chromadb(
-        embeddings_model,
-        settings.questions_db_directory,
-        settings.questions_db_collection,
+        persist_directory=questions_db_directory,
+        collection_name=questions_db_collection,
     )
     response = questions_vectorstore.get(
         include=["metadatas", "documents", "embeddings"]
@@ -83,18 +59,4 @@ def explore(
     )
 
     df = pd.concat([docs_df, questions_df], ignore_index=True)
-    print(df)
-    spotlight.show(
-        df,
-        dtype={
-            "used_by_questions": spotlight_dtypes.SequenceDType(
-                spotlight_dtypes.str_dtype
-            )
-        },
-        embed=False,
-        analyze=False,
-    )
-
-
-if __name__ == "__main__":
-    app()
+    return df

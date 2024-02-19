@@ -26,6 +26,7 @@ from assistant import (
     get_retriever,
     question_as_doc,
 )
+from assistant.exploration import get_docs_questions_df
 from assistant.settings import Settings, settings
 from assistant.types import (
     LLM,
@@ -108,6 +109,21 @@ def _get_questions_chromadb(embeddings_model: Embeddings) -> Chroma:
         settings.questions_db_collection,
     )
     return vectorstore
+
+
+@st.cache_resource(show_spinner=False)
+def get_or_create_spotlight_viewer() -> Any:
+    try:
+        from renumics import spotlight
+    except ImportError as e:
+        print(e)
+        return None
+    viewers = spotlight.viewers()
+    if viewers:
+        for viewer in viewers[:-1]:
+            viewer.close()
+        return spotlight.viewers()[-1]
+    return spotlight.show(no_browser=True, wait=False)
 
 
 def st_settings(
@@ -283,7 +299,19 @@ def st_app(
             messages.append(Message("assistant", rag_answer["answer"]))
             return messages
 
+        viewer = get_or_create_spotlight_viewer()
+
+        def explore() -> None:
+            df = get_docs_questions_df(
+                settings.docs_db_directory,
+                settings.docs_db_collection,
+                settings.questions_db_directory,
+                settings.questions_db_collection,
+            )
+            viewer.show(df, wait=False)
+
     st_chat(on_question)
+    st.button("Explore", on_click=explore, disabled=viewer is None)
 
 
 app.command()(st_app)
