@@ -358,13 +358,16 @@ def st_app(
     )
     with st.sidebar:
         st_settings(settings)
-
-    if image:
-        st.image(image, width=128)
-    if h1:
-        st.title(h1)
-    if h2:
-        st.header(h2, divider=True)
+    col1, col2 = st.columns([7, 1])
+    with col1:
+        if h1:
+            st.title(h1)
+        if h2:
+            st.header(h2)
+    with col2:
+        if image:
+            st.image(image)
+    st.divider()
 
     # All variables used in `get_embeddings_model`, `_get_rag_chain` and
     # `get_questions_chromadb` should be set before, either with `st_settings` or fixed.
