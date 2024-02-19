@@ -10,6 +10,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import (
     BSHTMLLoader,
     DirectoryLoader,
+    PyPDFLoader,
     UnstructuredMarkdownLoader,
 )
 from tqdm import trange
@@ -98,6 +99,14 @@ def create_db(
         str(docs_directory),
         glob="*.md",
         loader_cls=UnstructuredMarkdownLoader,
+        recursive=True,
+        show_progress=True,
+    )
+    docs.extend(loader.load())
+    loader = DirectoryLoader(
+        str(docs_directory),
+        glob="*.pdf",
+        loader_cls=PyPDFLoader,  # type: ignore
         recursive=True,
         show_progress=True,
     )
