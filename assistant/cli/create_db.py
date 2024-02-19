@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import math
 from enum import Enum
 from pathlib import Path
 
@@ -6,7 +7,12 @@ import chromadb
 import chromadb.config
 import typer
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import BSHTMLLoader, DirectoryLoader
+from langchain_community.document_loaders import (
+    BSHTMLLoader,
+    DirectoryLoader,
+    UnstructuredMarkdownLoader,
+)
+from tqdm import trange
 from typing_extensions import Annotated
 
 from assistant import get_chromadb, get_embeddings_model, parse_model_name, stable_hash
@@ -46,6 +52,9 @@ def create_db(
             help="Action to perform if given documents are indexed already.",
         ),
     ] = OnMatchAction.FAIL,
+    batch_size: Annotated[
+        int, typer.Option(help="Batch size for indexing document chunks.")
+    ] = 50,
 ) -> None:
     """
     Index documents into database.
@@ -63,9 +72,10 @@ def create_db(
                 f"'--exist-ok' for appending to existing collections."
             )
     embeddings_model = get_embeddings_model(*parse_model_name(embeddings_model_name))
+    assert batch_size > 0
 
     docs_vectorstore = get_chromadb(
-        settings.docs_db_directory, embeddings_model, settings.docs_db_collection
+        embeddings_model, settings.docs_db_directory, settings.docs_db_collection
     )
     indexed_doc_filepaths = sorted(
         set(
@@ -74,6 +84,7 @@ def create_db(
         )
     )
 
+    docs = []
     loader = DirectoryLoader(
         str(docs_directory),
         glob="*.html",
@@ -82,7 +93,15 @@ def create_db(
         recursive=True,
         show_progress=True,
     )
-    docs = loader.load()
+    docs.extend(loader.load())
+    loader = DirectoryLoader(
+        str(docs_directory),
+        glob="*.md",
+        loader_cls=UnstructuredMarkdownLoader,
+        recursive=True,
+        show_progress=True,
+    )
+    docs.extend(loader.load())
 
     if on_match == OnMatchAction.IGNORE:
         docs = [
@@ -114,8 +133,11 @@ def create_db(
         splits = text_splitter.split_documents(docs)
         split_ids = list(map(stable_hash, splits))
 
-        docs_vectorstore.add_documents(splits, ids=split_ids)
-        docs_vectorstore.persist()
+        for batch_index in trange(math.ceil(len(splits) / batch_size)):
+            start = batch_size * batch_index
+            end = start + batch_size
+            docs_vectorstore.add_documents(splits[start:end], ids=split_ids[start:end])
+            docs_vectorstore.persist()
 
 
 if __name__ == "__main__":

@@ -1,3 +1,73 @@
+"""
+RAG assistant.
+
+This module provides the most functionality for RAG usage:
+- LLM embeddings (OpenAI, Azure OpenAi and Hugging Face models are supported);
+- Vectorsores and retrievers (ChromaDB);
+- Chains (RAG chain with using and returning source documents);
+- LLMs (OpenAI, Azure OpenAi and Hugging Face models are supported);
+
+Load and split documents:
+```python
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.document_loaders import WebBaseLoader
+
+loader = WebBaseLoader("https://lilianweng.github.io/posts/2023-06-23-agent/")
+docs = loader.load()
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+splits = text_splitter.split_documents(docs)
+```
+
+# Index documents using Hugging Face model
+```python
+from assistant import get_chromadb, get_embeddings_model
+
+embeddings_model = get_embeddings_model("thenlper/gte-base", "hf")
+vectorstore = get_chromadb(embeddings_model)
+vectorstore.add_documents(splits)
+```
+
+# Create RAG chain using Hugging Face model
+```python
+from assistant import get_llm, get_rag_chain, get_retriever
+
+retriever = get_retriever(vectorstore)
+llm = get_llm("google/flan-t5-base", "hf")
+chain = get_rag_chain(retriever, llm)
+```
+
+# Invoke RAG chain
+```python
+chain.invoke("What is Task Decomposition?")
+# {'source_documents': [...], 'question': ..., 'answer': ...}
+```
+
+# Clear previous indices
+```python
+vectorstore.delete_collection()
+```
+
+# Index documents using OpenAI model
+```python
+embeddings_model = get_embeddings_model("text-embedding-ada-002", "openai")
+vectorstore = get_chromadb(embeddings_model)
+vectorstore.add_documents(splits)
+```
+
+# Create RAG chain using OpenAI model
+```python
+retriever = get_retriever(vectorstore)
+llm = get_llm("gpt-4", "openai")
+chain = get_rag_chain(retriever, llm)
+```
+
+# Invoke RAG chain
+```python
+chain.invoke("What is Task Decomposition?")
+# {'source_documents': [...], 'question': ..., 'answer': ...}
+```
+"""
+
 import hashlib
 import json
 import sys
@@ -22,7 +92,7 @@ from langchain_openai import (
 )
 
 from .exceptions import HFImportError
-from .settings import guess_model_type, settings
+from .settings import guess_model_type
 from .types import (
     LLM,
     ModelType,
@@ -38,7 +108,7 @@ if sys.platform == "linux":
     __import__("pysqlite3")
     sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 
-# Import `chromadb` when `sqlite3` is patched only.
+# Import `chromadb` when `sqlite3` is patched.
 import chromadb  # noqa: E402
 import chromadb.api.types  # noqa: E402
 
@@ -95,9 +165,7 @@ def get_hf_llm(name: str) -> HuggingFacePipeline:
     except ImportError as e:
         raise HFImportError() from e
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    pipe = pipeline(
-        model=name, device=device, max_length=1024, temperature=0.0
-    )  # torch_dtype=torch.float16
+    pipe = pipeline(model=name, device=device, max_length=2048)
     llm = HuggingFacePipeline(pipeline=pipe)
     return llm
 
@@ -123,71 +191,93 @@ def get_llm_config(llm: LLM) -> Tuple[str, ModelType]:
     raise TypeError(f"Unknown model type `{type(llm)}`.")
 
 
+def assert_embeddings_model_ok_for_chromadb(
+    embeddings_model: Embeddings, persist_directory: Path, collection_name: str
+) -> None:
+    """
+    If model config is exists in the given collection of the given ChromaDB,
+    check its compatibility with the given model.
+    """
+    if not persist_directory.exists():
+        # Vectorstore doesn't exist yet.
+        return
+    model_name, model_type = get_embeddings_model_config(embeddings_model)
+    client_settings = chromadb.Settings(
+        is_persistent=True, persist_directory=str(persist_directory)
+    )
+    client = chromadb.Client(client_settings)
+    try:
+        collection = client.get_collection(collection_name, embedding_function=None)
+    except ValueError:
+        # Collection doesn't exist in the ChromaDB yet.
+        return
+    if not collection.metadata:
+        # No metadata in the collection.
+        return
+    try:
+        collection_model_type = collection.metadata["model_type"]
+    except KeyError:
+        ...  # No model type in the metadata.
+    else:
+        # Assume models from Azure and OpenAI with the same name as same.
+        if collection_model_type != model_type and {
+            model_type,
+            collection_model_type,
+        } != {"azure", "openai"}:
+            raise RuntimeError(
+                f"Given embeddings model type '{model_type}' doesn't "
+                f"match with the embeddings model type "
+                f"'{collection_model_type}' of the "
+                f"collection '{collection_name}' of the ChromaDB."
+            )
+    try:
+        collection_model_name = collection.metadata["model_name"]
+    except KeyError:
+        ...  # No model name in the metadata.
+    else:
+        if collection_model_name != model_name:
+            raise RuntimeError(
+                f"Given embeddings model name '{model_name}' doesn't "
+                f"match with the embeddings model name "
+                f"'{collection_model_name}' of the "
+                f"collection '{collection_name}' of the database."
+            )
+
+
 def get_chromadb(
-    persist_directory: Path,
-    embeddings_model: Embeddings,
-    collection_name: str,
+    embeddings_model: Optional[Embeddings] = None,
+    persist_directory: Optional[Path] = None,
+    collection_name: str = Chroma._LANGCHAIN_DEFAULT_COLLECTION_NAME,
     relevance_score_fn: RelevanceScoreFn = "l2",
 ) -> Chroma:
     """
     https://docs.trychroma.com/usage-guide#changing-the-distance-function
     """
-    model_name, model_type = get_embeddings_model_config(embeddings_model)
-    if persist_directory.exists():
-        client_settings = chromadb.Settings(
-            is_persistent=True, persist_directory=str(settings.docs_db_directory)
+    if embeddings_model is not None and persist_directory is not None:
+        assert_embeddings_model_ok_for_chromadb(
+            embeddings_model, persist_directory, collection_name
         )
-        client = chromadb.Client(client_settings)
-        try:
-            collection = client.get_collection(collection_name, embedding_function=None)
-        except ValueError:
-            ...  # Collection doesn't exist, so nothing to check.
-        else:
-            if collection.metadata:
-                try:
-                    collection_model_type = collection.metadata["model_type"]
-                except KeyError:
-                    ...  # Model type isn't defined on the collection, do not check.
-                else:
-                    # Assume models from Azure and OpenAI with the same name as same.
-                    if model_type != collection_model_type and {
-                        model_type,
-                        collection_model_type,
-                    } != {"azure", "openai"}:
-                        raise RuntimeError(
-                            f"Given embeddings model type '{model_type}' doesn't "
-                            f"match with the embeddings model type "
-                            f"'{collection.metadata['model_type']}' of the "
-                            f"collection '{collection_name}' of the database."
-                        )
-                if (
-                    "model_name" in collection.metadata
-                    and collection.metadata["model_name"] != model_name
-                ):
-                    raise RuntimeError(
-                        f"Given embeddings model name '{model_name}' doesn't "
-                        f"match with the embeddings model name "
-                        f"'{collection.metadata['model_name']}' of the "
-                        f"collection '{collection_name}' of the database."
-                    )
 
-    collection_metadata = {"model_name": model_name, "model_type": model_type}
+    kwargs: Dict = {
+        "collection_name": collection_name,
+        "embedding_function": embeddings_model,
+        "persist_directory": (
+            None if persist_directory is None else str(persist_directory)
+        ),
+    }
+    collection_metadata = {}
+    if embeddings_model is not None:
+        model_name, model_type = get_embeddings_model_config(embeddings_model)
+        collection_metadata["model_name"] = model_name
+        collection_metadata["model_type"] = model_type
+
     if isinstance(relevance_score_fn, str):
         assert relevance_score_fn in get_args(PredefinedRelevanceScoreFn)
         collection_metadata["hnsw:space"] = relevance_score_fn
-        return Chroma(
-            collection_name=collection_name,
-            embedding_function=embeddings_model,
-            persist_directory=str(persist_directory),
-            collection_metadata=collection_metadata,
-        )
-    return Chroma(
-        collection_name=collection_name,
-        embedding_function=embeddings_model,
-        persist_directory=str(persist_directory),
-        collection_metadata=collection_metadata,
-        relevance_score_fn=relevance_score_fn,
-    )
+    else:
+        kwargs["relevance_score_fn"] = relevance_score_fn
+    kwargs["collection_metadata"] = collection_metadata
+    return Chroma(**kwargs)
 
 
 def get_retriever(

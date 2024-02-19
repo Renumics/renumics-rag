@@ -112,10 +112,10 @@ def _get_rag_chain(
     embeddings_model: Embeddings,
 ) -> Runnable:
     vectorstore = get_chromadb(
-        persist_directory=settings.docs_db_directory,
-        embeddings_model=embeddings_model,
-        collection_name=settings.docs_db_collection,
-        relevance_score_fn=relevance_score_fn,
+        embeddings_model,
+        settings.docs_db_directory,
+        settings.docs_db_collection,
+        relevance_score_fn,
     )
     retriever = get_retriever(
         vectorstore, k, search_type, score_threshold, fetch_k, lambda_mult
@@ -125,11 +125,11 @@ def _get_rag_chain(
 
 
 @st.cache_resource(show_spinner=False, hash_funcs=HASH_FUNCS)
-def get_questions_chromadb(embeddings_model: Embeddings) -> Chroma:
+def _get_questions_chromadb(embeddings_model: Embeddings) -> Chroma:
     vectorstore = get_chromadb(
-        persist_directory=settings.questions_db_directory,
-        embeddings_model=embeddings_model,
-        collection_name=settings.questions_db_collection,
+        embeddings_model,
+        settings.questions_db_directory,
+        settings.questions_db_collection,
     )
     return vectorstore
 
@@ -360,7 +360,7 @@ def st_app(
         st_settings(settings)
 
     if image:
-        st.image(image)
+        st.image(image, width=128)
     if h1:
         st.title(h1)
     if h2:
@@ -385,7 +385,7 @@ def st_app(
                 st.session_state.lambda_mult,
                 embeddings_model,
             )
-            questions_vectorstore = get_questions_chromadb(embeddings_model)
+            questions_vectorstore = _get_questions_chromadb(embeddings_model)
         st_docs_chat(chain, questions_vectorstore)
     elif st.session_state.rag_mode == "sql":
         with st.spinner("Loading llm, chain and explorer..."):
