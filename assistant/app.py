@@ -1,6 +1,7 @@
 import dataclasses
 from typing import Any, Callable, Dict, List, Literal, Optional, Type, Union, get_args
 
+import pandas as pd
 import streamlit as st
 import typer
 from langchain.vectorstores.chroma import Chroma
@@ -115,15 +116,26 @@ def _get_questions_chromadb(embeddings_model: Embeddings) -> Chroma:
 def get_or_create_spotlight_viewer() -> Any:
     try:
         from renumics import spotlight
+        from renumics.spotlight import dtypes as spotlight_dtypes
     except ImportError as e:
         print(e)
         return None
     viewers = spotlight.viewers()
+    print(viewers)
     if viewers:
         for viewer in viewers[:-1]:
             viewer.close()
         return spotlight.viewers()[-1]
-    return spotlight.show(no_browser=True, wait=False)
+    return spotlight.show(
+        pd.DataFrame({}),  # Hack for Spotlight
+        no_browser=True,
+        dtype={
+            "used_by_questions": spotlight_dtypes.SequenceDType(
+                spotlight_dtypes.str_dtype
+            )
+        },
+        wait=False,
+    )
 
 
 def st_settings(
@@ -228,13 +240,14 @@ def st_chat(on_question: Callable[[str], List[Message]]) -> None:
     if question := st.chat_input("Your question"):
         st.session_state.messages.append(Message("user", question))
 
-    st_chat_messages(st.session_state.messages)
+    with st.container(height=400, border=False):
+        st_chat_messages(st.session_state.messages)
 
-    if st.session_state.messages[-1].role == "user":
-        with st.spinner("Thinking..."):
-            messages = on_question(st.session_state.messages[-1].content)
-            st_chat_messages(messages)
-            st.session_state.messages.extend(messages)
+        if st.session_state.messages[-1].role == "user":
+            with st.spinner("Thinking..."):
+                messages = on_question(st.session_state.messages[-1].content)
+                st_chat_messages(messages)
+                st.session_state.messages.extend(messages)
 
 
 def st_app(
@@ -256,6 +269,7 @@ def st_app(
     )
     with st.sidebar:
         st_settings(settings)
+
     col1, col2 = st.columns([7, 1])
     with col1:
         if h1:
@@ -310,8 +324,17 @@ def st_app(
             )
             viewer.show(df, wait=False)
 
+    if viewer is None:
+        st.warning(
+            "Install [Renumics Spotlight](https://github.com/Renumics/spotlight) "
+            "to explore vectorstores interactively: "
+            "`pip install pandas renumics-spotlight`",
+            icon="⚠️",
+        )
+    else:
+        st.button("Explore", on_click=explore, disabled=viewer is None)
+
     st_chat(on_question)
-    st.button("Explore", on_click=explore, disabled=viewer is None)
 
 
 app.command()(st_app)
