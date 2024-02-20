@@ -41,7 +41,7 @@ pandas = "^2.0.3"
 [tool.poetry.extras]
 openai = ["langchain-openai"]
 hf = ["transformers", "bitsandbytes"]
-all = ["langchain-openai", "transformers", "bitsandbytes"]
+all = ["langchain-openai", "transformers", "bitsandbytes", "torch"]
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.12.1"
