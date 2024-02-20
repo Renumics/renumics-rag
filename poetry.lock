@@ -3370,8 +3370,8 @@ files = [
 [package.dependencies]
 numpy = [
     {version = ">=1.20.3", markers = "python_version < \"3.10\""},
-    {version = ">=1.21.0", markers = "python_version >= \"3.10\" and python_version < \"3.11\""},
     {version = ">=1.23.2", markers = "python_version >= \"3.11\""},
+    {version = ">=1.21.0", markers = "python_version >= \"3.10\" and python_version < \"3.11\""},
 ]
 python-dateutil = ">=2.8.2"
 pytz = ">=2020.1"
@@ -6476,4 +6476,4 @@ openai = ["langchain-openai"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<3.9.7 || >3.9.7,<3.12"
-content-hash = "101d5acb403e39075fa053ef42b67d88f3f7eaa4299b11619db029c44115b492"
+content-hash = "4a8312348026783040d2e6809e81a6e041bf7d99cbc6f44f24f4121077ad2d78"
