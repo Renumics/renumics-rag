@@ -117,8 +117,7 @@ def get_or_create_spotlight_viewer() -> Any:
     try:
         from renumics import spotlight
         from renumics.spotlight import dtypes as spotlight_dtypes
-    except ImportError as e:
-        print(e)
+    except ImportError:
         return None
     viewers = spotlight.viewers()
     print(viewers)
