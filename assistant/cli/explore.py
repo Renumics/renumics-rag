@@ -5,15 +5,6 @@ Explore embeddings database.
 
 import typer
 
-try:
-    from renumics import spotlight
-    from renumics.spotlight import dtypes as spotlight_dtypes
-except ImportError as e:
-    raise ImportError(
-        "Install Renumics Spotlight to explore vectorstores: "
-        "`pip install pandas renumics-spotlight`."
-    ) from e
-
 from assistant.exploration import get_docs_questions_df
 from assistant.settings import settings
 
@@ -32,6 +23,16 @@ def explore() -> None:
         settings.questions_db_collection,
     )
     print(df)
+
+    try:
+        from renumics import spotlight
+        from renumics.spotlight import dtypes as spotlight_dtypes
+    except ImportError as e:
+        raise ImportError(
+            "Install Renumics Spotlight to explore vectorstores: "
+            "`pip install rag-demo[exploration]` or `pip install renumics-spotlight`."
+        ) from e
+
     spotlight.show(
         df,
         dtype={
