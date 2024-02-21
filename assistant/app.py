@@ -120,7 +120,6 @@ def get_or_create_spotlight_viewer() -> Any:
     except ImportError:
         return None
     viewers = spotlight.viewers()
-    print(viewers)
     if viewers:
         for viewer in viewers[:-1]:
             viewer.close()
@@ -239,14 +238,13 @@ def st_chat(on_question: Callable[[str], List[Message]]) -> None:
     if question := st.chat_input("Your question"):
         st.session_state.messages.append(Message("user", question))
 
-    with st.container(height=400, border=False):
-        st_chat_messages(st.session_state.messages)
+    st_chat_messages(st.session_state.messages)
 
-        if st.session_state.messages[-1].role == "user":
-            with st.spinner("Thinking..."):
-                messages = on_question(st.session_state.messages[-1].content)
-                st_chat_messages(messages)
-                st.session_state.messages.extend(messages)
+    if st.session_state.messages[-1].role == "user":
+        with st.spinner("Thinking..."):
+            messages = on_question(st.session_state.messages[-1].content)
+            st_chat_messages(messages)
+            st.session_state.messages.extend(messages)
 
 
 def st_app(
@@ -267,6 +265,7 @@ def st_app(
         },
     )
     with st.sidebar:
+        sidebar_container = st.container()
         st_settings(settings)
 
     col1, col2 = st.columns([7, 1])
@@ -323,15 +322,22 @@ def st_app(
             )
             viewer.show(df, wait=False)
 
-    if viewer is None:
-        st.warning(
-            "Install [Renumics Spotlight](https://github.com/Renumics/spotlight) "
-            "to explore vectorstores interactively: "
-            "`pip install pandas renumics-spotlight`",
-            icon="⚠️",
-        )
-    else:
-        st.button("Explore", on_click=explore, disabled=viewer is None)
+    with sidebar_container:
+        if viewer is None:
+            st.warning(
+                "Install [Renumics Spotlight](https://github.com/Renumics/spotlight) "
+                "to explore vectorstores interactively: "
+                "`pip install rag-demo[exploration]` or `pip install renumics-spotlight`",
+                icon="⚠️",
+            )
+        else:
+            st.button(
+                "Explore",
+                help="Explore documents and questions interactivaly in Renumics Spotlight.",
+                on_click=explore,
+                type="primary",
+                disabled=viewer is None,
+            )
 
     st_chat(on_question)
 
