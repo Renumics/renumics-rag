@@ -67,6 +67,7 @@ chain.invoke("What is Task Decomposition?")
 # {'source_documents': [...], 'question': ..., 'answer': ...}
 ```
 """
+
 import hashlib
 import json
 import sys
@@ -260,9 +261,9 @@ def get_chromadb(
     kwargs: Dict = {
         "collection_name": collection_name,
         "embedding_function": embeddings_model,
-        "persist_directory": None
-        if persist_directory is None
-        else str(persist_directory),
+        "persist_directory": (
+            None if persist_directory is None else str(persist_directory)
+        ),
     }
     collection_metadata = {}
     if embeddings_model is not None:
@@ -304,13 +305,11 @@ def get_retriever(
 
 
 def format_doc(doc: Document) -> str:
-    return f"Content: {doc.page_content}\nSource: {doc.metadata['source']}"
+    return f"Content: {doc.page_content}\nSource: \"{doc.metadata['source']}\""
 
 
 def format_docs(docs: List[Document]) -> str:
-    return "\n\n".join(
-        f"Content: {doc.page_content}\nSource: {doc.metadata['source']}" for doc in docs
-    )
+    return "\n\n".join(map(format_doc, docs))
 
 
 def get_rag_chain(retriever: VectorStoreRetriever, llm: LLM) -> Runnable:

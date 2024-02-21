@@ -1,6 +1,6 @@
-import dataclasses
-from typing import Any, Callable, Dict, List, Literal, Optional, Type, Union, get_args
+from typing import Any, Callable, Dict, List, Optional, Type, Union, get_args
 
+import pandas as pd
 import streamlit as st
 import typer
 from langchain.vectorstores.chroma import Chroma
@@ -16,7 +16,6 @@ from langchain_openai import (
 )
 
 from assistant import (
-    format_doc,
     get_chromadb,
     get_embeddings_model,
     get_embeddings_model_config,
@@ -26,30 +25,23 @@ from assistant import (
     get_retriever,
     question_as_doc,
 )
+from assistant.exploration import get_docs_questions_df
 from assistant.settings import Settings, settings
 from assistant.types import (
+    AVATARS,
     LLM,
     MODEL_TYPES,
     PREDEFINED_RELEVANCE_SCORE_FNS,
     RETRIEVER_SEARCH_TYPES,
+    Message,
     ModelType,
+    NestedMessage,
     PredefinedRelevanceScoreFn,
     RelevanceScoreFn,
     RetrieverSearchType,
 )
 
 app = typer.Typer()
-
-Role = Literal["user", "assistant", "source"]
-
-
-AVATARS: Dict[Role, Any] = {"user": "🧐", "assistant": "🤖", "source": "📚"}
-
-
-@dataclasses.dataclass
-class Message:
-    role: Role
-    content: str
 
 
 def hash_model(model: Union[Embeddings, LLM]) -> int:
@@ -108,6 +100,30 @@ def _get_questions_chromadb(embeddings_model: Embeddings) -> Chroma:
         settings.questions_db_collection,
     )
     return vectorstore
+
+
+@st.cache_resource(show_spinner=False)
+def get_or_create_spotlight_viewer() -> Any:
+    try:
+        from renumics import spotlight
+        from renumics.spotlight import dtypes as spotlight_dtypes
+    except ImportError:
+        return None
+    viewers = spotlight.viewers()
+    if viewers:
+        for viewer in viewers[:-1]:
+            viewer.close()
+        return spotlight.viewers()[-1]
+    return spotlight.show(
+        pd.DataFrame({}),  # Hack for Spotlight
+        no_browser=True,
+        dtype={
+            "used_by_questions": spotlight_dtypes.SequenceDType(
+                spotlight_dtypes.str_dtype
+            )
+        },
+        wait=False,
+    )
 
 
 def st_settings(
@@ -202,10 +218,15 @@ def st_settings(
 def st_chat_messages(messages: List[Message]) -> None:
     for message in messages:
         with st.chat_message(message.role, avatar=AVATARS.get(message.role)):
-            st.write(message.content)
+            if isinstance(message, NestedMessage):
+                with st.expander(message.content):
+                    for content in message.subcontents:
+                        st.write(content)
+            else:
+                st.write(message.content)
 
 
-def st_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
+def st_chat(on_question: Callable[[str], List[Message]]) -> None:
     if "messages" not in st.session_state.keys():
         st.session_state.messages = [Message("assistant", "Ask me a question")]
 
@@ -216,17 +237,7 @@ def st_chat(chain: Runnable, questions_vectorstore: Chroma) -> None:
 
     if st.session_state.messages[-1].role == "user":
         with st.spinner("Thinking..."):
-            rag_answer = chain.invoke(question)
-
-            questions_vectorstore.add_documents(
-                [question_as_doc(st.session_state.messages[-1].content, rag_answer)]
-            )
-            questions_vectorstore.persist()
-
-            messages: List[Message] = []
-            for doc in rag_answer["source_documents"]:
-                messages.append(Message("source", format_doc(doc)))
-            messages.append(Message("assistant", rag_answer["answer"]))
+            messages = on_question(st.session_state.messages[-1].content)
             st_chat_messages(messages)
             st.session_state.messages.extend(messages)
 
@@ -248,6 +259,10 @@ def st_app(
             # "About": "https://github.com/Renumics/rag-demo",
         },
     )
+    with st.sidebar:
+        sidebar_container = st.container()
+        st_settings(settings)
+
     col1, col2 = st.columns([7, 1])
     with col1:
         if h1:
@@ -258,9 +273,6 @@ def st_app(
         if image:
             st.image(image)
     st.divider()
-
-    with st.sidebar:
-        st_settings(settings)
 
     # All variables used in `get_embeddings_model`, `_get_rag_chain` and
     # `get_questions_chromadb` should be set before, either with `st_settings` or fixed.
@@ -282,7 +294,50 @@ def st_app(
         )
         questions_vectorstore = _get_questions_chromadb(embeddings_model)
 
-    st_chat(chain, questions_vectorstore)
+        def on_question(question: str) -> List[Message]:
+            rag_answer = chain.invoke(question)
+
+            questions_vectorstore.add_documents([question_as_doc(question, rag_answer)])
+            questions_vectorstore.persist()
+
+            messages: List[Message] = []
+            sources: List[str] = []
+            for doc in rag_answer["source_documents"]:
+                sources.append(f"**Content**: {doc.page_content}")
+                sources.append(f"**Source**: \"{doc.metadata['source']}\"")
+            messages.append(NestedMessage("source", "Sources", sources))
+            messages.append(Message("assistant", rag_answer["answer"]))
+            return messages
+
+        viewer = get_or_create_spotlight_viewer()
+
+        def explore() -> None:
+            df = get_docs_questions_df(
+                settings.docs_db_directory,
+                settings.docs_db_collection,
+                settings.questions_db_directory,
+                settings.questions_db_collection,
+            )
+            viewer.show(df, wait=False)
+
+    with sidebar_container:
+        if viewer is None:
+            st.warning(
+                "Install [Renumics Spotlight](https://github.com/Renumics/spotlight) "
+                "to explore vectorstores interactively: "
+                "`pip install rag-demo[exploration]` or `pip install renumics-spotlight`",
+                icon="⚠️",
+            )
+        else:
+            st.button(
+                "Explore",
+                help="Explore documents and questions interactivaly in Renumics Spotlight.",
+                on_click=explore,
+                type="primary",
+                disabled=viewer is None,
+            )
+
+    st_chat(on_question)
 
 
 app.command()(st_app)

@@ -36,11 +36,14 @@ bitsandbytes = {version = "^0.42.0", optional = true}
 unstructured = "^0.11.8"
 markdown = "^3.5.2"
 pypdf = "^4.0.1"
+pandas = "^2.0.3"
+renumics-spotlight = {version = "^1.6.5", optional = true}
 
 [tool.poetry.extras]
 openai = ["langchain-openai"]
 hf = ["transformers", "bitsandbytes"]
-all = ["langchain-openai", "transformers", "bitsandbytes"]
+exploration = ["renumics-spotlight"]
+all = ["langchain-openai", "transformers", "bitsandbytes", "renumics-spotlight"]
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.12.1"
@@ -65,7 +68,9 @@ disallow_untyped_defs = true
 [[tool.mypy.overrides]]
 module = [
     "transformers",
-    "sentence_transformers"
+    "sentence_transformers",
+    "torch.*",
+    "renumics.*"
 ]
 ignore_missing_imports = true
 
