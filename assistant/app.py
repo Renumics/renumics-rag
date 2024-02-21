@@ -1,5 +1,4 @@
-import dataclasses
-from typing import Any, Callable, Dict, List, Literal, Optional, Type, Union, get_args
+from typing import Any, Callable, Dict, List, Optional, Type, Union, get_args
 
 import pandas as pd
 import streamlit as st
@@ -17,7 +16,6 @@ from langchain_openai import (
 )
 
 from assistant import (
-    format_doc,
     get_chromadb,
     get_embeddings_model,
     get_embeddings_model_config,
@@ -30,28 +28,20 @@ from assistant import (
 from assistant.exploration import get_docs_questions_df
 from assistant.settings import Settings, settings
 from assistant.types import (
+    AVATARS,
     LLM,
     MODEL_TYPES,
     PREDEFINED_RELEVANCE_SCORE_FNS,
     RETRIEVER_SEARCH_TYPES,
+    Message,
     ModelType,
+    NestedMessage,
     PredefinedRelevanceScoreFn,
     RelevanceScoreFn,
     RetrieverSearchType,
 )
 
 app = typer.Typer()
-
-Role = Literal["user", "assistant", "source"]
-
-
-AVATARS: Dict[Role, Any] = {"user": "🧐", "assistant": "🤖", "source": "📚"}
-
-
-@dataclasses.dataclass
-class Message:
-    role: Role
-    content: str
 
 
 def hash_model(model: Union[Embeddings, LLM]) -> int:
@@ -228,7 +218,12 @@ def st_settings(
 def st_chat_messages(messages: List[Message]) -> None:
     for message in messages:
         with st.chat_message(message.role, avatar=AVATARS.get(message.role)):
-            st.write(message.content)
+            if isinstance(message, NestedMessage):
+                with st.expander(message.content):
+                    for content in message.subcontents:
+                        st.write(content)
+            else:
+                st.write(message.content)
 
 
 def st_chat(on_question: Callable[[str], List[Message]]) -> None:
@@ -306,8 +301,11 @@ def st_app(
             questions_vectorstore.persist()
 
             messages: List[Message] = []
+            sources: List[str] = []
             for doc in rag_answer["source_documents"]:
-                messages.append(Message("source", format_doc(doc)))
+                sources.append(f"**Content**: {doc.page_content}")
+                sources.append(f"**Source**: \"{doc.metadata['source']}\"")
+            messages.append(NestedMessage("source", "Sources", sources))
             messages.append(Message("assistant", rag_answer["answer"]))
             return messages
 

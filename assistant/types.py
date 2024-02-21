@@ -1,4 +1,5 @@
-from typing import Callable, Dict, Literal, Union
+import dataclasses
+from typing import Any, Callable, Dict, List, Literal, Union
 
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.language_models.llms import BaseLLM
@@ -25,3 +26,21 @@ RETRIEVER_SEARCH_TYPES: Dict[RetrieverSearchType, str] = {
     "similarity_score_threshold": "Similarity with score threshold",
     "mmr": "Maximal marginal relevance (MMR)",
 }
+
+
+# Types for Streamlit app
+Role = Literal["user", "assistant", "source"]
+
+
+AVATARS: Dict[Role, Any] = {"user": "🧐", "assistant": "🤖", "source": "📚"}
+
+
+@dataclasses.dataclass
+class Message:
+    role: Role
+    content: str
+
+
+@dataclasses.dataclass
+class NestedMessage(Message):
+    subcontents: List[str]
