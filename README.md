@@ -1,8 +1,8 @@
-# 🤖RAG Demo
+# 🤖 RAG Demo
 
 Retrieval-augmented generation assistant demo using [LangChain](https://github.com/langchain-ai/langchain) and [Streamlit](https://github.com/streamlit/streamlit).
 
-## 🛠️Installation
+## 🛠️ Installation
 
 Setup a virtual environment in the project directory:
 
@@ -23,7 +23,7 @@ pip install git+https://github.com/Renumics/rag-demo.git[all] pandas renumics-sp
 # pip install git+https://github.com/Renumics/rag-demo.git[all] pandas renumics-spotlight torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
 ```
 
-## ⚒️Local Setup
+## ⚒️ Local Setup
 
 If you intend to edit, not simply use, this project, clone the entire repository:
 
@@ -98,7 +98,7 @@ Modify parameters if desired in the [settings file](./settings.yaml).
 
 > Note: you can create different settings files and toggle between them by setting the `RAG_SETTINGS` environment variable.
 
-## 🚀Usage
+## 🚀 Usage
 
 Create a new `data/docs` directory within the project and place your documents in there (recursive directories are supported).
 
