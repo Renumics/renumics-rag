@@ -18,9 +18,9 @@ Install the RAG demo package and some extra dependencies:
 
 ```shell
 # For GPU support
-pip install git+https://github.com/Renumics/rag-demo.git[all] pandas renumics-spotlight torch torchvision sentence-transformers accelerate
+pip install git+https://github.com/Renumics/rag-demo.git[all] torch torchvision sentence-transformers accelerate
 # For CPU support
-# pip install git+https://github.com/Renumics/rag-demo.git[all] pandas renumics-spotlight torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
+# pip install git+https://github.com/Renumics/rag-demo.git[all] torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
 ```
 
 ## ⚒️ Local Setup
@@ -50,9 +50,9 @@ Install the RAG demo package and some extra dependencies:
 ```shell
 pip install -e .[all]
 # For GPU support
-pip install pandas renumics-spotlight torch torchvision sentence-transformers accelerate
+pip install torch torchvision sentence-transformers accelerate
 # For CPU support
-# pip install pandas renumics-spotlight torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
+# pip install torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
 ```
 
 ### Via `poetry`
@@ -62,9 +62,9 @@ Install the RAG demo and some extra dependencies:
 ```shell
 poetry install --all-extras
 # Torch with GPU support
-pip install pandas renumics-spotlight torch torchvision sentence-transformers accelerate
+pip install torch torchvision sentence-transformers accelerate
 # Torch with CPU support
-# pip install pandas renumics-spotlight torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
+# pip install torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
 ```
 
 Activate the environment (otherwise, prexis all subsequent commands with `poetry run`):
@@ -75,7 +75,7 @@ poetry shell
 
 > Note: If you have [Direnv](https://direnv.net/) installed, you can avoid prefixing python commands with `poetry run` by executing `direnv allow` in the project directory. It will activate environment each time you enter the project directory.
 
-### ⚙️Configuration
+### ⚙️ Configuration
 
 If you plan to use OpenAI models, create `.env` with the following content:
 
