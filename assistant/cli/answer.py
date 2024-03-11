@@ -41,6 +41,7 @@ def answer(
         *parse_model_name(llm_name),
         device=settings.device,
         trust_remote_code=settings.trust_remote_code,
+        torch_dtype=settings.torch_dtype,
     )
     docs_vectorstore = get_chromadb(
         embeddings_model,

@@ -288,6 +288,7 @@ def st_app(
             st.session_state.llm_type,
             device=settings.device,
             trust_remote_code=settings.trust_remote_code,
+            torch_dtype=settings.torch_dtype,
         )
         chain = _get_rag_chain(
             llm,

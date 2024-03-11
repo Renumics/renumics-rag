@@ -39,6 +39,7 @@ class Settings(BaseModel):
     # Hugging Face-specific settings
     device: Optional[Device] = None
     trust_remote_code: bool = False
+    torch_dtype: Optional[str] = None
 
     @validator("fetch_k")
     @classmethod

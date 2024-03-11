@@ -185,7 +185,10 @@ def get_embeddings_model_config(embeddings_model: Embeddings) -> Tuple[str, Mode
 
 
 def get_hf_llm(
-    name: str, device: Optional[Device] = None, trust_remote_code: bool = False
+    name: str,
+    device: Optional[Device] = None,
+    trust_remote_code: bool = False,
+    torch_dtype: Optional[str] = None,
 ) -> HuggingFacePipeline:
     try:
         import torch  # noqa: F401
@@ -196,6 +199,7 @@ def get_hf_llm(
     pipe = pipeline(
         model=name,
         device=torch_device,
+        torch_dtype=torch_dtype,
         trust_remote_code=trust_remote_code,
         max_length=2048,
     )
@@ -209,13 +213,14 @@ def get_llm(
     *,
     device: Optional[Device] = None,
     trust_remote_code: bool = False,
+    torch_dtype: Optional[str] = None,
 ) -> LLM:
     if model_type == "azure":
         return AzureChatOpenAI(azure_deployment=name, temperature=0.0)
     if model_type == "openai":
         return ChatOpenAI(model=name, temperature=0.0)
     if model_type == "hf":
-        return get_hf_llm(name, device, trust_remote_code)
+        return get_hf_llm(name, device, trust_remote_code, torch_dtype)
     raise TypeError(f"Unknown model type '{model_type}'.")
 
 
