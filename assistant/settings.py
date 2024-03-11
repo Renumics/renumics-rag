@@ -6,7 +6,7 @@ import yaml
 from pydantic import BaseModel, ConfigDict, Field, PositiveInt, validator
 from typing_extensions import Annotated, Self
 
-from .types import ModelType, RelevanceScoreFn, RetrieverSearchType
+from .types import Device, ModelType, RelevanceScoreFn, RetrieverSearchType
 
 
 def guess_model_type() -> ModelType:
@@ -35,6 +35,10 @@ class Settings(BaseModel):
     docs_db_collection: Annotated[str, Field(min_length=1)] = "docs_store"
     questions_db_directory: Path = Path("./db-questions")
     questions_db_collection: Annotated[str, Field(min_length=1)] = "questions_store"
+
+    # Hugging Face-specific settings
+    device: Optional[Device] = None
+    trust_remote_code: bool = False
 
     @validator("fetch_k")
     @classmethod

@@ -280,8 +280,15 @@ def st_app(
         embeddings_model = _get_embeddings_model(
             st.session_state.embeddings_model_name,
             st.session_state.embeddings_model_type,
+            device=settings.device,
+            trust_remote_code=settings.trust_remote_code,
         )
-        llm = _get_llm(st.session_state.llm_name, st.session_state.llm_type)
+        llm = _get_llm(
+            st.session_state.llm_name,
+            st.session_state.llm_type,
+            device=settings.device,
+            trust_remote_code=settings.trust_remote_code,
+        )
         chain = _get_rag_chain(
             llm,
             st.session_state.relevance_score_fn,

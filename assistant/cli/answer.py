@@ -32,8 +32,16 @@ def answer(
     """
     Answer question(s) using indexed database.
     """
-    embeddings_model = get_embeddings_model(*parse_model_name(embeddings_model_name))
-    llm = get_llm(*parse_model_name(llm_name))
+    embeddings_model = get_embeddings_model(
+        *parse_model_name(embeddings_model_name),
+        device=settings.device,
+        trust_remote_code=settings.trust_remote_code,
+    )
+    llm = get_llm(
+        *parse_model_name(llm_name),
+        device=settings.device,
+        trust_remote_code=settings.trust_remote_code,
+    )
     docs_vectorstore = get_chromadb(
         embeddings_model,
         settings.docs_db_directory,

@@ -5,6 +5,7 @@ from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.language_models.llms import BaseLLM
 
 ModelType = Literal["openai", "azure", "hf"]
+Device = Literal["cpu", "gpu"]
 PredefinedRelevanceScoreFn = Literal["l2", "ip", "cosine"]
 RelevanceScoreFn = Union[PredefinedRelevanceScoreFn, Callable[[float], float]]
 RetrieverSearchType = Literal["similarity", "similarity_score_threshold", "mmr"]
