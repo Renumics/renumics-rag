@@ -77,7 +77,7 @@ poetry shell
 
 ### ⚙️ Configuration
 
-If you plan to use OpenAI models, create `.env` with the following content:
+If you plan to use OpenAI models, create a `.env` file with the following content:
 
 ```bash
 OPENAI_API_KEY="Your OpenAI API key"
@@ -92,7 +92,7 @@ AZURE_OPENAI_API_KEY="Your Azure OpenAI API key"
 AZURE_OPENAI_ENDPOINT="Your Azure OpenAI endpoint"
 ```
 
-If you are using Hugging Face models, a .env file is not necessary. You can configure the embeddings model, retriever and the LLM in the config file (serttings.yaml). The default settings (taken from [settings file](./settings.yaml) are
+If you are using Hugging Face models, a .env file is not necessary. You can configure the embeddings model, retriever and the LLM in the config file (settings.yaml). The default settings (taken from [settings file](./settings.yaml) are:
 
 ```shell
 llm_type: 'openai'       # 'openai', 'hf' or 'azure'
@@ -160,7 +160,7 @@ You can enter your questions to get them answered by the RAG System. Each answer
 The Settings section on the left allows you to choose different LLMs from OpenAI or Hugging Face. In the advanced settings, you can adjust the retrieval settings like the choice of relevance score function, the number of retrieved snippets, and search type. You can also change the embeddings model. 
 Note: Changing the embeddings model requires creating a new database with the new embeddings.
 
-## 🔎 Interactivly exploreration
+## 🔎 Interactive exploration
 
 After submitting some questions, you can explore them using [Renumics Spotlight](https://github.com/Renumics/spotlight) by clicking the red explore button on the left:
 ![RAG-Demo-Explore](RAG-Demo-Explore.png)
