@@ -172,8 +172,16 @@ You can see a table of all questions and all document snippets on the top left s
 
 On the right side is the similarity map; it shows the questions and documents based on the embeddings. You can customize it by clicking the settings button and apply coloring by 'used_by_num_question' to color the snippets by the number of questions where the retriever loaded this snippet.
 
-You can select snippets in the similarity map or in the table to display them in the details view at the bottom. To customize the detail view, you can remove view rows by clicking the 'x' and add views with the 'Add View' button. A good setup here is to display the document, used_by_num_question and type.
+You can select snippets in the similarity map or in the table to display them in the details view at the bottom. To customize the detail view, you can remove rows by clicking the 'x' and add views with the 'Add View' button. A good setup here is to display the document, used_by_num_question and type.
 
 ![Rag_demo_Spotlight-adjusted](Rag_demo_Spotlight-adjusted.png)
 
 Exploring the exemplary F1 Dataset and over 500 questions from our [RAG evaluation article](https://towardsdatascience.com/visualize-your-rag-data-evaluate-your-retrieval-augmented-generation-system-with-ragas-fc2486308557) can reveal interesting clusters. Document clusters of race statistics, racing techniques and strategies, and team details are frequently referenced by at least one question. Others, like Television Rights or specific race track details, are retrieved less often.
+
+## 🔎 Tutorials and References
+
+To learn more about visulization for RAG, check out our articles:
+
+-   [ITNext: Visualize your RAG Data - EDA for Retrieval-Augmented Generation](https://itnext.io/visualize-your-rag-data-eda-for-retrieval-augmented-generation-0701ee98768f): visualization of single questions, answers, and related documents shows large potential for RAG. Dimensionality reduction techniques can make the embedding space accessible for users and developers
+
+-   [Towards Data Science: Visualize your RAG Data - Evaluate your Retrieval-Augmented Generation System with Ragas](https://towardsdatascience.com/visualize-your-rag-data-evaluate-your-retrieval-augmented-generation-system-with-ragas-fc2486308557): Utilizing UMAP-based visualization offers an interesting approach to delve deeper than just analyzing global metrics for evaluations in RAG.
