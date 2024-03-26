@@ -1,4 +1,4 @@
-# 🤖 RAG Demo
+# 🤖 Renumics RAG: Visualize RAG Data
 
 Retrieval-augmented generation assistant demo using [LangChain](https://github.com/langchain-ai/langchain) and [Streamlit](https://github.com/streamlit/streamlit).
 
