@@ -50,9 +50,9 @@ Install the RAG demo package and some extra dependencies:
 ```shell
 pip install -e .[all]
 # For GPU support
-pip install pandas renumics-spotlight torch torchvision sentence-transformers accelerate
+pip install pandas torch torchvision sentence-transformers accelerate
 # For CPU support
-# pip install pandas renumics-spotlight torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
+# pip install pandas torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
 ```
 
 ### Via `poetry`
@@ -62,9 +62,9 @@ Install the RAG demo and some extra dependencies:
 ```shell
 poetry install --all-extras
 # Torch with GPU support
-pip install pandas renumics-spotlight torch torchvision sentence-transformers accelerate
+pip install pandas torch torchvision sentence-transformers accelerate
 # Torch with CPU support
-# pip install pandas renumics-spotlight torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
+# pip install pandas torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
 ```
 
 Activate the environment (otherwise, prexis all subsequent commands with `poetry run`):
