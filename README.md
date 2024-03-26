@@ -1,4 +1,4 @@
-# 🤖 Renumics RAG: Visualize RAG Data
+# 🤖 Renumics RAG: Explore and Visualize RAG Data
 
 Retrieval-augmented generation assistant demo using [LangChain](https://github.com/langchain-ai/langchain) and [Streamlit](https://github.com/streamlit/streamlit).
 
@@ -154,7 +154,7 @@ app
 ```
 
 This will open a new browser window:
-![RAG-demo-gui](RAG-demo-gui.png)
+![RAG-demo-gui](assets/img/RAG-demo-gui.png)
 
 You can enter your questions to get them answered by the RAG System. Each answer contains an expandable 'Sources' section that includes the text and filename for each snippet used to generate the answer. 
 The Settings section on the left allows you to choose different LLMs from OpenAI or Hugging Face. In the advanced settings, you can adjust the retrieval settings like the choice of relevance score function, the number of retrieved snippets, and search type. You can also change the embeddings model. 
@@ -163,10 +163,10 @@ Note: Changing the embeddings model requires creating a new database with the ne
 ## 🔎 Interactive exploration
 
 After submitting some questions, you can explore them using [Renumics Spotlight](https://github.com/Renumics/spotlight) by clicking the red explore button on the left:
-![RAG-Demo-Explore](RAG-Demo-Explore.png)
+![RAG-Demo-Explore](assets/img/RAG-Demo-Explore.png)
 
 It will open a new browser tab:
-![RAG-Demo-Spotlight](RAG-Demo-Spotlight.png)
+![RAG-Demo-Spotlight](assets/img/RAG-Demo-Spotlight.png)
 
 You can see a table of all questions and all document snippets on the top left side. Using the 'visible columns' button, you can control which columns are shown in the table.
 
@@ -174,7 +174,7 @@ On the right side is the similarity map; it shows the questions and documents ba
 
 You can select snippets in the similarity map or in the table to display them in the details view at the bottom. To customize the detail view, you can remove rows by clicking the 'x' and add views with the 'Add View' button. A good setup here is to display the document, used_by_num_question and type.
 
-![Rag_demo_Spotlight-adjusted](Rag_demo_Spotlight-adjusted.png)
+![Rag_demo_Spotlight-adjusted](assets/img/Rag_demo_Spotlight-adjusted.png)
 
 Exploring the exemplary F1 Dataset and over 500 questions from our [RAG evaluation article](https://towardsdatascience.com/visualize-your-rag-data-evaluate-your-retrieval-augmented-generation-system-with-ragas-fc2486308557) can reveal interesting clusters. Document clusters of race statistics, racing techniques and strategies, and team details are frequently referenced by at least one question. Others, like Television Rights or specific race track details, are retrieved less often.
 
@@ -183,7 +183,7 @@ Exploring the exemplary F1 Dataset and over 500 questions from our [RAG evaluati
 To learn more about visulization for RAG, check out our articles:
 
 -   [ITNext: Visualize your RAG Data - EDA for Retrieval-Augmented Generation](https://itnext.io/visualize-your-rag-data-eda-for-retrieval-augmented-generation-0701ee98768f): visualization of single questions, answers, and related documents shows large potential for RAG. Dimensionality reduction techniques can make the embedding space accessible for users and developers
-![UMAP dimensionality reduction of the embeddings of document snippets, colored by to their relevance to the question “Who built the Nürburgring?”](rag1_ani.gif)
+    ![UMAP dimensionality reduction of the embeddings of document snippets, colored by to their relevance to the question “Who built the Nürburgring?”](assets/img/rag1_ani.gif)
 
 -   [Towards Data Science: Visualize your RAG Data - Evaluate your Retrieval-Augmented Generation System with Ragas](https://towardsdatascience.com/visualize-your-rag-data-evaluate-your-retrieval-augmented-generation-system-with-ragas-fc2486308557): Utilizing UMAP-based visualization offers an interesting approach to delve deeper than just analyzing global metrics for evaluations in RAG.
-![Animation of the iterations of a UMAP [3] dimensionality reduction for Wikipedia Formula One articles in the embedding space with manually labeled clusters](rag2_ani.gif)
+    ![Animation of the iterations of a UMAP [3] dimensionality reduction for Wikipedia Formula One articles in the embedding space with manually labeled clusters](assets/img/rag2_ani.gif)
