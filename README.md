@@ -18,9 +18,9 @@ Install the RAG demo package and some extra dependencies:
 
 ```shell
 # For GPU support
-pip install git+https://github.com/Renumics/rag-demo.git[all] torch torchvision sentence-transformers accelerate
+pip install git+https://github.com/Renumics/renumics-rag.git[all] torch torchvision sentence-transformers accelerate
 # For CPU support
-# pip install git+https://github.com/Renumics/rag-demo.git[all] torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
+# pip install git+https://github.com/Renumics/renumics-rag.git[all] torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
 ```
 
 ## ⚒️ Local Setup
@@ -28,7 +28,7 @@ pip install git+https://github.com/Renumics/rag-demo.git[all] torch torchvision 
 If you intend to edit, not simply use, this project, clone the entire repository:
 
 ```shell
-git clone git@github.com:Renumics/rag-demo.git
+git clone git@github.com:Renumics/renumics-rag.git
 ```
 
 Then install it in editable mode.

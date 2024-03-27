@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "rag-demo"
+name = "renumics-rag"
 version = "0.1.0"
-description = "Retrieval-augmented generation assistant demo"
+description = "Renumics RAG: Explore and Visualize RAG Data"
 authors = ["Renumics GmbH <info@renumics.com>"]
 license = "MIT"
 readme = "README.md"
