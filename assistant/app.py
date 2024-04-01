@@ -254,9 +254,9 @@ def st_app(
         page_icon=favicon,
         layout="wide",
         menu_items={
-            # "Get Help": "https://github.com/Renumics/rag-demo",
-            # "Report a bug": "https://github.com/Renumics/rag-demo/issues",
-            # "About": "https://github.com/Renumics/rag-demo",
+            # "Get Help": "https://github.com/Renumics/renumics-rag",
+            # "Report a bug": "https://github.com/Renumics/renumics-rag/issues",
+            # "About": "https://github.com/Renumics/renumics-rag",
         },
     )
     with st.sidebar:
@@ -333,7 +333,7 @@ def st_app(
             st.warning(
                 "Install [Renumics Spotlight](https://github.com/Renumics/spotlight) "
                 "to explore vectorstores interactively: "
-                "`pip install rag-demo[exploration]` or `pip install renumics-spotlight`",
+                "`pip install renumics-rag[exploration]` or `pip install renumics-spotlight`",
                 icon="⚠️",
             )
         else:

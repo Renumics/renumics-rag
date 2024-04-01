@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "rag-demo"
+name = "renumics-rag"
 version = "0.1.0"
-description = "Retrieval-augmented generation assistant demo"
+description = "Renumics RAG: Explore and Visualize RAG Data"
 authors = ["Renumics GmbH <info@renumics.com>"]
 license = "MIT"
 readme = "README.md"
@@ -46,15 +46,17 @@ exploration = ["renumics-spotlight"]
 all = ["langchain-openai", "transformers", "bitsandbytes", "renumics-spotlight"]
 
 [tool.poetry.group.dev.dependencies]
+pre-commit = "^3.0.1"
 black = "^23.12.1"
 ruff = "^0.1.14"
 mypy = "^1.7.1"
-pre-commit = "^3.0.1"
 pandas-stubs = "^2.0.2.230605"
-ipython = "^8.12.3"
 types-pyyaml = "^6.0.12.12"
-notebook = "^7.0.8"
 types-tqdm = "^4.66.0.20240106"
+ipython = "^8.12.3"
+notebook = "^7.0.8"
+langchain-experimental = "*"
+opentelemetry-exporter-otlp-proto-grpc = "<1.23"
 
 [tool.ruff.lint]
 extend-select = [

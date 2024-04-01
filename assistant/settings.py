@@ -87,6 +87,6 @@ try:
 except FileNotFoundError as e:
     raise FileNotFoundError(
         f"{e}\nCreate a new settings file "
-        f"(s. https://github.com/Renumics/rag-demo/blob/main/settings.yaml) or "
+        f"(s. https://github.com/Renumics/renumics-rag/blob/main/settings.yaml) or "
         f"set `RAG_SETTINGS` environment variable to an existing one."
     )

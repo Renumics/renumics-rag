@@ -30,7 +30,7 @@ def explore() -> None:
     except ImportError as e:
         raise ImportError(
             "Install Renumics Spotlight to explore vectorstores: "
-            "`pip install rag-demo[exploration]` or `pip install renumics-spotlight`."
+            "`pip install renumics-rag[exploration]` or `pip install renumics-spotlight`."
         ) from e
 
     spotlight.show(
