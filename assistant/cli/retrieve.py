@@ -28,7 +28,11 @@ def retrieve(
     """
     Retrieve documents relevant to question(s) using indexed database.
     """
-    embeddings_model = get_embeddings_model(*parse_model_name(embeddings_model_name))
+    embeddings_model = get_embeddings_model(
+        *parse_model_name(embeddings_model_name),
+        device=settings.device,
+        trust_remote_code=settings.trust_remote_code,
+    )
     vectorstore = get_chromadb(
         embeddings_model, settings.docs_db_directory, settings.docs_db_collection
     )

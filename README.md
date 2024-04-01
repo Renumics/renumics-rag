@@ -182,8 +182,8 @@ Exploring the exemplary F1 Dataset and over 500 questions from our [RAG evaluati
 
 To learn more about visulization for RAG, check out our articles:
 
--   [ITNext: Visualize your RAG Data - EDA for Retrieval-Augmented Generation](https://itnext.io/visualize-your-rag-data-eda-for-retrieval-augmented-generation-0701ee98768f): visualization of single questions, answers, and related documents shows large potential for RAG. Dimensionality reduction techniques can make the embedding space accessible for users and developers
-    ![UMAP dimensionality reduction of the embeddings of document snippets, colored by to their relevance to the question “Who built the Nürburgring?”](assets/img/rag1_ani.gif)
+- [ITNext: Visualize your RAG Data - EDA for Retrieval-Augmented Generation](https://itnext.io/visualize-your-rag-data-eda-for-retrieval-augmented-generation-0701ee98768f): visualization of single questions, answers, and related documents shows large potential for RAG. Dimensionality reduction techniques can make the embedding space accessible for users and developers
+  ![UMAP dimensionality reduction of the embeddings of document snippets, colored by to their relevance to the question “Who built the Nürburgring?”](assets/img/rag1_ani.gif)
 
--   [Towards Data Science: Visualize your RAG Data - Evaluate your Retrieval-Augmented Generation System with Ragas](https://towardsdatascience.com/visualize-your-rag-data-evaluate-your-retrieval-augmented-generation-system-with-ragas-fc2486308557): Utilizing UMAP-based visualization offers an interesting approach to delve deeper than just analyzing global metrics for evaluations in RAG.
-    ![Animation of the iterations of a UMAP [3] dimensionality reduction for Wikipedia Formula One articles in the embedding space with manually labeled clusters](assets/img/rag2_ani.gif)
+- [Towards Data Science: Visualize your RAG Data - Evaluate your Retrieval-Augmented Generation System with Ragas](https://towardsdatascience.com/visualize-your-rag-data-evaluate-your-retrieval-augmented-generation-system-with-ragas-fc2486308557): Utilizing UMAP-based visualization offers an interesting approach to delve deeper than just analyzing global metrics for evaluations in RAG.
+  ![Animation of the iterations of a UMAP [3] dimensionality reduction for Wikipedia Formula One articles in the embedding space with manually labeled clusters](assets/img/rag2_ani.gif)

@@ -95,6 +95,7 @@ from .exceptions import HFImportError
 from .settings import guess_model_type
 from .types import (
     LLM,
+    Device,
     ModelType,
     PredefinedRelevanceScoreFn,
     RelevanceScoreFn,
@@ -123,27 +124,52 @@ def parse_model_name(name: str) -> Tuple[str, ModelType]:
     return name, model_type
 
 
-def get_hf_embeddings_model(name: str) -> HuggingFaceEmbeddings:
+def _get_torch_device(device: Optional[Device] = None) -> Any:
     try:
-        import sentence_transformers  # noqa: F401
         import torch
     except ImportError as e:
         raise HFImportError() from e
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    encode_kwargs = {"normalize_embeddings": True}
-    mode_kwargs = {"device": device}
-    return HuggingFaceEmbeddings(
-        model_name=name, encode_kwargs=encode_kwargs, model_kwargs=mode_kwargs
+    if device is None:
+        return torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    if device == "gpu":
+        return torch.device("cuda:0")
+    if device == "cpu":
+        return torch.device("cpu")
+    raise ValueError(
+        f"Device should be one of 'cpu', 'gpu' or `None`, but value {device} "
+        f"of type {type(device)} received."
     )
 
 
-def get_embeddings_model(name: str, model_type: ModelType) -> Embeddings:
+def get_hf_embeddings_model(
+    name: str, device: Optional[Device] = None, trust_remote_code: bool = False
+) -> HuggingFaceEmbeddings:
+    try:
+        import sentence_transformers  # noqa: F401
+        import torch  # noqa: F401
+    except ImportError as e:
+        raise HFImportError() from e
+    torch_device = _get_torch_device(device)
+    encode_kwargs = {"normalize_embeddings": True}
+    model_kwargs = {"device": torch_device, "trust_remote_code": trust_remote_code}
+    return HuggingFaceEmbeddings(
+        model_name=name, encode_kwargs=encode_kwargs, model_kwargs=model_kwargs
+    )
+
+
+def get_embeddings_model(
+    name: str,
+    model_type: ModelType,
+    *,
+    device: Optional[Device] = None,
+    trust_remote_code: bool = False,
+) -> Embeddings:
     if model_type == "azure":
         return AzureOpenAIEmbeddings(azure_deployment=name)
     if model_type == "openai":
         return OpenAIEmbeddings(model=name)
     if model_type == "hf":
-        return get_hf_embeddings_model(name)
+        return get_hf_embeddings_model(name, device, trust_remote_code)
     raise TypeError(f"Unknown model type '{model_type}'.")
 
 
@@ -158,25 +184,43 @@ def get_embeddings_model_config(embeddings_model: Embeddings) -> Tuple[str, Mode
     raise TypeError(f"Unknown model type `{type(embeddings_model)}`.")
 
 
-def get_hf_llm(name: str) -> HuggingFacePipeline:
+def get_hf_llm(
+    name: str,
+    device: Optional[Device] = None,
+    trust_remote_code: bool = False,
+    torch_dtype: Optional[str] = None,
+) -> HuggingFacePipeline:
     try:
-        import torch
+        import torch  # noqa: F401
         from transformers import pipeline
     except ImportError as e:
         raise HFImportError() from e
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    pipe = pipeline(model=name, device=device, max_length=2048)
+    torch_device = _get_torch_device(device)
+    pipe = pipeline(
+        model=name,
+        device=torch_device,
+        torch_dtype=torch_dtype,
+        trust_remote_code=trust_remote_code,
+        max_length=2048,
+    )
     llm = HuggingFacePipeline(pipeline=pipe)
     return llm
 
 
-def get_llm(name: str, model_type: ModelType) -> LLM:
+def get_llm(
+    name: str,
+    model_type: ModelType,
+    *,
+    device: Optional[Device] = None,
+    trust_remote_code: bool = False,
+    torch_dtype: Optional[str] = None,
+) -> LLM:
     if model_type == "azure":
         return AzureChatOpenAI(azure_deployment=name, temperature=0.0)
     if model_type == "openai":
         return ChatOpenAI(model=name, temperature=0.0)
     if model_type == "hf":
-        return get_hf_llm(name)
+        return get_hf_llm(name, device, trust_remote_code, torch_dtype)
     raise TypeError(f"Unknown model type '{model_type}'.")
 
 
@@ -191,7 +235,7 @@ def get_llm_config(llm: LLM) -> Tuple[str, ModelType]:
     raise TypeError(f"Unknown model type `{type(llm)}`.")
 
 
-def assert_embeddings_model_ok_for_chromadb(
+def _assert_embeddings_model_ok_for_chromadb(
     embeddings_model: Embeddings, persist_directory: Path, collection_name: str
 ) -> None:
     """
@@ -254,7 +298,7 @@ def get_chromadb(
     https://docs.trychroma.com/usage-guide#changing-the-distance-function
     """
     if embeddings_model is not None and persist_directory is not None:
-        assert_embeddings_model_ok_for_chromadb(
+        _assert_embeddings_model_ok_for_chromadb(
             embeddings_model, persist_directory, collection_name
         )
 
