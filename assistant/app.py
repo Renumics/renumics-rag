@@ -4,7 +4,8 @@ import pandas as pd
 import streamlit as st
 import typer
 from langchain.vectorstores.chroma import Chroma
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.chat_models import ChatOllama
+from langchain_community.embeddings import HuggingFaceEmbeddings, OllamaEmbeddings
 from langchain_community.llms.huggingface_pipeline import HuggingFacePipeline
 from langchain_core.embeddings import Embeddings
 from langchain_core.runnables import Runnable
@@ -56,9 +57,11 @@ HASH_FUNCS: Dict[Union[str, Type], Callable[[Any], Any]] = {
     AzureOpenAIEmbeddings: hash_model,
     OpenAIEmbeddings: hash_model,
     HuggingFaceEmbeddings: hash_model,
+    OllamaEmbeddings: hash_model,
     AzureChatOpenAI: hash_model,
     ChatOpenAI: hash_model,
     HuggingFacePipeline: hash_model,
+    ChatOllama: hash_model,
 }
 
 
@@ -280,12 +283,14 @@ def st_app(
         embeddings_model = _get_embeddings_model(
             st.session_state.embeddings_model_name,
             st.session_state.embeddings_model_type,
+            base_url=settings.base_url,
             device=settings.device,
             trust_remote_code=settings.trust_remote_code,
         )
         llm = _get_llm(
             st.session_state.llm_name,
             st.session_state.llm_type,
+            base_url=settings.base_url,
             device=settings.device,
             trust_remote_code=settings.trust_remote_code,
             torch_dtype=settings.torch_dtype,

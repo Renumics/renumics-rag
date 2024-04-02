@@ -34,11 +34,13 @@ def answer(
     """
     embeddings_model = get_embeddings_model(
         *parse_model_name(embeddings_model_name),
+        base_url=settings.base_url,
         device=settings.device,
         trust_remote_code=settings.trust_remote_code,
     )
     llm = get_llm(
         *parse_model_name(llm_name),
+        base_url=settings.base_url,
         device=settings.device,
         trust_remote_code=settings.trust_remote_code,
         torch_dtype=settings.torch_dtype,

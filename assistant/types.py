@@ -4,7 +4,7 @@ from typing import Any, Callable, Dict, List, Literal, Union
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.language_models.llms import BaseLLM
 
-ModelType = Literal["openai", "azure", "hf"]
+ModelType = Literal["openai", "azure", "hf", "ollama"]
 Device = Literal["cpu", "gpu"]
 PredefinedRelevanceScoreFn = Literal["l2", "ip", "cosine"]
 RelevanceScoreFn = Union[PredefinedRelevanceScoreFn, Callable[[float], float]]
@@ -16,6 +16,7 @@ MODEL_TYPES: Dict[ModelType, str] = {
     "openai": "OpenAI",
     "azure": "Azure OpenAI",
     "hf": "Hugging Face",
+    "ollama": "Ollama",
 }
 PREDEFINED_RELEVANCE_SCORE_FNS: Dict[PredefinedRelevanceScoreFn, str] = {
     "l2": "Squared euclidean distance",

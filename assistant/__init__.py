@@ -76,7 +76,8 @@ from typing import Any, Dict, List, Optional, Tuple, cast, get_args
 
 import dotenv
 from langchain.vectorstores.chroma import Chroma
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.chat_models import ChatOllama
+from langchain_community.embeddings import HuggingFaceEmbeddings, OllamaEmbeddings
 from langchain_community.llms.huggingface_pipeline import HuggingFacePipeline
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
@@ -161,6 +162,7 @@ def get_embeddings_model(
     name: str,
     model_type: ModelType,
     *,
+    base_url: Optional[str] = None,
     device: Optional[Device] = None,
     trust_remote_code: bool = False,
 ) -> Embeddings:
@@ -170,6 +172,9 @@ def get_embeddings_model(
         return OpenAIEmbeddings(model=name)
     if model_type == "hf":
         return get_hf_embeddings_model(name, device, trust_remote_code)
+    if model_type == "ollama":
+        assert base_url is not None
+        return OllamaEmbeddings(base_url=base_url, model=name)
     raise TypeError(f"Unknown model type '{model_type}'.")
 
 
@@ -179,6 +184,8 @@ def get_embeddings_model_config(embeddings_model: Embeddings) -> Tuple[str, Mode
         return embeddings_model.deployment, "azure"
     if isinstance(embeddings_model, OpenAIEmbeddings):
         return embeddings_model.model, "openai"
+    if isinstance(embeddings_model, OllamaEmbeddings):
+        return embeddings_model.model, "ollama"
     if isinstance(embeddings_model, HuggingFaceEmbeddings):
         return embeddings_model.model_name, "hf"
     raise TypeError(f"Unknown model type `{type(embeddings_model)}`.")
@@ -211,6 +218,7 @@ def get_llm(
     name: str,
     model_type: ModelType,
     *,
+    base_url: Optional[str] = None,
     device: Optional[Device] = None,
     trust_remote_code: bool = False,
     torch_dtype: Optional[str] = None,
@@ -221,6 +229,9 @@ def get_llm(
         return ChatOpenAI(model=name, temperature=0.0)
     if model_type == "hf":
         return get_hf_llm(name, device, trust_remote_code, torch_dtype)
+    if model_type == "ollama":
+        assert base_url is not None
+        return ChatOllama(base_url=base_url, model=name, temperature=0.0)
     raise TypeError(f"Unknown model type '{model_type}'.")
 
 
@@ -230,6 +241,8 @@ def get_llm_config(llm: LLM) -> Tuple[str, ModelType]:
         return llm.deployment_name, "azure"
     if isinstance(llm, ChatOpenAI):
         return llm.model_name, "openai"
+    if isinstance(llm, ChatOllama):
+        return llm.model, "ollama"
     if isinstance(llm, HuggingFacePipeline):
         return llm.pipeline.model, "hf"
     raise TypeError(f"Unknown model type `{type(llm)}`.")

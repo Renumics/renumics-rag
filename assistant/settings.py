@@ -41,6 +41,9 @@ class Settings(BaseModel):
     trust_remote_code: bool = False
     torch_dtype: Optional[str] = None
 
+    # Ollama-specific settings
+    base_url: Optional[str] = None
+
     @validator("fetch_k")
     @classmethod
     def _(cls, fetch_k: int, values: Dict[str, Any]) -> int:
