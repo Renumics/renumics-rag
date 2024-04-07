@@ -1,814 +1,814 @@
 [
-    {
-        "question": "Who is the most successful Formula One driver of all time?",
-        "answer": "Lewis Hamilton"
-    },
-    {
-        "question": "Which team has won the most Constructors' Championships in Formula One history?",
-        "answer": "Ferrari"
-    },
-    {
-        "question": "What is the name of the youngest Formula One World Champion?",
-        "answer": "Sebastian Vettel"
-    },
-    {
-        "question": "Which circuit hosts the Monaco Grand Prix?",
-        "answer": "Circuit de Monaco"
-    },
-    {
-        "question": "What is the term for a driver leading a race from start to finish?",
-        "answer": "Leading from pole"
-    },
-    {
-        "question": "What is the most successful Formula One team of all time?",
-        "answer": "Scuderia Ferrari"
-    },
-    {
-        "question": "What is the minimum weight for a Formula One car (including driver) as per regulations?",
-        "answer": "752kg"
-    },
-    {
-        "question": "Who is the only female driver to have scored points in Formula One?",
-        "answer": "Lella Lombardi"
-    },
-    {
-        "question": "What is the term for a car losing traction and sliding sideways during a corner?",
-        "answer": "Oversteer"
-    },
-    {
-        "question": "Which team won the first-ever Formula One World Constructors' Championship?",
-        "answer": "Vanwall"
-    },
-    {
-        "question": "What is DRS in Formula One?",
-        "answer": "Drag Reduction System"
-    },
-    {
-        "question": "Who holds the record for the most consecutive Grand Prix wins?",
-        "answer": "Alberto Ascari"
-    },
-    {
-        "question": "Which country has produced the most Formula One World Champions?",
-        "answer": "United Kingdom"
-    },
-    {
-        "question": "What is the name of the German Grand Prix circuit?",
-        "answer": "Hockenheimring"
-    },
-    {
-        "question": "Who was the last Formula One World Champion before the introduction of the Constructors' Championship?",
-        "answer": "Juan Manuel Fangio"
-    },
-    {
-        "question": "What is the term for a race-ending crash involving multiple cars?",
-        "answer": "Pile-up"
-    },
-    {
-        "question": "Which circuit is known as 'The Temple of Speed'?",
-        "answer": "Autodromo Nazionale Monza"
-    },
-    {
-        "question": "What is the term for a driver who performs better in wet conditions?",
-        "answer": "Rainmaster"
-    },
-    {
-        "question": "Who holds the record for the most wins in a single season of Formula One?",
-        "answer": "Michael Schumacher"
-    },
-    {
-        "question": "What is the name of the circuit located in Austin, Texas, which hosts the United States Grand Prix?",
-        "answer": "Circuit of the Americas"
-    },
-    {
-        "question": "What is the term for a car's ability to stick to the road during cornering?",
-        "answer": "Grip"
-    },
-    {
-        "question": "Which driver is known as 'The Professor'?",
-        "answer": "Alain Prost"
-    },
-    {
-        "question": "What is the name of the longest circuit on the current Formula One calendar?",
-        "answer": "Circuit de Spa-Francorchamps"
-    },
-    {
-        "question": "Who is the youngest driver to start a Formula One race?",
-        "answer": "Max Verstappen"
-    },
-    {
-        "question": "Which driver famously won the 1976 Formula One World Championship despite suffering severe injuries earlier in the season?",
-        "answer": "Niki Lauda"
-    },
-    {
-        "question": "What is the name of the engine supplier for Red Bull Racing?",
-        "answer": "Honda"
-    },
-    {
-        "question": "Which city hosts the Canadian Grand Prix?",
-        "answer": "Montreal"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a British racing license, driving for an Italian team, with an American engine?",
-        "answer": "Mario Andretti"
-    },
-    {
-        "question": "What is the term for the area where cars are kept before a race?",
-        "answer": "Paddock"
-    },
-    {
-        "question": "Which driver is known as 'The Flying Finn'?",
-        "answer": "Mika H\u00e4kkinen"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car of his own construction?",
-        "answer": "Jack Brabham"
-    },
-    {
-        "question": "What is the term for a driver lapping another driver during a race?",
-        "answer": "Overlap"
-    },
-    {
-        "question": "Which team won the first-ever Formula One World Championship?",
-        "answer": "Alfa Romeo"
-    },
-    {
-        "question": "Who is the most recent driver to win his first Formula One Grand Prix?",
-        "answer": "Esteban Ocon"
-    },
-    {
-        "question": "What is the name of the tire supplier for Formula One?",
-        "answer": "Pirelli"
-    },
-    {
-        "question": "Which driver is known as 'The Iceman'?",
-        "answer": "Kimi R\u00e4ikk\u00f6nen"
-    },
-    {
-        "question": "Who is the only driver to win the Indianapolis 500, the Le Mans 24 Hours, and the Formula One World Championship?",
-        "answer": "Graham Hill"
-    },
-    {
-        "question": "What is the name of the corner at the Circuit de Monaco known for its tight hairpin turn?",
-        "answer": "Fairmont Hairpin"
-    },
-    {
-        "question": "Which driver holds the record for the most pole positions in Formula One?",
-        "answer": "Lewis Hamilton"
-    },
-    {
-        "question": "What is the term for a car's ability to maintain high speeds in a straight line?",
-        "answer": "Top speed"
-    },
-    {
-        "question": "Which circuit is known for its high-altitude location and challenging corners?",
-        "answer": "Aut\u00f3dromo Hermanos Rodr\u00edguez"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a non-turbocharged engine during the turbo era?",
-        "answer": "Nelson Piquet"
-    },
-    {
-        "question": "What is the term for a race driver who is hired to drive for a team on a per-race basis?",
-        "answer": "Racing Freelancer"
-    },
-    {
-        "question": "Which team has the most pole positions in Formula One history?",
-        "answer": "McLaren"
-    },
-    {
-        "question": "Who holds the record for the most podium finishes in Formula One?",
-        "answer": "Lewis Hamilton"
-    },
-    {
-        "question": "What is the term for a driver losing control of the car and spinning off the track?",
-        "answer": "Spin"
-    },
-    {
-        "question": "Which driver won the inaugural Formula One World Championship in 1950?",
-        "answer": "Nino Farina"
-    },
-    {
-        "question": "What is the name of the corner at the Circuit de Spa-Francorchamps where Eau Rouge is followed by Raidillon?",
-        "answer": "Eau Rouge"
-    },
-    {
-        "question": "Who was the first driver to win the Formula One World Championship posthumously?",
-        "answer": "Jochen Rindt"
-    },
-    {
-        "question": "What is the term for the driver starting a race from the front of the grid?",
-        "answer": "Pole position"
-    },
-    {
-        "question": "Which country hosted the first-ever Formula One World Championship race?",
-        "answer": "United Kingdom"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with both Ferrari and McLaren?",
-        "answer": "Niki Lauda"
-    },
-    {
-        "question": "What is the name of the first-ever street circuit to host a Formula One race?",
-        "answer": "Circuit de Monaco"
-    },
-    {
-        "question": "Which driver won the most races in a single season of Formula One?",
-        "answer": "Michael Schumacher"
-    },
-    {
-        "question": "What is the term for a driver following closely behind another car to reduce drag and increase speed?",
-        "answer": "Slipstreaming"
-    },
-    {
-        "question": "Which team introduced the concept of the 'pit stop' in Formula One racing?",
-        "answer": "Ferrari"
-    },
-    {
-        "question": "Who was the first Formula One driver to win the World Championship without winning a race?",
-        "answer": "Mike Hawthorn"
-    },
-    {
-        "question": "What is the term for the triangular piece of bodywork that extends from the nose of a Formula One car?",
-        "answer": "Nose cone"
-    },
-    {
-        "question": "Which driver holds the record for the most consecutive pole positions in Formula One?",
-        "answer": "Ayrton Senna"
-    },
-    {
-        "question": "What is the term for a team's strategy of bringing its cars into the pits before its rivals to gain an advantage?",
-        "answer": "Undercut"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing his own name?",
-        "answer": "Jack Brabham"
-    },
-    {
-        "question": "What is the term for the race track where the cars are tested before the start of a Grand Prix?",
-        "answer": "Grid"
-    },
-    {
-        "question": "Which driver is known as 'The Black Professor'?",
-        "answer": "Lewis Hamilton"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car powered by a four-wheel-drive system?",
-        "answer": "Jody Scheckter"
-    },
-    {
-        "question": "What is the term for a driver's ability to enter a corner at a higher speed without losing control?",
-        "answer": "Cornering speed"
-    },
-    {
-        "question": "Which team won the first-ever Formula One Constructors' Championship?",
-        "answer": "Cooper Car Company"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '27'?",
-        "answer": "Alan Jones"
-    },
-    {
-        "question": "What is the term for a car's resistance to sliding during cornering?",
-        "answer": "Traction"
-    },
-    {
-        "question": "Which driver won the most Formula One World Championships during the 1980s?",
-        "answer": "Alain Prost"
-    },
-    {
-        "question": "What is the term for a driver's ability to slow down and stop the car quickly?",
-        "answer": "Braking"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car powered by a turbocharged engine?",
-        "answer": "Niki Lauda"
-    },
-    {
-        "question": "What is the term for the part of the car that generates downforce to increase grip on the track?",
-        "answer": "Wing"
-    },
-    {
-        "question": "Which driver holds the record for the most fastest laps in Formula One?",
-        "answer": "Michael Schumacher"
-    },
-    {
-        "question": "Who was the first Formula One World Champion to be awarded the Drivers' Championship trophy?",
-        "answer": "Giuseppe Farina"
-    },
-    {
-        "question": "What is the term for the point in a race where a driver catches up to the car in front of them?",
-        "answer": "Overtake"
-    },
-    {
-        "question": "Which circuit is known as 'The Green Hell'?",
-        "answer": "N\u00fcrburgring"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '99'?",
-        "answer": "Giacomo Agostini"
-    },
-    {
-        "question": "What is the term for the track-side area where cars make quick stops for repairs or adjustments?",
-        "answer": "Pit lane"
-    },
-    {
-        "question": "Which driver won the most Formula One World Championships during the 1960s?",
-        "answer": "Jack Brabham"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car powered by a Ford engine?",
-        "answer": "Jim Clark"
-    },
-    {
-        "question": "What is the term for a driver's ability to maintain consistent lap times throughout a race?",
-        "answer": "Race pace"
-    },
-    {
-        "question": "Which team introduced the concept of the 'tandem wing' in Formula One?",
-        "answer": "Lotus"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car powered by a V8 engine?",
-        "answer": "Jim Clark"
-    },
-    {
-        "question": "What is the term for a car's ability to change direction quickly without losing grip?",
-        "answer": "Agility"
-    },
-    {
-        "question": "Which driver holds the record for the most consecutive wins in Formula One?",
-        "answer": "Sebastian Vettel"
-    },
-    {
-        "question": "Who was the first Formula One driver to win the World Championship posthumously?",
-        "answer": "Jochen Rindt"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car powered by a flat-12 engine?",
-        "answer": "Niki Lauda"
-    },
-    {
-        "question": "What is the term for the area where cars are positioned before the start of a race?",
-        "answer": "Grid"
-    },
-    {
-        "question": "Which driver is known as 'The Flying Scot'?",
-        "answer": "Jackie Stewart"
-    },
-    {
-        "question": "Who holds the record for the most podium finishes in a single season of Formula One?",
-        "answer": "Michael Schumacher"
-    },
-    {
-        "question": "What is the name of the Japanese Grand Prix circuit?",
-        "answer": "Suzuka Circuit"
-    },
-    {
-        "question": "Which driver won the most Formula One World Championships during the 1970s?",
-        "answer": "Niki Lauda"
-    },
-    {
-        "question": "What is the term for a driver's ability to follow the racing line and maintain high speed through corners?",
-        "answer": "Cornering technique"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '22'?",
-        "answer": "Keke Rosberg"
-    },
-    {
-        "question": "What is the term for the final round of a Formula One season?",
-        "answer": "Season finale"
-    },
-    {
-        "question": "Which team has won the most consecutive Constructors' Championships in Formula One?",
-        "answer": "Ferrari"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '8'?",
-        "answer": "Mike Hawthorn"
-    },
-    {
-        "question": "What is the name of the chicane at the Circuit Gilles Villeneuve?",
-        "answer": "Wall of Champions"
-    },
-    {
-        "question": "Which driver holds the record for the most wins at the Monaco Grand Prix?",
-        "answer": "Ayrton Senna"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car powered by a V12 engine?",
-        "answer": "Alain Prost"
-    },
-    {
-        "question": "What is the term for the line that separates the track from the pit lane?",
-        "answer": "Pit wall"
-    },
-    {
-        "question": "Which driver holds the record for the most consecutive podium finishes in Formula One?",
-        "answer": "Michael Schumacher"
-    },
-    {
-        "question": "Who won the first-ever Formula One race?",
-        "answer": "Giuseppe Farina"
-    },
-    {
-        "question": "What is the term for a driver's ability to make quick and accurate decisions during a race?",
-        "answer": "Racecraft"
-    },
-    {
-        "question": "Which team won the first-ever Formula One Constructors' Championship?",
-        "answer": "Vanwall"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car powered by a turbocharged V6 engine?",
-        "answer": "Niki Lauda"
-    },
-    {
-        "question": "What is the term for a driver changing lanes during a race to block an opponent?",
-        "answer": "Defensive driving"
-    },
-    {
-        "question": "Which driver holds the record for the most pole positions at a single circuit?",
-        "answer": "Ayrton Senna (Suzuka Circuit)"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '12'?",
-        "answer": "Nigel Mansell"
-    },
-    {
-        "question": "What is the term for the rear part of the car where the engine is housed?",
-        "answer": "Engine bay"
-    },
-    {
-        "question": "Which driver won the most races in the 1990s?",
-        "answer": "Michael Schumacher"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car powered by a V12 engine during the V8 era?",
-        "answer": "Alain Prost"
-    },
-    {
-        "question": "What is the term for the area where cars make pit stops during a race?",
-        "answer": "Pit lane"
-    },
-    {
-        "question": "Which driver holds the record for the most pole positions in a single season of Formula One?",
-        "answer": "Nigel Mansell"
-    },
-    {
-        "question": "Who won the first Formula One race held at the Circuit Paul Ricard?",
-        "answer": "Alain Prost"
-    },
-    {
-        "question": "What is the term for the part of the car that connects the engine to the gearbox?",
-        "answer": "Transmission"
-    },
-    {
-        "question": "Which driver holds the record for the most consecutive wins at the same Grand Prix?",
-        "answer": "Michael Schumacher (French Grand Prix)"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '11'?",
-        "answer": "Alan Jones"
-    },
-    {
-        "question": "What is the term for the racing strategy where a driver conserves fuel to finish the race with minimal pit stops?",
-        "answer": "Fuel-saving strategy"
-    },
-    {
-        "question": "Which team won the first-ever Formula One World Constructors' Championship without winning a race?",
-        "answer": "Matra"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car powered by a turbocharged V6 hybrid engine?",
-        "answer": "Lewis Hamilton"
-    },
-    {
-        "question": "What is the term for the area where cars undergo technical inspections before and after races?",
-        "answer": "Parc ferm\u00e9"
-    },
-    {
-        "question": "Which driver won the most races in the 1980s?",
-        "answer": "Alain Prost"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '6'?",
-        "answer": "Phil Hill"
-    },
-    {
-        "question": "What is the term for the process of adjusting a car's setup to improve performance during a race?",
-        "answer": "Car tuning"
-    },
-    {
-        "question": "Which team won the first-ever Formula One Constructors' Championship without winning a race?",
-        "answer": "Cooper Car Company"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '9'?",
-        "answer": "Jenson Button"
-    },
-    {
-        "question": "What is the term for the part of the car that houses the driver's seat and cockpit controls?",
-        "answer": "Monocoque"
-    },
-    {
-        "question": "Which driver holds the record for the most consecutive podium finishes at the start of a season?",
-        "answer": "Michael Schumacher"
-    },
-    {
-        "question": "Who won the first Formula One race held at the Circuit de Catalunya?",
-        "answer": "Nigel Mansell"
-    },
-    {
-        "question": "What is the term for the racing strategy where a driver pushes hard in the early laps to build a lead?",
-        "answer": "Pushing strategy"
-    },
-    {
-        "question": "Which team won the first-ever Formula One World Constructors' Championship without using a wind tunnel?",
-        "answer": "Brabham"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car powered by a turbocharged engine during the naturally aspirated era?",
-        "answer": "Keke Rosberg"
-    },
-    {
-        "question": "What is the term for the racing strategy where a driver conserves tires to avoid pit stops?",
-        "answer": "Tire-saving strategy"
-    },
-    {
-        "question": "Which driver won the most races in the 1970s?",
-        "answer": "Niki Lauda"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '14'?",
-        "answer": "Emerson Fittipaldi"
-    },
-    {
-        "question": "What is the term for the racing strategy where a driver saves fuel by coasting or lifting off the throttle?",
-        "answer": "Fuel-saving strategy"
-    },
-    {
-        "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a V8 engine?",
-        "answer": "Ferrari"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '7'?",
-        "answer": "John Surtees"
-    },
-    {
-        "question": "What is the term for the racing strategy where a driver maximizes speed and performance without regard to fuel consumption?",
-        "answer": "Full-throttle strategy"
-    },
-    {
-        "question": "Which driver holds the record for the most consecutive pole positions at the same Grand Prix?",
-        "answer": "Ayrton Senna (San Marino Grand Prix)"
-    },
-    {
-        "question": "Who won the first Formula One race held at the Hungaroring?",
-        "answer": "Nigel Mansell"
-    },
-    {
-        "question": "What is the term for the racing strategy where a driver maximizes tire grip by avoiding aggressive maneuvers?",
-        "answer": "Tire-saving strategy"
-    },
-    {
-        "question": "Which team won the first-ever Formula One World Constructors' Championship with a car powered by a turbocharged engine?",
-        "answer": "Williams"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '16'?",
-        "answer": "Graham Hill"
-    },
-    {
-        "question": "What is the term for the racing strategy where a driver uses tire degradation to gain an advantage?",
-        "answer": "Tire-degradation strategy"
-    },
-    {
-        "question": "Which driver holds the record for the most consecutive podium finishes at the end of a season?",
-        "answer": "Michael Schumacher"
-    },
-    {
-        "question": "Who won the first Formula One race held at the Aut\u00f3dromo Internacional Nelson Piquet?",
-        "answer": "Nigel Mansell"
-    },
-    {
-        "question": "What is the term for the racing strategy where a driver pushes hard in the middle stages of a race to gain positions?",
-        "answer": "Mid-race push strategy"
-    },
-    {
-        "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a V6 engine?",
-        "answer": "McLaren"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '10'?",
-        "answer": "Jody Scheckter"
-    },
-    {
-        "question": "What is the term for the racing strategy where a driver conserves tires in the early stages of a race to have fresh rubber for the end?",
-        "answer": "Early tire conservation strategy"
-    },
-    {
-        "question": "Which driver holds the record for the most consecutive pole positions at the end of a season?",
-        "answer": "Ayrton Senna"
-    },
-    {
-        "question": "Who won the first Formula One race held at the Circuit de Nevers Magny-Cours?",
-        "answer": "Alain Prost"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '1'?",
-        "answer": "Sebastian Vettel"
-    },
-    {
-        "question": "What is the term for the process of adjusting a car's aerodynamics to improve performance?",
-        "answer": "Aero tuning"
-    },
-    {
-        "question": "Which driver won the most races in the 2000s?",
-        "answer": "Michael Schumacher"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '5'?",
-        "answer": "Mike Hawthorn"
-    },
-    {
-        "question": "What is the term for the racing strategy where a driver follows closely behind another car to reduce drag?",
-        "answer": "Drafting"
-    },
-    {
-        "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a hybrid engine?",
-        "answer": "Mercedes"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car powered by a V6 engine during the V8 era?",
-        "answer": "Lewis Hamilton"
-    },
-    {
-        "question": "What is the term for the process of adjusting a car's suspension to improve handling?",
-        "answer": "Suspension tuning"
-    },
-    {
-        "question": "Which driver holds the record for the most consecutive wins in a single season of Formula One?",
-        "answer": "Alberto Ascari"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '4'?",
-        "answer": "Jochen Rindt"
-    },
-    {
-        "question": "What is the term for the racing strategy where a driver conserves fuel by lifting off the throttle on straightaways?",
-        "answer": "Fuel-saving coasting"
-    },
-    {
-        "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a hybrid V6 turbo engine?",
-        "answer": "Mercedes"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car powered by a V6 turbo hybrid engine?",
-        "answer": "Lewis Hamilton"
-    },
-    {
-        "question": "What is the term for the process of adjusting a car's engine settings to improve performance?",
-        "answer": "Engine tuning"
-    },
-    {
-        "question": "Which driver holds the record for the most consecutive fastest laps in Formula One?",
-        "answer": "Jim Clark"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '3'?",
-        "answer": "Jack Brabham"
-    },
-    {
-        "question": "What is the term for the racing strategy where a driver conserves fuel by coasting into corners?",
-        "answer": "Fuel-saving coasting"
-    },
-    {
-        "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a hybrid V6 engine?",
-        "answer": "Mercedes"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '2'?",
-        "answer": "Graham Hill"
-    },
-    {
-        "question": "What is the term for the process of adjusting a car's weight distribution to improve handling?",
-        "answer": "Weight balancing"
-    },
-    {
-        "question": "Which driver holds the record for the most consecutive podium finishes in Formula One?",
-        "answer": "Michael Schumacher"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '15'?",
-        "answer": "John Surtees"
-    },
-    {
-        "question": "What is the term for the racing strategy where a driver conserves fuel by short-shifting?",
-        "answer": "Fuel-saving short-shifting"
-    },
-    {
-        "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a hybrid turbocharged engine?",
-        "answer": "Mercedes"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '17'?",
-        "answer": "Denny Hulme"
-    },
-    {
-        "question": "What is the term for the process of adjusting a car's gearbox to improve acceleration?",
-        "answer": "Gearbox tuning"
-    },
-    {
-        "question": "Which driver holds the record for the most consecutive pole positions in a single season of Formula One?",
-        "answer": "Alberto Ascari"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '27'?",
-        "answer": "Nigel Mansell"
-    },
-    {
-        "question": "What is the term for the racing strategy where a driver conserves fuel by staying in higher gears?",
-        "answer": "Fuel-saving gearing"
-    },
-    {
-        "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a hybrid V6 turbocharged engine?",
-        "answer": "Mercedes"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '26'?",
-        "answer": "Denny Hulme"
-    },
-    {
-        "question": "What is the term for the process of adjusting a car's brakes to improve stopping power?",
-        "answer": "Brake tuning"
-    },
-    {
-        "question": "Which driver holds the record for the most consecutive wins at the start of a Formula One career?",
-        "answer": "Alberto Ascari"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '18'?",
-        "answer": "Mario Andretti"
-    },
-    {
-        "question": "What is the term for the racing strategy where a driver conserves fuel by coasting in neutral?",
-        "answer": "Fuel-saving coasting"
-    },
-    {
-        "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a hybrid V6 turbocharged hybrid engine?",
-        "answer": "Mercedes"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '20'?",
-        "answer": "Emerson Fittipaldi"
-    },
-    {
-        "question": "What is the term for the process of adjusting a car's steering to improve responsiveness?",
-        "answer": "Steering tuning"
-    },
-    {
-        "question": "Which driver holds the record for the most consecutive pole positions at the start of a Formula One career?",
-        "answer": "Ayrton Senna"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '23'?",
-        "answer": "James Hunt"
-    },
-    {
-        "question": "What is the term for the racing strategy where a driver conserves fuel by avoiding aggressive driving?",
-        "answer": "Fuel-saving driving"
-    },
-    {
-        "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a hybrid V6 turbocharged hybrid power unit?",
-        "answer": "Mercedes"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '25'?",
-        "answer": "Niki Lauda"
-    },
-    {
-        "question": "What is the term for the process of adjusting a car's chassis to improve stability?",
-        "answer": "Chassis tuning"
-    },
-    {
-        "question": "Which driver holds the record for the most consecutive pole positions in Formula One?",
-        "answer": "Ayrton Senna"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '24'?",
-        "answer": "James Hunt"
-    },
-    {
-        "question": "What is the term for the racing strategy where a driver conserves fuel by drafting behind other cars?",
-        "answer": "Fuel-saving drafting"
-    },
-    {
-        "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a hybrid V6 turbocharged hybrid power unit with an energy recovery system?",
-        "answer": "Mercedes"
-    },
-    {
-        "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '19'?",
-        "answer": "Michael Schumacher"
-    }
+  {
+    "question": "Who is the most successful Formula One driver of all time?",
+    "answer": "Lewis Hamilton"
+  },
+  {
+    "question": "Which team has won the most Constructors' Championships in Formula One history?",
+    "answer": "Ferrari"
+  },
+  {
+    "question": "What is the name of the youngest Formula One World Champion?",
+    "answer": "Sebastian Vettel"
+  },
+  {
+    "question": "Which circuit hosts the Monaco Grand Prix?",
+    "answer": "Circuit de Monaco"
+  },
+  {
+    "question": "What is the term for a driver leading a race from start to finish?",
+    "answer": "Leading from pole"
+  },
+  {
+    "question": "What is the most successful Formula One team of all time?",
+    "answer": "Scuderia Ferrari"
+  },
+  {
+    "question": "What is the minimum weight for a Formula One car (including driver) as per regulations?",
+    "answer": "752kg"
+  },
+  {
+    "question": "Who is the only female driver to have scored points in Formula One?",
+    "answer": "Lella Lombardi"
+  },
+  {
+    "question": "What is the term for a car losing traction and sliding sideways during a corner?",
+    "answer": "Oversteer"
+  },
+  {
+    "question": "Which team won the first-ever Formula One World Constructors' Championship?",
+    "answer": "Vanwall"
+  },
+  {
+    "question": "What is DRS in Formula One?",
+    "answer": "Drag Reduction System"
+  },
+  {
+    "question": "Who holds the record for the most consecutive Grand Prix wins?",
+    "answer": "Alberto Ascari"
+  },
+  {
+    "question": "Which country has produced the most Formula One World Champions?",
+    "answer": "United Kingdom"
+  },
+  {
+    "question": "What is the name of the German Grand Prix circuit?",
+    "answer": "Hockenheimring"
+  },
+  {
+    "question": "Who was the last Formula One World Champion before the introduction of the Constructors' Championship?",
+    "answer": "Juan Manuel Fangio"
+  },
+  {
+    "question": "What is the term for a race-ending crash involving multiple cars?",
+    "answer": "Pile-up"
+  },
+  {
+    "question": "Which circuit is known as 'The Temple of Speed'?",
+    "answer": "Autodromo Nazionale Monza"
+  },
+  {
+    "question": "What is the term for a driver who performs better in wet conditions?",
+    "answer": "Rainmaster"
+  },
+  {
+    "question": "Who holds the record for the most wins in a single season of Formula One?",
+    "answer": "Michael Schumacher"
+  },
+  {
+    "question": "What is the name of the circuit located in Austin, Texas, which hosts the United States Grand Prix?",
+    "answer": "Circuit of the Americas"
+  },
+  {
+    "question": "What is the term for a car's ability to stick to the road during cornering?",
+    "answer": "Grip"
+  },
+  {
+    "question": "Which driver is known as 'The Professor'?",
+    "answer": "Alain Prost"
+  },
+  {
+    "question": "What is the name of the longest circuit on the current Formula One calendar?",
+    "answer": "Circuit de Spa-Francorchamps"
+  },
+  {
+    "question": "Who is the youngest driver to start a Formula One race?",
+    "answer": "Max Verstappen"
+  },
+  {
+    "question": "Which driver famously won the 1976 Formula One World Championship despite suffering severe injuries earlier in the season?",
+    "answer": "Niki Lauda"
+  },
+  {
+    "question": "What is the name of the engine supplier for Red Bull Racing?",
+    "answer": "Honda"
+  },
+  {
+    "question": "Which city hosts the Canadian Grand Prix?",
+    "answer": "Montreal"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a British racing license, driving for an Italian team, with an American engine?",
+    "answer": "Mario Andretti"
+  },
+  {
+    "question": "What is the term for the area where cars are kept before a race?",
+    "answer": "Paddock"
+  },
+  {
+    "question": "Which driver is known as 'The Flying Finn'?",
+    "answer": "Mika H\u00e4kkinen"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car of his own construction?",
+    "answer": "Jack Brabham"
+  },
+  {
+    "question": "What is the term for a driver lapping another driver during a race?",
+    "answer": "Overlap"
+  },
+  {
+    "question": "Which team won the first-ever Formula One World Championship?",
+    "answer": "Alfa Romeo"
+  },
+  {
+    "question": "Who is the most recent driver to win his first Formula One Grand Prix?",
+    "answer": "Esteban Ocon"
+  },
+  {
+    "question": "What is the name of the tire supplier for Formula One?",
+    "answer": "Pirelli"
+  },
+  {
+    "question": "Which driver is known as 'The Iceman'?",
+    "answer": "Kimi R\u00e4ikk\u00f6nen"
+  },
+  {
+    "question": "Who is the only driver to win the Indianapolis 500, the Le Mans 24 Hours, and the Formula One World Championship?",
+    "answer": "Graham Hill"
+  },
+  {
+    "question": "What is the name of the corner at the Circuit de Monaco known for its tight hairpin turn?",
+    "answer": "Fairmont Hairpin"
+  },
+  {
+    "question": "Which driver holds the record for the most pole positions in Formula One?",
+    "answer": "Lewis Hamilton"
+  },
+  {
+    "question": "What is the term for a car's ability to maintain high speeds in a straight line?",
+    "answer": "Top speed"
+  },
+  {
+    "question": "Which circuit is known for its high-altitude location and challenging corners?",
+    "answer": "Aut\u00f3dromo Hermanos Rodr\u00edguez"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a non-turbocharged engine during the turbo era?",
+    "answer": "Nelson Piquet"
+  },
+  {
+    "question": "What is the term for a race driver who is hired to drive for a team on a per-race basis?",
+    "answer": "Racing Freelancer"
+  },
+  {
+    "question": "Which team has the most pole positions in Formula One history?",
+    "answer": "McLaren"
+  },
+  {
+    "question": "Who holds the record for the most podium finishes in Formula One?",
+    "answer": "Lewis Hamilton"
+  },
+  {
+    "question": "What is the term for a driver losing control of the car and spinning off the track?",
+    "answer": "Spin"
+  },
+  {
+    "question": "Which driver won the inaugural Formula One World Championship in 1950?",
+    "answer": "Nino Farina"
+  },
+  {
+    "question": "What is the name of the corner at the Circuit de Spa-Francorchamps where Eau Rouge is followed by Raidillon?",
+    "answer": "Eau Rouge"
+  },
+  {
+    "question": "Who was the first driver to win the Formula One World Championship posthumously?",
+    "answer": "Jochen Rindt"
+  },
+  {
+    "question": "What is the term for the driver starting a race from the front of the grid?",
+    "answer": "Pole position"
+  },
+  {
+    "question": "Which country hosted the first-ever Formula One World Championship race?",
+    "answer": "United Kingdom"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with both Ferrari and McLaren?",
+    "answer": "Niki Lauda"
+  },
+  {
+    "question": "What is the name of the first-ever street circuit to host a Formula One race?",
+    "answer": "Circuit de Monaco"
+  },
+  {
+    "question": "Which driver won the most races in a single season of Formula One?",
+    "answer": "Michael Schumacher"
+  },
+  {
+    "question": "What is the term for a driver following closely behind another car to reduce drag and increase speed?",
+    "answer": "Slipstreaming"
+  },
+  {
+    "question": "Which team introduced the concept of the 'pit stop' in Formula One racing?",
+    "answer": "Ferrari"
+  },
+  {
+    "question": "Who was the first Formula One driver to win the World Championship without winning a race?",
+    "answer": "Mike Hawthorn"
+  },
+  {
+    "question": "What is the term for the triangular piece of bodywork that extends from the nose of a Formula One car?",
+    "answer": "Nose cone"
+  },
+  {
+    "question": "Which driver holds the record for the most consecutive pole positions in Formula One?",
+    "answer": "Ayrton Senna"
+  },
+  {
+    "question": "What is the term for a team's strategy of bringing its cars into the pits before its rivals to gain an advantage?",
+    "answer": "Undercut"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing his own name?",
+    "answer": "Jack Brabham"
+  },
+  {
+    "question": "What is the term for the race track where the cars are tested before the start of a Grand Prix?",
+    "answer": "Grid"
+  },
+  {
+    "question": "Which driver is known as 'The Black Professor'?",
+    "answer": "Lewis Hamilton"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car powered by a four-wheel-drive system?",
+    "answer": "Jody Scheckter"
+  },
+  {
+    "question": "What is the term for a driver's ability to enter a corner at a higher speed without losing control?",
+    "answer": "Cornering speed"
+  },
+  {
+    "question": "Which team won the first-ever Formula One Constructors' Championship?",
+    "answer": "Cooper Car Company"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '27'?",
+    "answer": "Alan Jones"
+  },
+  {
+    "question": "What is the term for a car's resistance to sliding during cornering?",
+    "answer": "Traction"
+  },
+  {
+    "question": "Which driver won the most Formula One World Championships during the 1980s?",
+    "answer": "Alain Prost"
+  },
+  {
+    "question": "What is the term for a driver's ability to slow down and stop the car quickly?",
+    "answer": "Braking"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car powered by a turbocharged engine?",
+    "answer": "Niki Lauda"
+  },
+  {
+    "question": "What is the term for the part of the car that generates downforce to increase grip on the track?",
+    "answer": "Wing"
+  },
+  {
+    "question": "Which driver holds the record for the most fastest laps in Formula One?",
+    "answer": "Michael Schumacher"
+  },
+  {
+    "question": "Who was the first Formula One World Champion to be awarded the Drivers' Championship trophy?",
+    "answer": "Giuseppe Farina"
+  },
+  {
+    "question": "What is the term for the point in a race where a driver catches up to the car in front of them?",
+    "answer": "Overtake"
+  },
+  {
+    "question": "Which circuit is known as 'The Green Hell'?",
+    "answer": "N\u00fcrburgring"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '99'?",
+    "answer": "Giacomo Agostini"
+  },
+  {
+    "question": "What is the term for the track-side area where cars make quick stops for repairs or adjustments?",
+    "answer": "Pit lane"
+  },
+  {
+    "question": "Which driver won the most Formula One World Championships during the 1960s?",
+    "answer": "Jack Brabham"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car powered by a Ford engine?",
+    "answer": "Jim Clark"
+  },
+  {
+    "question": "What is the term for a driver's ability to maintain consistent lap times throughout a race?",
+    "answer": "Race pace"
+  },
+  {
+    "question": "Which team introduced the concept of the 'tandem wing' in Formula One?",
+    "answer": "Lotus"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car powered by a V8 engine?",
+    "answer": "Jim Clark"
+  },
+  {
+    "question": "What is the term for a car's ability to change direction quickly without losing grip?",
+    "answer": "Agility"
+  },
+  {
+    "question": "Which driver holds the record for the most consecutive wins in Formula One?",
+    "answer": "Sebastian Vettel"
+  },
+  {
+    "question": "Who was the first Formula One driver to win the World Championship posthumously?",
+    "answer": "Jochen Rindt"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car powered by a flat-12 engine?",
+    "answer": "Niki Lauda"
+  },
+  {
+    "question": "What is the term for the area where cars are positioned before the start of a race?",
+    "answer": "Grid"
+  },
+  {
+    "question": "Which driver is known as 'The Flying Scot'?",
+    "answer": "Jackie Stewart"
+  },
+  {
+    "question": "Who holds the record for the most podium finishes in a single season of Formula One?",
+    "answer": "Michael Schumacher"
+  },
+  {
+    "question": "What is the name of the Japanese Grand Prix circuit?",
+    "answer": "Suzuka Circuit"
+  },
+  {
+    "question": "Which driver won the most Formula One World Championships during the 1970s?",
+    "answer": "Niki Lauda"
+  },
+  {
+    "question": "What is the term for a driver's ability to follow the racing line and maintain high speed through corners?",
+    "answer": "Cornering technique"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '22'?",
+    "answer": "Keke Rosberg"
+  },
+  {
+    "question": "What is the term for the final round of a Formula One season?",
+    "answer": "Season finale"
+  },
+  {
+    "question": "Which team has won the most consecutive Constructors' Championships in Formula One?",
+    "answer": "Ferrari"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '8'?",
+    "answer": "Mike Hawthorn"
+  },
+  {
+    "question": "What is the name of the chicane at the Circuit Gilles Villeneuve?",
+    "answer": "Wall of Champions"
+  },
+  {
+    "question": "Which driver holds the record for the most wins at the Monaco Grand Prix?",
+    "answer": "Ayrton Senna"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car powered by a V12 engine?",
+    "answer": "Alain Prost"
+  },
+  {
+    "question": "What is the term for the line that separates the track from the pit lane?",
+    "answer": "Pit wall"
+  },
+  {
+    "question": "Which driver holds the record for the most consecutive podium finishes in Formula One?",
+    "answer": "Michael Schumacher"
+  },
+  {
+    "question": "Who won the first-ever Formula One race?",
+    "answer": "Giuseppe Farina"
+  },
+  {
+    "question": "What is the term for a driver's ability to make quick and accurate decisions during a race?",
+    "answer": "Racecraft"
+  },
+  {
+    "question": "Which team won the first-ever Formula One Constructors' Championship?",
+    "answer": "Vanwall"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car powered by a turbocharged V6 engine?",
+    "answer": "Niki Lauda"
+  },
+  {
+    "question": "What is the term for a driver changing lanes during a race to block an opponent?",
+    "answer": "Defensive driving"
+  },
+  {
+    "question": "Which driver holds the record for the most pole positions at a single circuit?",
+    "answer": "Ayrton Senna (Suzuka Circuit)"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '12'?",
+    "answer": "Nigel Mansell"
+  },
+  {
+    "question": "What is the term for the rear part of the car where the engine is housed?",
+    "answer": "Engine bay"
+  },
+  {
+    "question": "Which driver won the most races in the 1990s?",
+    "answer": "Michael Schumacher"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car powered by a V12 engine during the V8 era?",
+    "answer": "Alain Prost"
+  },
+  {
+    "question": "What is the term for the area where cars make pit stops during a race?",
+    "answer": "Pit lane"
+  },
+  {
+    "question": "Which driver holds the record for the most pole positions in a single season of Formula One?",
+    "answer": "Nigel Mansell"
+  },
+  {
+    "question": "Who won the first Formula One race held at the Circuit Paul Ricard?",
+    "answer": "Alain Prost"
+  },
+  {
+    "question": "What is the term for the part of the car that connects the engine to the gearbox?",
+    "answer": "Transmission"
+  },
+  {
+    "question": "Which driver holds the record for the most consecutive wins at the same Grand Prix?",
+    "answer": "Michael Schumacher (French Grand Prix)"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '11'?",
+    "answer": "Alan Jones"
+  },
+  {
+    "question": "What is the term for the racing strategy where a driver conserves fuel to finish the race with minimal pit stops?",
+    "answer": "Fuel-saving strategy"
+  },
+  {
+    "question": "Which team won the first-ever Formula One World Constructors' Championship without winning a race?",
+    "answer": "Matra"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car powered by a turbocharged V6 hybrid engine?",
+    "answer": "Lewis Hamilton"
+  },
+  {
+    "question": "What is the term for the area where cars undergo technical inspections before and after races?",
+    "answer": "Parc ferm\u00e9"
+  },
+  {
+    "question": "Which driver won the most races in the 1980s?",
+    "answer": "Alain Prost"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '6'?",
+    "answer": "Phil Hill"
+  },
+  {
+    "question": "What is the term for the process of adjusting a car's setup to improve performance during a race?",
+    "answer": "Car tuning"
+  },
+  {
+    "question": "Which team won the first-ever Formula One Constructors' Championship without winning a race?",
+    "answer": "Cooper Car Company"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '9'?",
+    "answer": "Jenson Button"
+  },
+  {
+    "question": "What is the term for the part of the car that houses the driver's seat and cockpit controls?",
+    "answer": "Monocoque"
+  },
+  {
+    "question": "Which driver holds the record for the most consecutive podium finishes at the start of a season?",
+    "answer": "Michael Schumacher"
+  },
+  {
+    "question": "Who won the first Formula One race held at the Circuit de Catalunya?",
+    "answer": "Nigel Mansell"
+  },
+  {
+    "question": "What is the term for the racing strategy where a driver pushes hard in the early laps to build a lead?",
+    "answer": "Pushing strategy"
+  },
+  {
+    "question": "Which team won the first-ever Formula One World Constructors' Championship without using a wind tunnel?",
+    "answer": "Brabham"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car powered by a turbocharged engine during the naturally aspirated era?",
+    "answer": "Keke Rosberg"
+  },
+  {
+    "question": "What is the term for the racing strategy where a driver conserves tires to avoid pit stops?",
+    "answer": "Tire-saving strategy"
+  },
+  {
+    "question": "Which driver won the most races in the 1970s?",
+    "answer": "Niki Lauda"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '14'?",
+    "answer": "Emerson Fittipaldi"
+  },
+  {
+    "question": "What is the term for the racing strategy where a driver saves fuel by coasting or lifting off the throttle?",
+    "answer": "Fuel-saving strategy"
+  },
+  {
+    "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a V8 engine?",
+    "answer": "Ferrari"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '7'?",
+    "answer": "John Surtees"
+  },
+  {
+    "question": "What is the term for the racing strategy where a driver maximizes speed and performance without regard to fuel consumption?",
+    "answer": "Full-throttle strategy"
+  },
+  {
+    "question": "Which driver holds the record for the most consecutive pole positions at the same Grand Prix?",
+    "answer": "Ayrton Senna (San Marino Grand Prix)"
+  },
+  {
+    "question": "Who won the first Formula One race held at the Hungaroring?",
+    "answer": "Nigel Mansell"
+  },
+  {
+    "question": "What is the term for the racing strategy where a driver maximizes tire grip by avoiding aggressive maneuvers?",
+    "answer": "Tire-saving strategy"
+  },
+  {
+    "question": "Which team won the first-ever Formula One World Constructors' Championship with a car powered by a turbocharged engine?",
+    "answer": "Williams"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '16'?",
+    "answer": "Graham Hill"
+  },
+  {
+    "question": "What is the term for the racing strategy where a driver uses tire degradation to gain an advantage?",
+    "answer": "Tire-degradation strategy"
+  },
+  {
+    "question": "Which driver holds the record for the most consecutive podium finishes at the end of a season?",
+    "answer": "Michael Schumacher"
+  },
+  {
+    "question": "Who won the first Formula One race held at the Aut\u00f3dromo Internacional Nelson Piquet?",
+    "answer": "Nigel Mansell"
+  },
+  {
+    "question": "What is the term for the racing strategy where a driver pushes hard in the middle stages of a race to gain positions?",
+    "answer": "Mid-race push strategy"
+  },
+  {
+    "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a V6 engine?",
+    "answer": "McLaren"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '10'?",
+    "answer": "Jody Scheckter"
+  },
+  {
+    "question": "What is the term for the racing strategy where a driver conserves tires in the early stages of a race to have fresh rubber for the end?",
+    "answer": "Early tire conservation strategy"
+  },
+  {
+    "question": "Which driver holds the record for the most consecutive pole positions at the end of a season?",
+    "answer": "Ayrton Senna"
+  },
+  {
+    "question": "Who won the first Formula One race held at the Circuit de Nevers Magny-Cours?",
+    "answer": "Alain Prost"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '1'?",
+    "answer": "Sebastian Vettel"
+  },
+  {
+    "question": "What is the term for the process of adjusting a car's aerodynamics to improve performance?",
+    "answer": "Aero tuning"
+  },
+  {
+    "question": "Which driver won the most races in the 2000s?",
+    "answer": "Michael Schumacher"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '5'?",
+    "answer": "Mike Hawthorn"
+  },
+  {
+    "question": "What is the term for the racing strategy where a driver follows closely behind another car to reduce drag?",
+    "answer": "Drafting"
+  },
+  {
+    "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a hybrid engine?",
+    "answer": "Mercedes"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car powered by a V6 engine during the V8 era?",
+    "answer": "Lewis Hamilton"
+  },
+  {
+    "question": "What is the term for the process of adjusting a car's suspension to improve handling?",
+    "answer": "Suspension tuning"
+  },
+  {
+    "question": "Which driver holds the record for the most consecutive wins in a single season of Formula One?",
+    "answer": "Alberto Ascari"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '4'?",
+    "answer": "Jochen Rindt"
+  },
+  {
+    "question": "What is the term for the racing strategy where a driver conserves fuel by lifting off the throttle on straightaways?",
+    "answer": "Fuel-saving coasting"
+  },
+  {
+    "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a hybrid V6 turbo engine?",
+    "answer": "Mercedes"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car powered by a V6 turbo hybrid engine?",
+    "answer": "Lewis Hamilton"
+  },
+  {
+    "question": "What is the term for the process of adjusting a car's engine settings to improve performance?",
+    "answer": "Engine tuning"
+  },
+  {
+    "question": "Which driver holds the record for the most consecutive fastest laps in Formula One?",
+    "answer": "Jim Clark"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '3'?",
+    "answer": "Jack Brabham"
+  },
+  {
+    "question": "What is the term for the racing strategy where a driver conserves fuel by coasting into corners?",
+    "answer": "Fuel-saving coasting"
+  },
+  {
+    "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a hybrid V6 engine?",
+    "answer": "Mercedes"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '2'?",
+    "answer": "Graham Hill"
+  },
+  {
+    "question": "What is the term for the process of adjusting a car's weight distribution to improve handling?",
+    "answer": "Weight balancing"
+  },
+  {
+    "question": "Which driver holds the record for the most consecutive podium finishes in Formula One?",
+    "answer": "Michael Schumacher"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '15'?",
+    "answer": "John Surtees"
+  },
+  {
+    "question": "What is the term for the racing strategy where a driver conserves fuel by short-shifting?",
+    "answer": "Fuel-saving short-shifting"
+  },
+  {
+    "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a hybrid turbocharged engine?",
+    "answer": "Mercedes"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '17'?",
+    "answer": "Denny Hulme"
+  },
+  {
+    "question": "What is the term for the process of adjusting a car's gearbox to improve acceleration?",
+    "answer": "Gearbox tuning"
+  },
+  {
+    "question": "Which driver holds the record for the most consecutive pole positions in a single season of Formula One?",
+    "answer": "Alberto Ascari"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '27'?",
+    "answer": "Nigel Mansell"
+  },
+  {
+    "question": "What is the term for the racing strategy where a driver conserves fuel by staying in higher gears?",
+    "answer": "Fuel-saving gearing"
+  },
+  {
+    "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a hybrid V6 turbocharged engine?",
+    "answer": "Mercedes"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '26'?",
+    "answer": "Denny Hulme"
+  },
+  {
+    "question": "What is the term for the process of adjusting a car's brakes to improve stopping power?",
+    "answer": "Brake tuning"
+  },
+  {
+    "question": "Which driver holds the record for the most consecutive wins at the start of a Formula One career?",
+    "answer": "Alberto Ascari"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '18'?",
+    "answer": "Mario Andretti"
+  },
+  {
+    "question": "What is the term for the racing strategy where a driver conserves fuel by coasting in neutral?",
+    "answer": "Fuel-saving coasting"
+  },
+  {
+    "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a hybrid V6 turbocharged hybrid engine?",
+    "answer": "Mercedes"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '20'?",
+    "answer": "Emerson Fittipaldi"
+  },
+  {
+    "question": "What is the term for the process of adjusting a car's steering to improve responsiveness?",
+    "answer": "Steering tuning"
+  },
+  {
+    "question": "Which driver holds the record for the most consecutive pole positions at the start of a Formula One career?",
+    "answer": "Ayrton Senna"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '23'?",
+    "answer": "James Hunt"
+  },
+  {
+    "question": "What is the term for the racing strategy where a driver conserves fuel by avoiding aggressive driving?",
+    "answer": "Fuel-saving driving"
+  },
+  {
+    "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a hybrid V6 turbocharged hybrid power unit?",
+    "answer": "Mercedes"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '25'?",
+    "answer": "Niki Lauda"
+  },
+  {
+    "question": "What is the term for the process of adjusting a car's chassis to improve stability?",
+    "answer": "Chassis tuning"
+  },
+  {
+    "question": "Which driver holds the record for the most consecutive pole positions in Formula One?",
+    "answer": "Ayrton Senna"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '24'?",
+    "answer": "James Hunt"
+  },
+  {
+    "question": "What is the term for the racing strategy where a driver conserves fuel by drafting behind other cars?",
+    "answer": "Fuel-saving drafting"
+  },
+  {
+    "question": "Which team won the first-ever Formula One Constructors' Championship with a car powered by a hybrid V6 turbocharged hybrid power unit with an energy recovery system?",
+    "answer": "Mercedes"
+  },
+  {
+    "question": "Who is the only driver to win the Formula One World Championship with a car bearing the number '19'?",
+    "answer": "Michael Schumacher"
+  }
 ]
