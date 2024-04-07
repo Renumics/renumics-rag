@@ -72,7 +72,11 @@ def create_db(
                 f"the vectorstore at '{settings.docs_db_directory}'. Set "
                 f"'--exist-ok' for appending to existing collections."
             )
-    embeddings_model = get_embeddings_model(*parse_model_name(embeddings_model_name))
+    embeddings_model = get_embeddings_model(
+        *parse_model_name(embeddings_model_name),
+        device=settings.device,
+        trust_remote_code=settings.trust_remote_code,
+    )
     assert batch_size > 0
 
     docs_vectorstore = get_chromadb(

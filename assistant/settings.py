@@ -6,7 +6,7 @@ import yaml
 from pydantic import BaseModel, ConfigDict, Field, PositiveInt, validator
 from typing_extensions import Annotated, Self
 
-from .types import ModelType, RAGMode, RelevanceScoreFn, RetrieverSearchType
+from .types import Device, ModelType, RAGMode, RelevanceScoreFn, RetrieverSearchType
 
 
 def guess_model_type() -> ModelType:
@@ -36,6 +36,12 @@ class Settings(BaseModel):
     questions_db_directory: Path = Path("./db-questions")
     questions_db_collection: Annotated[str, Field(min_length=1)] = "questions_store"
 
+    # Hugging Face-specific settings
+    device: Optional[Device] = None
+    trust_remote_code: bool = False
+    torch_dtype: Optional[str] = None
+
+    # SQL-specific
     sql_dataset_path: Path = Path("./data/f1_dataset.parquet")
     rag_mode: RAGMode = "docs"
 
@@ -85,6 +91,6 @@ try:
 except FileNotFoundError as e:
     raise FileNotFoundError(
         f"{e}\nCreate a new settings file "
-        f"(s. https://github.com/Renumics/rag-demo/blob/main/settings.yaml) or "
+        f"(s. https://github.com/Renumics/renumics-rag/blob/main/settings.yaml) or "
         f"set `RAG_SETTINGS` environment variable to an existing one."
     )

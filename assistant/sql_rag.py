@@ -9,11 +9,14 @@ Your task is to convert a question into a SQL query, given the SQL table schema.
 
 SQL dataset contains a racing team dataset. It represents a racing car training session. The dataset contains timestamps at constant 1000 Hz frequency and multiple CAN-bus signals at these timestamps.
 
+Don't forget to query _datetime and _timestamp columns since they are crucial for the data understanding.
+
 ### Input:
 Generate a SQL query that answers the question `{question}`.
 This query will run on a database whose schema is represented in this string:
 CREATE TABLE dataset (
-    _timestamp TIMESTAMP_NS, -- Absolute timestamp.
+    _datetime TIMESTAMP_NS, -- Absolute datetime.
+    _timestamp DOUBLE, -- Time passed since the Unix epoch in seconds.
     a1_iu_gps_power DOUBLE, -- Power supply status of the GPS on the Intelligent Unit (IU).
     a1_pitorohr_current DOUBLE, -- Current flowing through the pitot tube's heater, which is used to measure airspeed.
     a2_com_router_power DOUBLE, -- Power supply status of the communication router responsible for network connectivity.
