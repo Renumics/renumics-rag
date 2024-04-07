@@ -304,18 +304,20 @@ def st_sql_chat(chain: Runnable, viewer: Any) -> None:
 
     if st.session_state.messages[-1].role == "user":
         with st.spinner("Thinking..."):
-            answer = chain.invoke(question)
+            answer: str = chain.invoke(question)
+            print(answer)
             try:
-                query, explanation = answer.split("END_QUERY", 1)
-                _, query = query.split("QUERY:")
+                prefix, query = answer.split("```sql", 1)
+                query, explanation = query.split("```", 1)
             except ValueError:
                 query = "⚠️Unparsable SQL query"
                 explanation = answer
             else:
-                query = query.strip().strip("`")
-                if query.startswith("sql"):
-                    query = query[3:]
-                query = query.strip()
+                explanation = prefix + explanation
+                assert "dataset" in query
+                query = query.strip().replace(
+                    "dataset", "'" + str(settings.sql_dataset_path) + "'"
+                )
             messages = [Message("query", query), Message("assistant", explanation)]
         with st.spinner("Preparing visualization..."):
             if viewer is not None and not query.startswith("⚠️"):
