@@ -135,11 +135,6 @@ def _get_questions_chromadb(embeddings_model: Embeddings) -> Chroma:
 
 
 @st.cache_resource(show_spinner=False)
-def get_db_connection() -> duckdb.DuckDBPyConnection:
-    return duckdb.connect()
-
-
-@st.cache_resource(show_spinner=False)
 def get_or_create_spotlight_viewer() -> Any:
     if spotlight is None:
         return None
