@@ -11,6 +11,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import (
     BSHTMLLoader,
     DirectoryLoader,
+    Docx2txtLoader,
     PyPDFLoader,
     UnstructuredMarkdownLoader,
 )
@@ -112,6 +113,13 @@ def create_db(
         str(docs_directory),
         glob="*.pdf",
         loader_cls=PyPDFLoader,  # type: ignore
+        recursive=True,
+        show_progress=True,
+    )
+    loader = DirectoryLoader(
+        str(docs_directory),
+        glob="*.docx",
+        loader_cls=Docx2txtLoader,  # type: ignore
         recursive=True,
         show_progress=True,
     )

@@ -1366,6 +1366,16 @@ files = [
 ]
 
 [[package]]
+name = "docx2txt"
+version = "0.8"
+description = "A pure python-based utility to extract text and images from docx files."
+optional = false
+python-versions = "*"
+files = [
+    {file = "docx2txt-0.8.tar.gz", hash = "sha256:2c06d98d7cfe2d3947e5760a57d924e3ff07745b379c8737723922e7009236e5"},
+]
+
+[[package]]
 name = "emoji"
 version = "2.12.1"
 description = "Emoji for Python"
@@ -8163,4 +8173,4 @@ openai = ["langchain-openai"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<3.9.7 || >3.9.7,<3.12"
-content-hash = "a6f43cd2fc5bbe278ccaa5b349b0ad257c2b5ad743d28b6c1764345676a5ac2d"
+content-hash = "eb18e96edd1e5d358f60b4f242c0d024c2b37a201159776ca4d4ce6137574fe4"

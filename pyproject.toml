@@ -38,6 +38,7 @@ markdown = "^3.5.2"
 pypdf = "^4.0.1"
 pandas = "^2.0.3"
 renumics-spotlight = {version = "^1.6.5", optional = true}
+docx2txt = "^0.8"
 
 [tool.poetry.extras]
 openai = ["langchain-openai"]
