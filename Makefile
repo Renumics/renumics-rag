@@ -47,6 +47,37 @@ lint: ## Lint all source files
 run: ## Run web app
 	poetry run streamlit run assistant/app.py
 
-.PHONY: build
-build: ## Build package
+.PHONY: build-wheel
+build-wheel: ## Build package
 	poetry build -f wheel
+
+.PHONY: build-image
+build-image: ## Build docker image
+	docker build -t renumics-rag -f Dockerfile .
+
+.PHONY: run-image-openai
+run-image-openai: ## Build docker image
+run-image-openai: build-image
+	docker run -it --rm -e OPENAI_API_KEY=$$OPENAI_API_KEY -p 8000:8000 renumics-rag
+
+.PHONY: run-image-azure
+run-image-azure: ## Build docker image
+run-image-azure: build-image
+	docker run -it --rm \
+		-e OPENAI_API_TYPE=$$OPENAI_API_TYPE \
+		-e OPENAI_API_VERSION=$$OPENAI_API_VERSION \
+		-e AZURE_OPENAI_API_KEY=$$AZURE_OPENAI_API_KEY \
+		-e AZURE_OPENAI_ENDPOINT=$$AZURE_OPENAI_ENDPOINT -p 8000:8000 renumics-rag
+
+.PHONY: docker-login
+docker-login: ## Log in to Azure registry
+	docker login -u "$$AZURE_REGISTRY_USERNAME" -p "$$AZURE_REGISTRY_PASSWORD" "$$AZURE_REGISTRY"
+
+.PHONY: release-image
+release-image: ## Tag and push image to Azure registry
+release-image: docker-login build-image
+	TIMESTAMP="$(shell date '+%Y-%m-%d_%H-%M-%S')"
+	docker tag renumics-rag "$${AZURE_REGISTRY}/renumics-rag:$$TIMESTAMP"
+	docker push "$${AZURE_REGISTRY}/renumics-rag:$$TIMESTAMP"
+	docker tag renumics-rag "$${AZURE_REGISTRY}/renumics-rag:latest"
+	docker push "$${AZURE_REGISTRY}/renumics-rag:latest"
