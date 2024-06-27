@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import math
+import warnings
 from enum import Enum
 from pathlib import Path
 
@@ -145,6 +146,21 @@ def create_db(
         )
         splits = text_splitter.split_documents(docs)
         split_ids = list(map(stable_hash, splits))
+
+        # Remove duplicates if exist.
+        indices_to_remove = set()
+        for i, split_id in enumerate(split_ids):
+            for j in range(i + 1, len(split_ids)):
+                if split_ids[j] == split_id:
+                    if len(splits[j].page_content) > len(splits[i].page_content):
+                        indices_to_remove.add(i)
+                    else:
+                        indices_to_remove.add(j)
+        if indices_to_remove:
+            warnings.warn("Duplicated splits found, remove duplicates.")
+            for index in sorted(indices_to_remove, reverse=True):
+                del splits[index]
+                del split_ids[index]
 
         for batch_index in trange(math.ceil(len(splits) / batch_size)):
             start = batch_size * batch_index
