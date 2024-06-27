@@ -2,7 +2,7 @@ llm_type: 'openai' # 'openai', 'hf' or 'azure'
 llm_name: 'gpt-3.5-turbo'
 
 relevance_score_fn: 'l2'
-k: 20
+k: 5
 search_type: 'similarity'
 score_threshold: 0.5
 fetch_k: 20

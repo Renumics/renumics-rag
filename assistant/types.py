@@ -30,10 +30,15 @@ RETRIEVER_SEARCH_TYPES: Dict[RetrieverSearchType, str] = {
 
 
 # Types for Streamlit app
-Role = Literal["user", "assistant", "source"]
+Role = Literal["user", "assistant", "source", "end"]
 
 
-AVATARS: Dict[Role, Any] = {"user": "🧐", "assistant": "🤖", "source": "📚"}
+AVATARS: Dict[Role, Any] = {
+    "user": "🧐",
+    "assistant": "🤖",
+    "source": "📚",
+    "end": "🏁",
+}
 
 
 @dataclasses.dataclass

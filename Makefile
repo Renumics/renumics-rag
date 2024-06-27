@@ -50,3 +50,25 @@ run: ## Run web app
 .PHONY: build
 build: ## Build package
 	poetry build -f wheel
+
+.PHONY: build-image
+build-image: ## Build docker image
+	docker build -t renumics-rag -f Dockerfile .
+
+.PHONY: run-image
+run-image: ## Build docker image
+run-image: build-image
+	docker run -it --rm -e OPENAI_API_KEY=$$OPENAI_API_KEY -p 8000:8000 renumics-rag
+
+.PHONY: docker-login
+docker-login: ## Log in to Azure registry
+	docker login -u "$$AZURE_REGISTRY_USERNAME" -p "$$AZURE_REGISTRY_PASSWORD" "$$AZURE_REGISTRY"
+
+.PHONY: release-image
+release-image: ## Tag and push image to Azure registry
+release-image: docker-login build-image
+	TIMESTAMP="$(shell date '+%Y-%m-%d_%H-%M-%S')"
+	docker tag renumics-rag "$${AZURE_REGISTRY}/renumics-rag:$$TIMESTAMP"
+	docker push "$${AZURE_REGISTRY}/renumics-rag:$$TIMESTAMP"
+	docker tag renumics-rag "$${AZURE_REGISTRY}/renumics-rag:latest"
+	docker push "$${AZURE_REGISTRY}/renumics-rag:latest"
