@@ -17,4 +17,4 @@ COPY settings.yaml ./
 
 COPY ./db-docs/ ./db-docs/
 
-CMD ["poetry", "run", "streamlit", "run", "assistant/app.py"]
+CMD ["poetry", "run", "app"]
