@@ -1,6 +1,5 @@
 from typing import Any, Callable, Dict, List, Optional, Type, Union, get_args
 
-import pandas as pd
 import streamlit as st
 import typer
 from langchain.vectorstores.chroma import Chroma
@@ -115,7 +114,7 @@ def get_or_create_spotlight_viewer() -> Any:
             viewer.close()
         return spotlight.viewers()[-1]
     return spotlight.show(
-        pd.DataFrame({}),  # Hack for Spotlight
+        port=8001,
         no_browser=True,
         dtype={
             "used_by_questions": spotlight_dtypes.SequenceDType(
