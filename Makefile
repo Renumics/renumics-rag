@@ -58,16 +58,17 @@ build-image: ## Build docker image
 .PHONY: run-image-openai
 run-image-openai: ## Build docker image
 run-image-openai: build-image
-	docker run -it --rm -e OPENAI_API_KEY=$$OPENAI_API_KEY -p 8000:8000 renumics-rag
+	docker run -it --rm -p 8000:8000 -p 8001:8001 --network=host -e OPENAI_API_KEY=$$OPENAI_API_KEY renumics-rag
 
 .PHONY: run-image-azure
 run-image-azure: ## Build docker image
 run-image-azure: build-image
-	docker run -it --rm \
+	docker run -it --rm -p 8000:8000 -p 8001:8001 --network=host \
 		-e OPENAI_API_TYPE=$$OPENAI_API_TYPE \
 		-e OPENAI_API_VERSION=$$OPENAI_API_VERSION \
 		-e AZURE_OPENAI_API_KEY=$$AZURE_OPENAI_API_KEY \
-		-e AZURE_OPENAI_ENDPOINT=$$AZURE_OPENAI_ENDPOINT -p 8000:8000 renumics-rag
+		-e AZURE_OPENAI_ENDPOINT=$$AZURE_OPENAI_ENDPOINT \
+		renumics-rag
 
 .PHONY: docker-login
 docker-login: ## Log in to Azure registry

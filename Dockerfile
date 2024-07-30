@@ -10,7 +10,7 @@ RUN pip install -IU pip setuptools wheel && pip install poetry==1.8.3
 COPY pyproject.toml poetry.lock README.md ./
 COPY ./assistant/__init__.py ./assistant/
 
-RUN poetry install --extras=openai --sync --without=dev
+RUN poetry install --all-extras --sync --without=dev
 
 COPY ./assistant/ ./assistant/
 COPY settings.yaml ./
