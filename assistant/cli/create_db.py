@@ -116,6 +116,7 @@ def create_db(
         recursive=True,
         show_progress=True,
     )
+    docs.extend(loader.load())
     loader = DirectoryLoader(
         str(docs_directory),
         glob="*.docx",
