@@ -22,7 +22,7 @@ typing-extensions = "^4.9.0"
 typer = "^0.9.0"
 langchain = "^0.3.27"
 langchain-community = "^0.3.27"
-langchain-core = "^0.3.27"
+langchain-core = "^0.3.80"
 chromadb = "^0.4.22"
 pysqlite3-binary = {version = "^0.5.2.post2", platform = 'linux'}
 beautifulsoup4 = "^4.12.3"
