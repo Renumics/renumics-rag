@@ -3751,32 +3751,6 @@ test = ["pytest (>=7.2)", "pytest-cov (>=4.0)", "pytest-xdist (>=3.0)"]
 test-extras = ["pytest-mpl", "pytest-randomly"]
 
 [[package]]
-name = "nltk"
-version = "3.9.2"
-description = "Natural Language Toolkit"
-optional = false
-python-versions = ">=3.9"
-groups = ["main"]
-files = [
-    {file = "nltk-3.9.2-py3-none-any.whl", hash = "sha256:1e209d2b3009110635ed9709a67a1a3e33a10f799490fa71cf4bec218c11c88a"},
-    {file = "nltk-3.9.2.tar.gz", hash = "sha256:0f409e9b069ca4177c1903c3e843eef90c7e92992fa4931ae607da6de49e1419"},
-]
-
-[package.dependencies]
-click = "*"
-joblib = "*"
-regex = ">=2021.8.3"
-tqdm = "*"
-
-[package.extras]
-all = ["matplotlib", "numpy", "pyparsing", "python-crfsuite", "requests", "scikit-learn", "scipy", "twython"]
-corenlp = ["requests"]
-machine-learning = ["numpy", "python-crfsuite", "scikit-learn", "scipy"]
-plot = ["matplotlib"]
-tgrep = ["pyparsing"]
-twitter = ["twython"]
-
-[[package]]
 name = "nodeenv"
 version = "1.10.0"
 description = "Node.js virtual environment builder"
@@ -7681,85 +7655,6 @@ tbb = ["tbb (>=2019.0)"]
 test = ["pytest"]
 
 [[package]]
-name = "unstructured"
-version = "0.18.31"
-description = "A library that prepares raw documents for downstream ML tasks."
-optional = false
-python-versions = ">=3.10.0"
-groups = ["main"]
-files = [
-    {file = "unstructured-0.18.31-py3-none-any.whl", hash = "sha256:fab4641176cb9b192ed38048758aa0d9843121d03626d18f42275afb31e5b2d3"},
-    {file = "unstructured-0.18.31.tar.gz", hash = "sha256:af4bbe32d1894ae6e755f0da6fc0dd307a1d0adeebe0e7cc6278f6cf744339ca"},
-]
-
-[package.dependencies]
-backoff = "*"
-beautifulsoup4 = "*"
-charset-normalizer = "*"
-dataclasses-json = "*"
-emoji = "*"
-filetype = "*"
-html5lib = "*"
-langdetect = "*"
-lxml = "*"
-nltk = "*"
-numba = "*"
-numpy = "*"
-psutil = "*"
-python-iso639 = "*"
-python-magic = "*"
-python-oxmsg = "*"
-rapidfuzz = "*"
-requests = "*"
-tqdm = "*"
-typing-extensions = "*"
-unstructured-client = "*"
-wrapt = "*"
-
-[package.extras]
-all-docs = ["effdet", "google-cloud-vision", "markdown", "msoffcrypto-tool", "networkx", "onnx (>=1.17.0)", "onnxruntime (>=1.19.0)", "openpyxl", "pandas", "pdf2image", "pdfminer.six", "pi_heif", "pikepdf", "pypandoc", "pypdf", "python-docx (>=1.1.2)", "python-pptx (>=1.0.1)", "unstructured-inference (>=1.1.1)", "unstructured.pytesseract (>=0.3.12)", "xlrd"]
-chunking-tokens = ["tiktoken"]
-csv = ["pandas"]
-doc = ["python-docx (>=1.1.2)"]
-docx = ["python-docx (>=1.1.2)"]
-epub = ["pypandoc"]
-huggingface = ["langdetect", "sacremoses", "sentencepiece", "torch", "transformers"]
-image = ["effdet", "google-cloud-vision", "onnx (>=1.17.0)", "onnxruntime (>=1.19.0)", "pdf2image", "pdfminer.six", "pi_heif", "pikepdf", "pypdf", "unstructured-inference (>=1.1.1)", "unstructured.pytesseract (>=0.3.12)"]
-local-inference = ["effdet", "google-cloud-vision", "markdown", "msoffcrypto-tool", "networkx", "onnx (>=1.17.0)", "onnxruntime (>=1.19.0)", "openpyxl", "pandas", "pdf2image", "pdfminer.six", "pi_heif", "pikepdf", "pypandoc", "pypdf", "python-docx (>=1.1.2)", "python-pptx (>=1.0.1)", "unstructured-inference (>=1.1.1)", "unstructured.pytesseract (>=0.3.12)", "xlrd"]
-md = ["markdown"]
-odt = ["pypandoc", "python-docx (>=1.1.2)"]
-org = ["pypandoc"]
-paddleocr = ["paddlepaddle (>=3.0.0b1)", "unstructured.paddleocr (==2.10.0)"]
-pdf = ["effdet", "google-cloud-vision", "onnx (>=1.17.0)", "onnxruntime (>=1.19.0)", "pdf2image", "pdfminer.six", "pi_heif", "pikepdf", "pypdf", "unstructured-inference (>=1.1.1)", "unstructured.pytesseract (>=0.3.12)"]
-ppt = ["python-pptx (>=1.0.1)"]
-pptx = ["python-pptx (>=1.0.1)"]
-rst = ["pypandoc"]
-rtf = ["pypandoc"]
-tsv = ["pandas"]
-xlsx = ["msoffcrypto-tool", "networkx", "openpyxl", "pandas", "xlrd"]
-
-[[package]]
-name = "unstructured-client"
-version = "0.42.8"
-description = "Python Client SDK for Unstructured API"
-optional = false
-python-versions = ">=3.9.2"
-groups = ["main"]
-files = [
-    {file = "unstructured_client-0.42.8-py3-none-any.whl", hash = "sha256:6dbdb62d36554a5cbe61dc1b6ef0c8b11a46cc61e2602c2dc22975ba78028214"},
-    {file = "unstructured_client-0.42.8.tar.gz", hash = "sha256:663655548ed5c205efb48b7f38ca0906998b33571512f7c53c60aa811e514464"},
-]
-
-[package.dependencies]
-aiofiles = ">=24.1.0"
-cryptography = ">=3.1"
-httpcore = ">=1.0.9"
-httpx = ">=0.27.0"
-pydantic = ">=2.11.2"
-pypdf = ">=6.2.0"
-requests-toolbelt = ">=1.0.0"
-
-[[package]]
 name = "urllib3"
 version = "2.6.3"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -8787,4 +8682,4 @@ openai = ["langchain-openai"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10.1 <3.12.0"
-content-hash = "f81fc027834de078c9a5f1810db3fac1ed946605e2769fe5d24bfafa7484c82b"
+content-hash = "e771e2f0cc22209655272304e734f8ce8ef1f0734fc86ab44df0dc9aaa4010e3"

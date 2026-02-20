@@ -13,7 +13,7 @@ from langchain_community.document_loaders import (
     DirectoryLoader,
     Docx2txtLoader,
     PyPDFLoader,
-    UnstructuredMarkdownLoader,
+    TextLoader,
 )
 from tqdm import trange
 from typing_extensions import Annotated
@@ -104,7 +104,8 @@ def create_db(
     loader = DirectoryLoader(
         str(docs_directory),
         glob="*.md",
-        loader_cls=UnstructuredMarkdownLoader,
+        loader_cls=TextLoader,
+        loader_kwargs={"encoding": "utf-8"},
         recursive=True,
         show_progress=True,
     )
