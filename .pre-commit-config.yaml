@@ -6,19 +6,18 @@ repos:
     # local hooks
     - repo: local
       hooks:
-          - id: ruff
-            name: ruff
-            entry: poetry run ruff check --fix --exit-non-zero-on-fix --show-fixes
-            language: system
-            types: [python]
-            require_serial: true
-          - id: mypy
-            name: mypy
-            entry: poetry run mypy
-            language: system
-            types: [python]
-            files: ^assistant/
-            require_serial: true
+        - id: ruff-format
+          name: ruff format
+          entry: bash -c "uv run ruff format --exit-non-zero-on-format ${0/#/../} ${@/#/../}"
+          language: system
+          types: [python]
+          exclude: ^backend/scripts/rimpy_blender.py$
+        - id: ruff-check
+          name: ruff check
+          entry: bash -c "uv run ruff check --fix --exit-non-zero-on-fix --show-fixes ${0/#/../} ${@/#/../}"
+          language: system
+          types: [python]
+          exclude: ^backend/scripts/rimpy_blender.py$
 
     # "official" pre-commit hooks
     - repo: https://github.com/pre-commit/pre-commit-hooks

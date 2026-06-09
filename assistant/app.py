@@ -2,7 +2,7 @@ from typing import Any, Callable, Dict, List, Optional, Type, Union, get_args
 
 import streamlit as st
 import typer
-from langchain.vectorstores.chroma import Chroma
+from langchain_chroma import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.llms.huggingface_pipeline import HuggingFacePipeline
 from langchain_core.embeddings import Embeddings
@@ -311,7 +311,7 @@ def st_app(
             sources: List[str] = []
             for doc in rag_answer["source_documents"]:
                 sources.append(f"**Content**: {doc.page_content}")
-                sources.append(f"**Source**: \"{doc.metadata['source']}\"")
+                sources.append(f'**Source**: "{doc.metadata["source"]}"')
             messages.append(NestedMessage("source", "Sources", sources))
             messages.append(Message("assistant", rag_answer["answer"]))
             return messages

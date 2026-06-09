@@ -7,7 +7,6 @@ from pathlib import Path
 import chromadb
 import chromadb.config
 import typer
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import (
     BSHTMLLoader,
     DirectoryLoader,
@@ -15,6 +14,7 @@ from langchain_community.document_loaders import (
     PyPDFLoader,
     UnstructuredMarkdownLoader,
 )
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from tqdm import trange
 from typing_extensions import Annotated
 

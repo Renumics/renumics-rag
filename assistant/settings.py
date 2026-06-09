@@ -1,9 +1,16 @@
 import os
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Optional
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field, PositiveInt, validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    PositiveInt,
+    ValidationInfo,
+    field_validator,
+)
 from typing_extensions import Annotated, Self
 
 from .types import Device, ModelType, RelevanceScoreFn, RetrieverSearchType
@@ -41,11 +48,11 @@ class Settings(BaseModel):
     trust_remote_code: bool = False
     torch_dtype: Optional[str] = None
 
-    @validator("fetch_k")
+    @field_validator("fetch_k")
     @classmethod
-    def _(cls, fetch_k: int, values: Dict[str, Any]) -> int:
-        k = values["k"]
-        if fetch_k < k:
+    def _(cls, fetch_k: int, info: ValidationInfo) -> int:
+        k = info.data.get("k")
+        if k is not None and fetch_k < k:
             raise ValueError(
                 f"`fetch_k`({fetch_k}) should be greater than or equal to `k`({k})"
             )
