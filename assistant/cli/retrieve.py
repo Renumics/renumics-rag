@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-from typing import List
-
 import typer
 from typing_extensions import Annotated
 
@@ -19,7 +17,7 @@ app = typer.Typer()
 @app.command()
 def retrieve(
     questions: Annotated[
-        List[str], typer.Argument(help="Question(s) to retrieve docs for.")
+        list[str], typer.Argument(help="Question(s) to retrieve docs for.")
     ],
     embeddings_model_name: Annotated[
         str, typer.Option("--embeddings", help=EMBEDDINGS_MODEL_NAME_HELP)

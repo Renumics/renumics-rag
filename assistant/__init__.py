@@ -72,7 +72,7 @@ import hashlib
 import json
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, cast, get_args
+from typing import Any, cast, get_args
 
 import dotenv
 from langchain_chroma import Chroma
@@ -113,7 +113,7 @@ import chromadb  # noqa: E402
 import chromadb.config  # noqa: E402
 
 
-def parse_model_name(name: str) -> Tuple[str, ModelType]:
+def parse_model_name(name: str) -> tuple[str, ModelType]:
     if ":" in name:
         model_type, name = name.split(":", 1)
         assert model_type in get_args(ModelType)
@@ -123,7 +123,7 @@ def parse_model_name(name: str) -> Tuple[str, ModelType]:
     return name, model_type
 
 
-def _get_torch_device(device: Optional[Device] = None) -> Any:
+def _get_torch_device(device: Device | None = None) -> Any:
     try:
         import torch
     except ImportError as e:
@@ -141,7 +141,7 @@ def _get_torch_device(device: Optional[Device] = None) -> Any:
 
 
 def get_hf_embeddings_model(
-    name: str, device: Optional[Device] = None, trust_remote_code: bool = False
+    name: str, device: Device | None = None, trust_remote_code: bool = False
 ) -> HuggingFaceEmbeddings:
     try:
         import sentence_transformers  # noqa: F401
@@ -160,7 +160,7 @@ def get_embeddings_model(
     name: str,
     model_type: ModelType,
     *,
-    device: Optional[Device] = None,
+    device: Device | None = None,
     trust_remote_code: bool = False,
 ) -> Embeddings:
     if model_type == "azure":
@@ -172,7 +172,7 @@ def get_embeddings_model(
     raise TypeError(f"Unknown model type '{model_type}'.")
 
 
-def get_embeddings_model_config(embeddings_model: Embeddings) -> Tuple[str, ModelType]:
+def get_embeddings_model_config(embeddings_model: Embeddings) -> tuple[str, ModelType]:
     if isinstance(embeddings_model, AzureOpenAIEmbeddings):
         assert embeddings_model.deployment is not None
         return embeddings_model.deployment, "azure"
@@ -185,9 +185,9 @@ def get_embeddings_model_config(embeddings_model: Embeddings) -> Tuple[str, Mode
 
 def get_hf_llm(
     name: str,
-    device: Optional[Device] = None,
+    device: Device | None = None,
     trust_remote_code: bool = False,
-    torch_dtype: Optional[str] = None,
+    torch_dtype: str | None = None,
 ) -> HuggingFacePipeline:
     try:
         import torch  # noqa: F401
@@ -211,9 +211,9 @@ def get_llm(
     name: str,
     model_type: ModelType,
     *,
-    device: Optional[Device] = None,
+    device: Device | None = None,
     trust_remote_code: bool = False,
-    torch_dtype: Optional[str] = None,
+    torch_dtype: str | None = None,
 ) -> LLM:
     if model_type == "azure":
         return AzureChatOpenAI(azure_deployment=name, temperature=0.0)
@@ -224,7 +224,7 @@ def get_llm(
     raise TypeError(f"Unknown model type '{model_type}'.")
 
 
-def get_llm_config(llm: LLM) -> Tuple[str, ModelType]:
+def get_llm_config(llm: LLM) -> tuple[str, ModelType]:
     if isinstance(llm, AzureChatOpenAI):
         assert llm.deployment_name is not None
         return llm.deployment_name, "azure"
@@ -289,8 +289,8 @@ def _assert_embeddings_model_ok_for_chromadb(
 
 
 def get_chromadb(
-    embeddings_model: Optional[Embeddings] = None,
-    persist_directory: Optional[Path] = None,
+    embeddings_model: Embeddings | None = None,
+    persist_directory: Path | None = None,
     collection_name: str = Chroma._LANGCHAIN_DEFAULT_COLLECTION_NAME,
     relevance_score_fn: RelevanceScoreFn = "l2",
 ) -> Chroma:
@@ -302,7 +302,7 @@ def get_chromadb(
             embeddings_model, persist_directory, collection_name
         )
 
-    kwargs: Dict = {
+    kwargs: dict = {
         "collection_name": collection_name,
         "embedding_function": embeddings_model,
         "persist_directory": (
@@ -326,14 +326,14 @@ def get_chromadb(
 
 def get_retriever(
     vectorstore: VectorStore,
-    k: Optional[int] = None,
+    k: int | None = None,
     search_type: RetrieverSearchType = "similarity",
-    score_threshold: Optional[float] = None,
-    fetch_k: Optional[int] = None,
-    lambda_mult: Optional[float] = None,
+    score_threshold: float | None = None,
+    fetch_k: int | None = None,
+    lambda_mult: float | None = None,
 ) -> VectorStoreRetriever:
-    kwargs: Dict[str, Any] = {"search_type": search_type}
-    search_kwargs: Dict[str, Any] = {}
+    kwargs: dict[str, Any] = {"search_type": search_type}
+    search_kwargs: dict[str, Any] = {}
     if k is not None:
         search_kwargs["k"] = k
     if search_type == "similarity_score_threshold":
@@ -352,7 +352,7 @@ def format_doc(doc: Document) -> str:
     return f'Content: {doc.page_content}\nSource: "{doc.metadata["source"]}"'
 
 
-def format_docs(docs: List[Document]) -> str:
+def format_docs(docs: list[Document]) -> str:
     return "\n\n".join(map(format_doc, docs))
 
 
@@ -392,7 +392,7 @@ def stable_hash(doc: Document) -> str:
     return hashlib.sha1(json.dumps(doc.metadata, sort_keys=True).encode()).hexdigest()
 
 
-def question_as_doc(question: str, rag_answer: Dict[str, Any]) -> Document:
+def question_as_doc(question: str, rag_answer: dict[str, Any]) -> Document:
     return Document(
         page_content=question,
         metadata={

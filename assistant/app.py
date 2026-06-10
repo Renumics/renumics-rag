@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, List, Optional, Type, Union, get_args
+from typing import Any, Callable, get_args
 
 import streamlit as st
 import typer
@@ -42,7 +42,7 @@ from assistant.types import (
 app = typer.Typer()
 
 
-def hash_model(model: Union[Embeddings, LLM]) -> int:
+def hash_model(model: Embeddings | LLM) -> int:
     if isinstance(model, Embeddings):
         name, model_type = get_embeddings_model_config(model)
     else:
@@ -50,7 +50,7 @@ def hash_model(model: Union[Embeddings, LLM]) -> int:
     return hash(name) ^ hash(model_type)
 
 
-HASH_FUNCS: Dict[Union[str, Type], Callable[[Any], Any]] = {
+HASH_FUNCS: dict[str | type, Callable[[Any], Any]] = {
     AzureOpenAIEmbeddings: hash_model,
     OpenAIEmbeddings: hash_model,
     HuggingFaceEmbeddings: hash_model,
@@ -213,7 +213,7 @@ def st_settings(
         )
 
 
-def st_chat_messages(messages: List[Message]) -> None:
+def st_chat_messages(messages: list[Message]) -> None:
     for message in messages:
         with st.chat_message(message.role, avatar=AVATARS.get(message.role)):
             if isinstance(message, NestedMessage):
@@ -224,7 +224,7 @@ def st_chat_messages(messages: List[Message]) -> None:
                 st.write(message.content)
 
 
-def st_chat(on_question: Callable[[str], List[Message]]) -> None:
+def st_chat(on_question: Callable[[str], list[Message]]) -> None:
     if "messages" not in st.session_state.keys():
         st.session_state.messages = [Message("assistant", "Ask me a question")]
 
@@ -243,7 +243,7 @@ def st_chat(on_question: Callable[[str], List[Message]]) -> None:
 def st_app(
     title: str = "RAG Demo",
     favicon: str = "🤖",
-    image: Optional[str] = None,
+    image: str | None = None,
     h1: str = "RAG Demo",
     h2: str = "Chat with your docs",
 ) -> None:
@@ -300,13 +300,13 @@ def st_app(
         )
         questions_vectorstore = _get_questions_chromadb(embeddings_model)
 
-        def on_question(question: str) -> List[Message]:
+        def on_question(question: str) -> list[Message]:
             rag_answer = chain.invoke(question)
 
             questions_vectorstore.add_documents([question_as_doc(question, rag_answer)])
 
-            messages: List[Message] = []
-            sources: List[str] = []
+            messages: list[Message] = []
+            sources: list[str] = []
             for doc in rag_answer["source_documents"]:
                 sources.append(f"**Content**: {doc.page_content}")
                 sources.append(f'**Source**: "{doc.metadata["source"]}"')
