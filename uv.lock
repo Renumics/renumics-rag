@@ -74,8 +74,8 @@ dependencies = [
     { name = "psutil" },
     { name = "pyyaml" },
     { name = "safetensors" },
-    { name = "torch", version = "2.12.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "torch", version = "2.12.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "torch", version = "2.12.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.15' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "torch", version = "2.12.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu')" },
     { name = "torch", version = "2.12.0+cu130", source = { registry = "https://download.pytorch.org/whl/cu130" }, marker = "extra == 'extra-12-renumics-rag-hf-cu130'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/ca/14/787e5498cd062640f0f3d92ef4ae4063174f76f9afd29d13fc52a319daae/accelerate-1.13.0.tar.gz", hash = "sha256:d631b4e0f5b3de4aff2d7e9e6857d164810dfc3237d54d017f075122d057b236", size = 402835, upload-time = "2026-03-04T19:34:12.359Z" }
@@ -514,11 +514,11 @@ wheels = [
 
 [[package]]
 name = "backoff"
-version = "2.2.1"
+version = "1.11.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/47/d7/5bbeb12c44d7c4f2fb5b56abce497eb5ed9f34d85701de869acedd602619/backoff-2.2.1.tar.gz", hash = "sha256:03f829f5bb1923180821643f8753b0502c3b682293992485b0eef2807afa5cba", size = 17001, upload-time = "2022-10-05T19:19:32.061Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/27/d2/9d2d0f0d6bbe17628b031040b1dadaee616286267e660ad5286a5ed657da/backoff-1.11.1.tar.gz", hash = "sha256:ccb962a2378418c667b3c979b504fdeb7d9e0d29c0579e3b13b86467177728cb", size = 14883, upload-time = "2021-07-14T13:56:15.748Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/df/73/b6e24bd22e6720ca8ee9a85a0c4a2971af8497d8f3193fa05390cbd46e09/backoff-2.2.1-py3-none-any.whl", hash = "sha256:63579f9a0628e06278f7e47b7d7d5b6ce20dc65c5e96a6f3ca99a6adca0396e8", size = 15148, upload-time = "2022-10-05T19:19:30.546Z" },
+    { url = "https://files.pythonhosted.org/packages/d7/dd/88df7d5b2077825d6757a674123062c6e7545cc61556b42739e8757b7b65/backoff-1.11.1-py2.py3-none-any.whl", hash = "sha256:61928f8fa48d52e4faa81875eecf308eccfb1016b018bb6bd21e05b5d90a96c5", size = 13141, upload-time = "2021-07-14T13:56:13.096Z" },
 ]
 
 [[package]]
@@ -1358,12 +1358,12 @@ wheels = [
 [package.optional-dependencies]
 audio = [
     { name = "torch", version = "2.10.0", source = { registry = "https://pypi.org/simple" }, marker = "(extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (extra != 'extra-12-renumics-rag-hf-cpu' and extra != 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "torch", version = "2.12.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "torch", version = "2.12.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "torch", version = "2.12.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.15' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "torch", version = "2.12.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu')" },
     { name = "torch", version = "2.12.0+cu130", source = { registry = "https://download.pytorch.org/whl/cu130" }, marker = "extra == 'extra-12-renumics-rag-hf-cu130'" },
-    { name = "torchcodec", version = "0.14.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "torchcodec", version = "0.14.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.15' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
     { name = "torchcodec", version = "0.14.0", source = { registry = "https://pypi.org/simple" }, marker = "(extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (extra != 'extra-12-renumics-rag-hf-cpu' and extra != 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "torchcodec", version = "0.14.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "torchcodec", version = "0.14.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu')" },
     { name = "torchcodec", version = "0.14.0+cu130", source = { registry = "https://download.pytorch.org/whl/cu130" }, marker = "extra == 'extra-12-renumics-rag-hf-cu130'" },
 ]
 
@@ -4910,7 +4910,7 @@ wheels = [
 
 [[package]]
 name = "opentelemetry-exporter-otlp-proto-grpc"
-version = "1.15.0"
+version = "1.11.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "backoff" },
@@ -4920,21 +4920,21 @@ dependencies = [
     { name = "opentelemetry-proto" },
     { name = "opentelemetry-sdk" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e4/ab/1be294b194af410f350f867a54621b4f33b7551adce2ae795e907148fc1e/opentelemetry_exporter_otlp_proto_grpc-1.15.0.tar.gz", hash = "sha256:844f2a4bb9bcda34e4eb6fe36765e5031aacb36dc60ed88c90fc246942ea26e7", size = 27262, upload-time = "2022-12-09T22:28:44.359Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/fa/f2/78132cbd5a06e1bac9f3d7db1e36259202dadf2048806c13fc25637a1302/opentelemetry-exporter-otlp-proto-grpc-1.11.1.tar.gz", hash = "sha256:e34fc79c76e299622812da5fe37cfeffdeeea464007530488d824e6c413e6a58", size = 21877, upload-time = "2022-04-21T21:02:45.749Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/dd/8f/73ad108bcfd61b4169be5ad8b76acaf9158f224740da10ab9ea3469d551a/opentelemetry_exporter_otlp_proto_grpc-1.15.0-py3-none-any.whl", hash = "sha256:c2a5492ba7d140109968135d641d06ce3c5bd73c50665f787526065d57d7fd1d", size = 20378, upload-time = "2022-12-09T22:28:14.623Z" },
+    { url = "https://files.pythonhosted.org/packages/54/49/73929a9de09a3b0ef935b6412bd37f182bc5a8c9c72bed2c070a48b246f2/opentelemetry_exporter_otlp_proto_grpc-1.11.1-py3-none-any.whl", hash = "sha256:7cabcf548604ab8156644bba0e9cb0a9c50561d621be39429e32581f5c8247a6", size = 18244, upload-time = "2022-04-21T21:02:20.517Z" },
 ]
 
 [[package]]
 name = "opentelemetry-proto"
-version = "1.15.0"
+version = "1.11.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "protobuf" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1e/80/b3b2a98039574e57b6b15982219ae025d55f8c46d50dde258865ce5601b4/opentelemetry_proto-1.15.0.tar.gz", hash = "sha256:9c4008e40ac8cab359daac283fbe7002c5c29c77ea2674ad5626a249e64e0101", size = 35713, upload-time = "2022-12-09T22:28:55.409Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c1/b1/2c1d94f379a9fc40144854bbe46609881f1c7bafe355b6f0510595788a3f/opentelemetry-proto-1.11.1.tar.gz", hash = "sha256:5df0ec69510a9e2414c0410d91a698ded5a04d3dd37f7d2a3e119e3c42a30647", size = 49166, upload-time = "2022-04-21T21:02:55.512Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3a/56/8343d94af8f32594f6b0bd273f72a40e430fb5970a353237af53af5d3031/opentelemetry_proto-1.15.0-py3-none-any.whl", hash = "sha256:044b6d044b4d10530f250856f933442b8753a17f94ae37c207607f733fb9a844", size = 52616, upload-time = "2022-12-09T22:28:30.03Z" },
+    { url = "https://files.pythonhosted.org/packages/b6/ef/52f5a710e68f6f7528a54666bfa4c95d1eda21c9ab967fa9b9451a5c9091/opentelemetry_proto-1.11.1-py3-none-any.whl", hash = "sha256:4d4663123b4777823aa533f478c6cef3ecbcf696d8dc6ac7fd6a90f37a01eafd", size = 66355, upload-time = "2022-04-21T21:02:32.88Z" },
 ]
 
 [[package]]
@@ -5766,16 +5766,16 @@ wheels = [
 
 [[package]]
 name = "protobuf"
-version = "4.25.9"
+version = "5.29.6"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/d9/8e/d08c41a8c004e1d437ef467e7c4f9c3295cd784eba48ed5d1d01f94b1dad/protobuf-4.25.9.tar.gz", hash = "sha256:b0dc7e7c68de8b1ce831dacb12fb407e838edbb8b6cc0dc3a2a6b4cbf6de9cff", size = 381040, upload-time = "2026-03-25T23:09:36.423Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/7e/57/394a763c103e0edf87f0938dafcd918d53b4c011dfc5c8ae80f3b0452dbb/protobuf-5.29.6.tar.gz", hash = "sha256:da9ee6a5424b6b30fd5e45c5ea663aef540ca95f9ad99d1e887e819cdf9b8723", size = 425623, upload-time = "2026-02-04T22:54:40.584Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a8/e9/59435bd04bdd46cb38c42a336b22f9843e8e586ff83c35a5423f8b14704e/protobuf-4.25.9-cp310-abi3-win32.whl", hash = "sha256:bde396f568b0b46fc8fbfe9f02facf25b6755b2578a3b8ac61e74b9d69499e03", size = 392879, upload-time = "2026-03-25T23:09:21.32Z" },
-    { url = "https://files.pythonhosted.org/packages/f3/16/42a5c7f1001783d2b5bfcecde10127f09010f78982c86ae409122ce3ece6/protobuf-4.25.9-cp310-abi3-win_amd64.whl", hash = "sha256:3683c05154252206f7cb2d371626514b3708199d9bcf683b503dabf3a2e38e06", size = 413900, upload-time = "2026-03-25T23:09:23.589Z" },
-    { url = "https://files.pythonhosted.org/packages/56/5b/0074a0a9eb01f3d1c4648ca5e81b22090c811b210b61df9018ac6d6c5cda/protobuf-4.25.9-cp37-abi3-macosx_10_9_universal2.whl", hash = "sha256:9560813560e6ee72c11ca8873878bdb7ee003c96a57ebb013245fe84e2540904", size = 394826, upload-time = "2026-03-25T23:09:25.194Z" },
-    { url = "https://files.pythonhosted.org/packages/54/aa/b2dba856f64c36b2a06c67be1472de98cca07a2322d0f0cbf03279a40e5b/protobuf-4.25.9-cp37-abi3-manylinux2014_aarch64.whl", hash = "sha256:999146ef02e7fa6a692477badd1528bcd7268df211852a3df2d834ba2b480791", size = 294191, upload-time = "2026-03-25T23:09:26.613Z" },
-    { url = "https://files.pythonhosted.org/packages/a8/5c/53f18822017b8bda6bd8bb4e02048e911fdc79a3dafdc83ab994fe922a84/protobuf-4.25.9-cp37-abi3-manylinux2014_x86_64.whl", hash = "sha256:438c636de8fb706a0de94a12a268ef1ae8f5ba5ae655a7671fcda5968ba3c9be", size = 295178, upload-time = "2026-03-25T23:09:27.839Z" },
-    { url = "https://files.pythonhosted.org/packages/16/28/d5065b212685875d3924bcdb3201cbf467cb4d58a18aa19a8dfd99ea80a9/protobuf-4.25.9-py3-none-any.whl", hash = "sha256:d49b615e7c935194ac161f0965699ac84df6112c378e05ec53da65d2e4cbb6d4", size = 156822, upload-time = "2026-03-25T23:09:34.957Z" },
+    { url = "https://files.pythonhosted.org/packages/d4/88/9ee58ff7863c479d6f8346686d4636dd4c415b0cbeed7a6a7d0617639c2a/protobuf-5.29.6-cp310-abi3-win32.whl", hash = "sha256:62e8a3114992c7c647bce37dcc93647575fc52d50e48de30c6fcb28a6a291eb1", size = 423357, upload-time = "2026-02-04T22:54:25.805Z" },
+    { url = "https://files.pythonhosted.org/packages/1c/66/2dc736a4d576847134fb6d80bd995c569b13cdc7b815d669050bf0ce2d2c/protobuf-5.29.6-cp310-abi3-win_amd64.whl", hash = "sha256:7e6ad413275be172f67fdee0f43484b6de5a904cc1c3ea9804cb6fe2ff366eda", size = 435175, upload-time = "2026-02-04T22:54:28.592Z" },
+    { url = "https://files.pythonhosted.org/packages/06/db/49b05966fd208ae3f44dcd33837b6243b4915c57561d730a43f881f24dea/protobuf-5.29.6-cp38-abi3-macosx_10_9_universal2.whl", hash = "sha256:b5a169e664b4057183a34bdc424540e86eea47560f3c123a0d64de4e137f9269", size = 418619, upload-time = "2026-02-04T22:54:30.266Z" },
+    { url = "https://files.pythonhosted.org/packages/b7/d7/48cbf6b0c3c39761e47a99cb483405f0fde2be22cf00d71ef316ce52b458/protobuf-5.29.6-cp38-abi3-manylinux2014_aarch64.whl", hash = "sha256:a8866b2cff111f0f863c1b3b9e7572dc7eaea23a7fae27f6fc613304046483e6", size = 320284, upload-time = "2026-02-04T22:54:31.782Z" },
+    { url = "https://files.pythonhosted.org/packages/e3/dd/cadd6ec43069247d91f6345fa7a0d2858bef6af366dbd7ba8f05d2c77d3b/protobuf-5.29.6-cp38-abi3-manylinux2014_x86_64.whl", hash = "sha256:e3387f44798ac1106af0233c04fb8abf543772ff241169946f698b3a9a3d3ab9", size = 320478, upload-time = "2026-02-04T22:54:32.909Z" },
+    { url = "https://files.pythonhosted.org/packages/5a/cb/e3065b447186cb70aa65acc70c86baf482d82bf75625bf5a2c4f6919c6a3/protobuf-5.29.6-py3-none-any.whl", hash = "sha256:6b9edb641441b2da9fa8f428760fc136a49cf97a52076010cf22a2ff73438a86", size = 173126, upload-time = "2026-02-04T22:54:39.462Z" },
 ]
 
 [[package]]
@@ -6910,12 +6910,12 @@ hf-cpu = [
     { name = "accelerate" },
     { name = "langchain-huggingface" },
     { name = "sentence-transformers" },
-    { name = "torch", version = "2.12.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "torch", version = "2.12.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "torchcodec", version = "0.14.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "torchcodec", version = "0.14.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "torchvision", version = "0.27.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "torchvision", version = "0.27.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "torch", version = "2.12.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.15' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "torch", version = "2.12.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu')" },
+    { name = "torchcodec", version = "0.14.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.15' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "torchcodec", version = "0.14.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu')" },
+    { name = "torchvision", version = "0.27.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.15' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "torchvision", version = "0.27.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu')" },
     { name = "transformers" },
 ]
 hf-cu130 = [
@@ -8050,8 +8050,8 @@ dependencies = [
     { name = "scikit-learn", version = "1.9.0", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.11' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.11' and extra == 'extra-12-renumics-rag-hf-cu130') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
     { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.11' and extra == 'extra-12-renumics-rag-hf-cu130') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
     { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.11' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.11' and extra == 'extra-12-renumics-rag-hf-cu130') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "torch", version = "2.12.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "torch", version = "2.12.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "torch", version = "2.12.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.15' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "torch", version = "2.12.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu')" },
     { name = "torch", version = "2.12.0+cu130", source = { registry = "https://download.pytorch.org/whl/cu130" }, marker = "extra == 'extra-12-renumics-rag-hf-cu130'" },
     { name = "tqdm" },
     { name = "transformers" },
@@ -8914,7 +8914,6 @@ name = "torch"
 version = "2.12.0"
 source = { registry = "https://download.pytorch.org/whl/cpu" }
 resolution-markers = [
-    "python_full_version >= '3.15' and sys_platform == 'darwin'",
     "python_full_version == '3.14.*' and sys_platform == 'darwin'",
     "python_full_version == '3.13.*' and sys_platform == 'darwin'",
     "python_full_version == '3.12.*' and sys_platform == 'darwin'",
@@ -8922,14 +8921,14 @@ resolution-markers = [
     "python_full_version < '3.11' and sys_platform == 'darwin'",
 ]
 dependencies = [
-    { name = "filelock", marker = "(sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "fsspec", marker = "(sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "jinja2", marker = "(sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "filelock", marker = "(python_full_version < '3.15' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "fsspec", marker = "(python_full_version < '3.15' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "jinja2", marker = "(python_full_version < '3.15' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
     { name = "networkx", version = "3.4.2", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.11' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "networkx", version = "3.6.1", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.11' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.11' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "setuptools", version = "81.0.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "sympy", marker = "(sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "typing-extensions", marker = "(sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "networkx", version = "3.6.1", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.11' and python_full_version < '3.15' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.11' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "setuptools", version = "81.0.0", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.15' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "sympy", marker = "(python_full_version < '3.15' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "typing-extensions", marker = "(python_full_version < '3.15' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
 ]
 wheels = [
     { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.12.0-cp310-cp310-macosx_14_0_arm64.whl", hash = "sha256:1834bd984f8a2f4f16bdfbeecca9146184b220aa46276bf5756735b5dae12812", upload-time = "2026-05-12T16:20:02Z" },
@@ -8952,6 +8951,7 @@ resolution-markers = [
     "python_full_version == '3.14.*' and sys_platform == 'emscripten'",
     "python_full_version >= '3.15' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32'",
     "python_full_version == '3.14.*' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version >= '3.15' and sys_platform == 'darwin'",
     "python_full_version == '3.13.*' and sys_platform == 'win32'",
     "python_full_version == '3.13.*' and sys_platform == 'emscripten'",
     "python_full_version == '3.13.*' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32'",
@@ -8964,14 +8964,14 @@ resolution-markers = [
     "python_full_version < '3.11' and sys_platform != 'darwin'",
 ]
 dependencies = [
-    { name = "filelock", marker = "(sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "fsspec", marker = "(sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "jinja2", marker = "(sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "filelock", marker = "(python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu')" },
+    { name = "fsspec", marker = "(python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu')" },
+    { name = "jinja2", marker = "(python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu')" },
     { name = "networkx", version = "3.4.2", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.11' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "networkx", version = "3.6.1", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.11' and sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.11' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "setuptools", version = "81.0.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "sympy", marker = "(sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "typing-extensions", marker = "(sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "networkx", version = "3.6.1", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.11' and sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.15' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "setuptools", version = "81.0.0", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu')" },
+    { name = "sympy", marker = "(python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu')" },
+    { name = "typing-extensions", marker = "(python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu')" },
 ]
 wheels = [
     { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.12.0%2Bcpu-cp310-cp310-linux_s390x.whl", hash = "sha256:0e04beb2ab285bdcc5bb15d9cf7b2a757cf0d9422092fa5747de946359e1b409", upload-time = "2026-05-12T23:15:34Z" },
@@ -9076,7 +9076,6 @@ name = "torchcodec"
 version = "0.14.0"
 source = { registry = "https://download.pytorch.org/whl/cpu" }
 resolution-markers = [
-    "python_full_version >= '3.15' and sys_platform == 'darwin'",
     "python_full_version == '3.14.*' and sys_platform == 'darwin'",
     "python_full_version == '3.13.*' and sys_platform == 'darwin'",
     "python_full_version == '3.12.*' and sys_platform == 'darwin'",
@@ -9151,6 +9150,7 @@ resolution-markers = [
     "python_full_version == '3.14.*' and sys_platform == 'emscripten'",
     "python_full_version >= '3.15' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32'",
     "python_full_version == '3.14.*' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version >= '3.15' and sys_platform == 'darwin'",
     "python_full_version == '3.13.*' and sys_platform == 'win32'",
     "python_full_version == '3.13.*' and sys_platform == 'emscripten'",
     "python_full_version == '3.13.*' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32'",
@@ -9233,7 +9233,6 @@ name = "torchvision"
 version = "0.27.0"
 source = { registry = "https://download.pytorch.org/whl/cpu" }
 resolution-markers = [
-    "python_full_version >= '3.15' and sys_platform == 'darwin'",
     "python_full_version == '3.14.*' and sys_platform == 'darwin'",
     "python_full_version == '3.13.*' and sys_platform == 'darwin'",
     "python_full_version == '3.12.*' and sys_platform == 'darwin'",
@@ -9242,9 +9241,9 @@ resolution-markers = [
 ]
 dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.11' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.11' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.11' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "pillow", marker = "sys_platform == 'darwin'" },
-    { name = "torch", version = "2.12.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform == 'darwin'" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.11' and python_full_version < '3.15' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.11' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (python_full_version >= '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "pillow", marker = "python_full_version < '3.15' and sys_platform == 'darwin'" },
+    { name = "torch", version = "2.12.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "python_full_version < '3.15' and sys_platform == 'darwin'" },
 ]
 wheels = [
     { url = "https://download-r2.pytorch.org/whl/cpu/torchvision-0.27.0-cp310-cp310-macosx_14_0_arm64.whl", hash = "sha256:0822b58d2c5d325cd0c7152b744acbd15f898c07572e2cfb70b075a865a4f6f9", upload-time = "2026-05-12T16:20:37Z" },
@@ -9267,6 +9266,7 @@ resolution-markers = [
     "python_full_version == '3.14.*' and sys_platform == 'emscripten'",
     "python_full_version >= '3.15' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32'",
     "python_full_version == '3.14.*' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version >= '3.15' and sys_platform == 'darwin'",
     "python_full_version == '3.13.*' and sys_platform == 'win32'",
     "python_full_version == '3.13.*' and sys_platform == 'emscripten'",
     "python_full_version == '3.13.*' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32'",
@@ -9280,9 +9280,9 @@ resolution-markers = [
 ]
 dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.11' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.11' and sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.11' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
-    { name = "pillow", marker = "sys_platform != 'darwin'" },
-    { name = "torch", version = "2.12.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform != 'darwin'" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.11' and sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version >= '3.15' and sys_platform == 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu') or (python_full_version < '3.15' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130') or (sys_platform != 'darwin' and extra == 'extra-12-renumics-rag-hf-cpu' and extra == 'extra-12-renumics-rag-hf-cu130')" },
+    { name = "pillow", marker = "python_full_version >= '3.15' or sys_platform != 'darwin'" },
+    { name = "torch", version = "2.12.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "python_full_version >= '3.15' or sys_platform != 'darwin'" },
 ]
 wheels = [
     { url = "https://download-r2.pytorch.org/whl/cpu/torchvision-0.27.0%2Bcpu-cp310-cp310-manylinux_2_28_aarch64.whl", hash = "sha256:279a056a6436f69f767675b1f1d82b67ecaca1ba1871b11ce0af4744a324aa22", upload-time = "2026-05-12T16:20:36Z" },
