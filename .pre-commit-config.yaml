@@ -37,12 +37,7 @@ repos:
           - id: check-toml
           - id: check-symlinks
 
-    # third-pary hooks
-    - repo: https://github.com/jumanjihouse/pre-commit-hooks
-      rev: 3.0.0
-      hooks:
-          - id: shellcheck
-          - id: shfmt
+    # third-party hooks
     - repo: https://github.com/kynan/nbstripout
       rev: 0.9.1
       hooks:
