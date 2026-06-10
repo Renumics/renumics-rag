@@ -9,66 +9,63 @@ help: ## Print this help message
 	@echo -e "$$(grep -hE '^\S+:.*##' $(MAKEFILE_LIST) | sed -e 's/:.*##\s*/:/' -e 's/^\(.\+\):\(.*\)/\\x1b[36m\1\\x1b[m:\2/' | column -c2 -t -s :)"
 
 .PHONY: init
-init: ## Locally install all dev dependencies
-	poetry install --all-extras
-
-.PHONY: init-cpu
-init-cpu: ## Locally install all dev dependencies with CPU support
-init-cpu: init
-	poetry run pip install torch torchvision sentence-transformers accelerate \
-		--extra-index-url https://download.pytorch.org/whl/cpu
+init: ## Locally install all dev dependencies (CPU support)
+	uv sync --all-extras --no-extra hf-cu130
 
 .PHONY: init-gpu
-init-gpu: ## Locally install all dev dependencies with GPU support
-init-gpu: init
-	poetry run pip install torch torchvision sentence-transformers accelerate
+init-gpu: ## Locally install all dev dependencies (GPU support)
+	uv sync --all-extras --no-extra hf-cpu
 
 .PHONY: clean
 clean: ## Clean project
-	rm -rf .ruff_cache/ .mypy_cache/
-
-.PHONY: check-format
-check-format: ## Check code formatting
-	poetry run black --check .
+	rm -rf .venv/ .ruff_cache/ .mypy_cache/
 
 .PHONY: format
 format: ## Fix code formatting
-	poetry run black .
-
-.PHONY: typecheck
-typecheck: ## Typecheck all source files
-	poetry run mypy -p assistant
+	uv run pre-commit run ruff-format --all-files
 
 .PHONY: lint
 lint: ## Lint all source files
-	poetry run ruff assistant
+	uv run pre-commit run ruff-check --all-files
+
+.PHONY: typecheck
+typecheck: ## Typecheck all source files
+	uv run pre-commit run mypy --all-files
 
 .PHONY: run
 run: ## Run web app
-	poetry run streamlit run assistant/app.py
+	uv run app
 
 .PHONY: build-wheel
 build-wheel: ## Build package
-	poetry build -f wheel
+	uv build --wheel
 
 .PHONY: build-image
-build-image: ## Build docker image
-	docker build -t renumics-rag -f Dockerfile .
+build-image: ## Build prod docker image
+	docker build --target prod -t renumics-rag -f Dockerfile .
 
 .PHONY: run-image-openai
-run-image-openai: ## Build docker image
+run-image-openai: ## Run prod image with OpenAI credentials
 run-image-openai: build-image
-	docker run -it --rm -p 8000:8000 -p 8001:8001 --network=host -e OPENAI_API_KEY=$$OPENAI_API_KEY renumics-rag
+	docker run -it --rm -p 8000:8000 --network=host -e OPENAI_API_KEY=$$OPENAI_API_KEY renumics-rag
 
 .PHONY: run-image-azure
-run-image-azure: ## Build docker image
+run-image-azure: ## Run prod image with Azure OpenAI credentials
 run-image-azure: build-image
-	docker run -it --rm -p 8000:8000 -p 8001:8001 --network=host \
+	docker run -it --rm -p 8000:8000 --network=host \
 		-e OPENAI_API_TYPE=$$OPENAI_API_TYPE \
 		-e OPENAI_API_VERSION=$$OPENAI_API_VERSION \
 		-e AZURE_OPENAI_API_KEY=$$AZURE_OPENAI_API_KEY \
 		-e AZURE_OPENAI_ENDPOINT=$$AZURE_OPENAI_ENDPOINT \
 		renumics-rag
+
+.PHONY: up
+up: ## Start dev environment via Docker Compose
+	docker compose up
+
+.PHONY: down
+down: ## Stop dev environment via Docker Compose
+	docker compose down
 
 .PHONY: docker-login
 docker-login: ## Log in to Azure registry

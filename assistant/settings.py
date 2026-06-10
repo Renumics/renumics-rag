@@ -1,9 +1,15 @@
 import os
 from pathlib import Path
-from typing import Any, Dict, Optional
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field, PositiveInt, validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    PositiveInt,
+    ValidationInfo,
+    field_validator,
+)
 from typing_extensions import Annotated, Self
 
 from .types import Device, ModelType, RelevanceScoreFn, RetrieverSearchType
@@ -20,7 +26,7 @@ def guess_model_type() -> ModelType:
 class Settings(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    llm_type: Optional[ModelType]
+    llm_type: ModelType | None
     llm_name: Annotated[str, Field(min_length=1)]
     relevance_score_fn: RelevanceScoreFn = "l2"
     k: PositiveInt = 4
@@ -28,7 +34,7 @@ class Settings(BaseModel):
     score_threshold: Annotated[float, Field(ge=0.0, le=1.0)] = 0.5
     fetch_k: PositiveInt = 20
     lambda_mult: Annotated[float, Field(ge=0.0, le=1.0)] = 0.5
-    embeddings_model_type: Optional[ModelType]
+    embeddings_model_type: ModelType | None
     embeddings_model_name: Annotated[str, Field(min_length=1)]
 
     docs_db_directory: Path = Path("./db-docs")
@@ -37,15 +43,15 @@ class Settings(BaseModel):
     questions_db_collection: Annotated[str, Field(min_length=1)] = "questions_store"
 
     # Hugging Face-specific settings
-    device: Optional[Device] = None
+    device: Device | None = None
     trust_remote_code: bool = False
-    torch_dtype: Optional[str] = None
+    torch_dtype: str | None = None
 
-    @validator("fetch_k")
+    @field_validator("fetch_k")
     @classmethod
-    def _(cls, fetch_k: int, values: Dict[str, Any]) -> int:
-        k = values["k"]
-        if fetch_k < k:
+    def _(cls, fetch_k: int, info: ValidationInfo) -> int:
+        k = info.data.get("k")
+        if k is not None and fetch_k < k:
             raise ValueError(
                 f"`fetch_k`({fetch_k}) should be greater than or equal to `k`({k})"
             )

@@ -7,7 +7,6 @@ from pathlib import Path
 import chromadb
 import chromadb.config
 import typer
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import (
     BSHTMLLoader,
     DirectoryLoader,
@@ -15,6 +14,7 @@ from langchain_community.document_loaders import (
     PyPDFLoader,
     UnstructuredMarkdownLoader,
 )
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from tqdm import trange
 from typing_extensions import Annotated
 
@@ -175,7 +175,6 @@ def create_db(
             start = batch_size * batch_index
             end = start + batch_size
             docs_vectorstore.add_documents(splits[start:end], ids=split_ids[start:end])
-            docs_vectorstore.persist()
 
 
 if __name__ == "__main__":

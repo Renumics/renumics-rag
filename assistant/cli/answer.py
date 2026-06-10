@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-from typing import List
-
 import typer
 from typing_extensions import Annotated
 
@@ -21,7 +19,7 @@ app = typer.Typer()
 
 @app.command()
 def answer(
-    questions: Annotated[List[str], typer.Argument(help="Question(s) to answer.")],
+    questions: Annotated[list[str], typer.Argument(help="Question(s) to answer.")],
     llm_name: Annotated[
         str, typer.Option("--llm", help=LLM_NAME_HELP)
     ] = settings.full_llm_name,

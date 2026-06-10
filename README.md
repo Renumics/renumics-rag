@@ -55,25 +55,16 @@ pip install pandas torch torchvision sentence-transformers accelerate
 # pip install pandas torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
 ```
 
-### Via `poetry`
+### Via `uv`
 
 Install the RAG demo and some extra dependencies:
 
 ```shell
-poetry install --all-extras
-# Torch with GPU support
-pip install pandas torch torchvision sentence-transformers accelerate
-# Torch with CPU support
-# pip install pandas torch torchvision sentence-transformers accelerate --extra-index-url https://download.pytorch.org/whl/cpu
+uv install --all-extras --no-extra hf-cu130 # CPU support
+uv install --all-extras --no-extra hf-cpu # GPU support
 ```
 
-Activate the environment (otherwise, prexis all subsequent commands with `poetry run`):
-
-```shell
-poetry shell
-```
-
-> Note: If you have [Direnv](https://direnv.net/) installed, you can avoid prefixing python commands with `poetry run` by executing `direnv allow` in the project directory. It will activate environment each time you enter the project directory.
+> Note: If you have [Direnv](https://direnv.net/) installed, you can avoid prefixing python commands with `uv run` after executing `direnv allow` in the project directory. It will activate environment each time you enter the project directory.
 
 ### ⚙️ Configuration
 
@@ -86,28 +77,15 @@ OPENAI_API_KEY="Your OpenAI API key"
 If you plan to use OpenAI models via Azure, create `.env` with the following content:
 
 ```shell
-OPENAI_API_TYPE="azure"
+OPENAI_API_TYPE="azure"  # optional
 OPENAI_API_VERSION="2023-08-01-preview"
 AZURE_OPENAI_API_KEY="Your Azure OpenAI API key"
 AZURE_OPENAI_ENDPOINT="Your Azure OpenAI endpoint"
 ```
 
-If you are using Hugging Face models, a .env file is not necessary. You can configure the embeddings model, retriever and the LLM in the config file (settings.yaml). The default settings (taken from [settings file](./settings.yaml) are:
+If you are using Hugging Face models, a .env file is not necessary.
 
-```shell
-llm_type: 'openai'       # 'openai', 'hf' or 'azure'
-llm_name: 'gpt-3.5-turbo'
-
-relevance_score_fn: 'l2'
-k: 20
-search_type: 'similarity'
-score_threshold: 0.5
-fetch_k: 20
-lambda_mult: 0.5
-
-embeddings_model_type: 'openai'     # 'openai', 'hf' or 'azure'
-embeddings_model_name: 'text-embedding-ada-002'
-```
+You can configure the embeddings model, retriever and the LLM in the config file [settings file](./settings.yaml).
 
 You can adapt it without cloning the repository by setting up an environment variable `RAG_SETTINGS` pointing to your local config file. You can also configure it from the GUI during the question and answering sessions. But it's important to choose the desired embeddings model because the indexing is done beforehand.
 
