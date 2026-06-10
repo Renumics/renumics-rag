@@ -39,7 +39,7 @@ def retrieve(
     retriever = get_retriever(vectorstore)
 
     for question in questions:
-        docs = retriever.get_relevant_documents(question)
+        docs = retriever.invoke(question)
         print(f"QUESTION: {question}")
         print("SOURCES:")
         for doc in docs:

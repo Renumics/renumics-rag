@@ -32,24 +32,26 @@ dependencies = [
 openai = [
     "langchain-openai>=0.1.8"
 ]
-hf = [
-    "transformers>=4.37.1",
-    "bitsandbytes>=0.42.0",
-]
 exploration = [
     "renumics-spotlight>=1.6.5"
 ]
-cpu = [
-    "torch",
+hf-cpu = [
+    "langchain-huggingface>=1.0.0",
+    "transformers>=4.0.0",
+    "torch>=2.0.0",
     "torchvision",
-    "sentence-transformers",
-    "accelerate",
+    "torchcodec",
+    "sentence-transformers>=5.0.0",
+    "accelerate>=1.0.0",
 ]
-cu130 = [
-    "torch",
+hf-cu130 = [
+    "langchain-huggingface>=1.0.0",
+    "transformers>=4.0.0",
+    "torch>=2.0.0",
     "torchvision",
-    "sentence-transformers",
-    "accelerate",
+    "torchcodec",
+    "sentence-transformers>=5.0.0",
+    "accelerate>=1.0.0",
 ]
 
 [project.scripts]
@@ -81,31 +83,26 @@ extend-select = ["I"]
 ignore_missing_imports = false
 disallow_untyped_defs = true
 
-[[tool.mypy.overrides]]
-module = [
-    "transformers",
-    "sentence_transformers",
-    "torch.*",
-    "renumics.*"
-]
-ignore_missing_imports = true
-
 [tool.uv]
 conflicts = [
   [
-    { extra = "cpu" },
-    { extra = "cu130" },
+    { extra = "hf-cpu" },
+    { extra = "hf-cu130" },
   ],
 ]
 
 [tool.uv.sources]
 torch = [
-  { index = "pytorch-cpu", extra = "cpu" },
-  { index = "pytorch-cu130", extra = "cu130" },
+  { index = "pytorch-cpu", extra = "hf-cpu" },
+  { index = "pytorch-cu130", extra = "hf-cu130" },
 ]
 torchvision = [
-  { index = "pytorch-cpu", extra = "cpu" },
-  { index = "pytorch-cu130", extra = "cu130" },
+  { index = "pytorch-cpu", extra = "hf-cpu" },
+  { index = "pytorch-cu130", extra = "hf-cu130" },
+]
+torchcodec = [
+  { index = "pytorch-cpu", extra = "hf-cpu" },
+  { index = "pytorch-cu130", extra = "hf-cu130" },
 ]
 
 [[tool.uv.index]]

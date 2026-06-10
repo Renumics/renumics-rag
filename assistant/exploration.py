@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import chromadb
+import chromadb.config
 import pandas as pd
 
 from assistant import get_chromadb

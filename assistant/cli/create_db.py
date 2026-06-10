@@ -175,7 +175,6 @@ def create_db(
             start = batch_size * batch_index
             end = start + batch_size
             docs_vectorstore.add_documents(splits[start:end], ids=split_ids[start:end])
-            docs_vectorstore.persist()
 
 
 if __name__ == "__main__":

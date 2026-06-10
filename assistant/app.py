@@ -3,10 +3,9 @@ from typing import Any, Callable, Dict, List, Optional, Type, Union, get_args
 import streamlit as st
 import typer
 from langchain_chroma import Chroma
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.llms.huggingface_pipeline import HuggingFacePipeline
 from langchain_core.embeddings import Embeddings
 from langchain_core.runnables import Runnable
+from langchain_huggingface import HuggingFaceEmbeddings, HuggingFacePipeline
 from langchain_openai import (
     AzureChatOpenAI,
     AzureOpenAIEmbeddings,
@@ -305,7 +304,6 @@ def st_app(
             rag_answer = chain.invoke(question)
 
             questions_vectorstore.add_documents([question_as_doc(question, rag_answer)])
-            questions_vectorstore.persist()
 
             messages: List[Message] = []
             sources: List[str] = []

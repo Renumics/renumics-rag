@@ -9,7 +9,7 @@ This module provides the most functionality for RAG usage:
 
 Load and split documents:
 ```python
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader
 
 loader = WebBaseLoader("https://lilianweng.github.io/posts/2023-06-23-agent/")
@@ -75,15 +75,14 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, cast, get_args
 
 import dotenv
-from langchain.vectorstores.chroma import Chroma
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.llms.huggingface_pipeline import HuggingFacePipeline
+from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import Runnable, RunnableParallel, RunnablePassthrough
 from langchain_core.vectorstores import VectorStore, VectorStoreRetriever
+from langchain_huggingface import HuggingFaceEmbeddings, HuggingFacePipeline
 from langchain_openai import (
     AzureChatOpenAI,
     AzureOpenAIEmbeddings,
@@ -111,7 +110,7 @@ if sys.platform == "linux":
 
 # Import `chromadb` when `sqlite3` is patched.
 import chromadb  # noqa: E402
-import chromadb.api.types  # noqa: E402
+import chromadb.config  # noqa: E402
 
 
 def parse_model_name(name: str) -> Tuple[str, ModelType]:
@@ -197,6 +196,7 @@ def get_hf_llm(
         raise HFImportError() from e
     torch_device = _get_torch_device(device)
     pipe = pipeline(
+        task="text-generation",
         model=name,
         device=torch_device,
         torch_dtype=torch_dtype,
@@ -246,7 +246,7 @@ def _assert_embeddings_model_ok_for_chromadb(
         # Vectorstore doesn't exist yet.
         return
     model_name, model_type = get_embeddings_model_config(embeddings_model)
-    client_settings = chromadb.Settings(
+    client_settings = chromadb.config.Settings(
         is_persistent=True, persist_directory=str(persist_directory)
     )
     client = chromadb.Client(client_settings)
@@ -349,7 +349,7 @@ def get_retriever(
 
 
 def format_doc(doc: Document) -> str:
-    return f"Content: {doc.page_content}\nSource: \"{doc.metadata['source']}\""
+    return f'Content: {doc.page_content}\nSource: "{doc.metadata["source"]}"'
 
 
 def format_docs(docs: List[Document]) -> str:

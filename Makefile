@@ -10,31 +10,27 @@ help: ## Print this help message
 
 .PHONY: init
 init: ## Locally install all dev dependencies (CPU support)
-	uv sync --all-extras --no-extra cu130
+	uv sync --all-extras --no-extra hf-cu130
 
 .PHONY: init-gpu
 init-gpu: ## Locally install all dev dependencies (GPU support)
-	uv sync --all-extras --no-extra cpu
+	uv sync --all-extras --no-extra hf-cpu
 
 .PHONY: clean
 clean: ## Clean project
 	rm -rf .venv/ .ruff_cache/ .mypy_cache/
 
-.PHONY: check-format
-check-format: ## Check code formatting
-	uv run black --check .
-
 .PHONY: format
 format: ## Fix code formatting
-	uv run black .
-
-.PHONY: typecheck
-typecheck: ## Typecheck all source files
-	uv run mypy -p assistant
+	uv run pre-commit run ruff-format --all-files
 
 .PHONY: lint
 lint: ## Lint all source files
-	uv run ruff assistant
+	uv run pre-commit run ruff-check --all-files
+
+.PHONY: typecheck
+typecheck: ## Typecheck all source files
+	uv run pre-commit run mypy --all-files
 
 .PHONY: run
 run: ## Run web app
