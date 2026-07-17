@@ -38,7 +38,7 @@ exploration = [
 hf-cpu = [
     "langchain-huggingface>=1.0.0",
     "transformers>=4.0.0",
-    "torch>=2.0.0",
+    "torch>=2.13.0",
     "torchvision",
     "torchcodec",
     "sentence-transformers>=5.0.0",
@@ -47,7 +47,7 @@ hf-cpu = [
 hf-cu130 = [
     "langchain-huggingface>=1.0.0",
     "transformers>=4.0.0",
-    "torch>=2.0.0",
+    "torch>=2.13.0",
     "torchvision",
     "torchcodec",
     "sentence-transformers>=5.0.0",
