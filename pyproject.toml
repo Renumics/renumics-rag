@@ -90,6 +90,15 @@ conflicts = [
     { extra = "hf-cu130" },
   ],
 ]
+# Security floors for Dependabot / transitive CVEs
+constraint-dependencies = [
+    "gitpython>=3.1.52",
+    "jupyterlab>=4.5.10",
+    "pillow>=12.3.0",
+    "pyasn1>=0.6.4",
+    "setuptools>=83.0.0",
+    "soupsieve>=2.8.4",
+]
 
 [tool.uv.sources]
 torch = [
