@@ -60,8 +60,8 @@ pip install pandas torch torchvision sentence-transformers accelerate
 Install the RAG demo and some extra dependencies:
 
 ```shell
-uv install --all-extras --no-extra hf-cu130 # CPU support
-uv install --all-extras --no-extra hf-cpu # GPU support
+uv sync --all-extras --no-extra hf-cu130 # CPU support
+uv sync --all-extras --no-extra hf-cpu # GPU support
 ```
 
 > Note: If you have [Direnv](https://direnv.net/) installed, you can avoid prefixing python commands with `uv run` after executing `direnv allow` in the project directory. It will activate environment each time you enter the project directory.
