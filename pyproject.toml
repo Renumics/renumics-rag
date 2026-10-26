@@ -5,7 +5,7 @@ description = "Renumics RAG: Explore and Visualize RAG Data"
 readme = "README.md"
 authors = [{ name = "Renumics GmbH", email = "info@renumics.com" }]
 license = "MIT"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "typing-extensions>=4.9.0",
     "typer>=0.9.0",
@@ -16,12 +16,12 @@ dependencies = [
     "pysqlite3-binary>=0.5.2.post2; sys_platform == 'linux'",
     "beautifulsoup4>=4.12.3",
     "lxml>=5.1.0",
-    "streamlit>=1.30.0",
+    "streamlit>=1.66.1",
     "pyyaml>=6.0.1",
     "pydantic>=2.0.0,<3.0.0",
-    "unstructured>=0.11.8",
+    "unstructured>=0.24.1",
     "markdown>=3.5.2",
-    "pypdf>=6.15.0",
+    "pypdf>=6.21.2",
     "pandas>=2.0.3",
     "docx2txt>=0.8",
     "langchain-chroma>=1.0.0",
@@ -42,7 +42,7 @@ hf-cpu = [
     "torchvision",
     "torchcodec",
     "sentence-transformers>=5.0.0",
-    "accelerate>=1.0.0",
+    "accelerate>=1.15.0",
 ]
 hf-cu130 = [
     "langchain-huggingface>=1.0.0",
@@ -51,7 +51,7 @@ hf-cu130 = [
     "torchvision",
     "torchcodec",
     "sentence-transformers>=5.0.0",
-    "accelerate>=1.0.0",
+    "accelerate>=1.15.0",
 ]
 
 [project.scripts]
@@ -90,6 +90,12 @@ conflicts = [
     { extra = "hf-cpu" },
     { extra = "hf-cu130" },
   ],
+]
+# Security floors for Dependabot / transitive CVEs
+# Note: filelock>=4.2.1 blocked by unstructured's filelock<4 pin — dismissed for now
+constraint-dependencies = [
+    "pillow>=13.0.0",
+    "virtualenv>=21.14.9",
 ]
 
 [tool.uv.sources]
