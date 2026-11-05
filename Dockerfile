@@ -11,7 +11,9 @@ RUN --mount=from=astral/uv:0.11.7-python3.12.13-trixie-slim@sha256:760df02ce4a80
   --mount=type=cache,target=/root/.cache/uv \
   --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
   --mount=type=bind,source=uv.lock,target=uv.lock \
-  uv sync --locked --no-dev --all-extras --no-extra cu130
+  --mount=type=bind,source=README.md,target=README.md \
+  --mount=type=bind,source=assistant,target=assistant \
+  uv sync --locked --no-dev --no-editable --all-extras --no-extra hf-cu130
 
 FROM base AS dev
 CMD ["app"]

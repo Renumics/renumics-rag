@@ -73,7 +73,6 @@ dev = [
     "ipython>=8.12.3",
     "notebook>=7.0.8",
     "langchain-experimental",
-    "opentelemetry-exporter-otlp-proto-grpc<1.23",
 ]
 
 [tool.ruff.lint]
